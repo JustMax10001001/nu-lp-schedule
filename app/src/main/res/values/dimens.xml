@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="subject_list_height">152dp</dimen>
+    <dimen name="subject_view_padding">12dp</dimen>
+    <dimen name="subject_primary_info_text_size">14sp</dimen>
+    <dimen name="subject_secondary_info_text_size">12sp</dimen>
+    <dimen name="subject_card_corner_radius">4dp</dimen>
+</resources>

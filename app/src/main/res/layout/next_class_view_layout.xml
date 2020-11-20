@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/schedule_view_card"
+    android:layout_margin="12dp">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="com.justsoft.nulpschedule.db.model.EntityClassWithSubject" />
+
+        <variable
+            name="timeFormatter"
+            type="com.justsoft.nulpschedule.utils.TimeFormatter" />
+
+        <variable
+            name="schedule"
+            type="com.justsoft.nulpschedule.model.Schedule" />
+
+        <variable
+            name="currentClass"
+            type="EntityClassWithSubject" />
+
+        <variable
+            name="nextClass"
+            type="EntityClassWithSubject" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkable="false"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardElevation="?attr/cardElevation"
+        app:cardCornerRadius="?attr/cornerRadius"
+        android:theme="@style/Theme.SchedulerTheme.ClassCard">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                android:theme="@style/Theme.SchedulerTheme.ClassCard.PrimaryInfo"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/group_text_view"
+                    android:layout_width="80dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom|center_horizontal"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:text="@{schedule.groupName}"
+                    android:textAllCaps="true"
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMaxTextSize="24sp"
+                    app:autoSizeMinTextSize="16sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="ПЗ-14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="@{schedule.instituteName}"
+                    android:textAllCaps="true"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/group_text_view"
+                    tools:text="ІКНІ" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="@{currentClass != null ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/current_class_subject_name_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:text="@{@string/subject_now(currentClass.subject.displayName)}"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintEnd_toStartOf="@id/current_class_online_icon"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Now: subject name" />
+
+                    <ImageView
+                        android:id="@+id/current_class_online_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/online_class_url_available"
+                        android:src="@drawable/ic_online_class"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:visibility="@{currentClass.scheduleClass.url == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Online" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@{currentClass != null ? @string/subject_ends_at(timeFormatter.formatEndTimeForSubjectIndex(currentClass.scheduleClass.index)) : ``}"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/current_class_subject_name_text_view"
+                        tools:text="Ends at 14:00" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="@{nextClass != null ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/next_subject_name_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:text="@{@string/subject_next_up(nextClass.subject.displayName)}"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintEnd_toStartOf="@id/next_online_class_icon_image_view"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Next up: subject name" />
+
+                    <ImageView
+                        android:id="@+id/next_online_class_icon_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/online_class_url_available"
+                        android:src="@drawable/ic_online_class"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:visibility="@{nextClass.scheduleClass.url == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Online" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@{nextClass != null ? @string/subject_starts_at(timeFormatter.formatStartTimeForSubjectIndex(nextClass.scheduleClass.index)) : ``}"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/next_subject_name_text_view"
+                        tools:text="Starts at 14:00" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

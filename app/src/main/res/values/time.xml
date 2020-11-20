@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="schedule_lesson_start_times">
+        <item>510</item>
+        <item>620</item>
+        <item>730</item>
+        <item>855</item>
+        <item>960</item>
+        <item>1060</item>
+        <item>1160</item>
+        <item>1260</item>
+    </integer-array>
+
+    <integer-array name="schedule_lesson_end_times">
+        <item>605</item>
+        <item>715</item>
+        <item>825</item>
+        <item>950</item>
+        <item>1055</item>
+        <item>1155</item>
+        <item>1255</item>
+        <item>1355</item>
+    </integer-array>
+</resources>

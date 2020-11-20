@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">NulpSchedule</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="add">ADD</string>
+    <string name="undo">Undo</string>
+
+    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
+    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
+
+    <string name="lesson_duration_format" translatable="false">%1$d:%2$02d-%3$d:%4$02d</string>
+
+    <string name="keystore_password" translatable="false">lpnu-password</string>
+    <string name="online_class_url">Online class URL</string>
+    <string name="url_copied">URL copied to clipboard</string>
+    <string name="online_class_url_available">Online class URL available</string>
+    <string name="open_lesson_in_app">Open online class in</string>
+    <string name="action_switch_to_next_group">Subgroup %d</string>
+    <string name="copy_online_class_url">Copy online class URL</string>
+    <string name="change_custom_subject_name">Set custom name for subject</string>
+    <string name="enter_custom_subject_name">Enter custom subject name</string>
+    <string name="custom_subject_name">Custom subject name</string>
+    <string name="subject_now">Now: %s</string>
+    <string name="subject_next_up">Next up: %s</string>
+    <string name="subject_ends_at">Ends at %s</string>
+    <string name="subject_starts_at">Starts at %s</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="add_new_schedule">Add new schedule</string>
+    <string name="institute_group">Institute group</string>
+    <string name="subgroup_1">Subgroup 1</string>
+    <string name="subgroup_2">Subgroup 2</string>
+    <string name="retry">Retry</string>
+    <string name="error_loading_schedules">Error loading schedules</string>
+    <string name="error_downloading_schedule">Error downloading schedule</string>
+    <string name="wow_such_empty">Wow, such empty</string>
+    <string name="schedule_is_removed">Schedule is removed</string>
+    <string name="switch_to_denominator">Show denominator</string>
+    <string name="switch_to_numerator">Show numerator</string>
+    <string name="this_schedule_was_already_added">This schedule was already added</string>
+
+    <string-array name="days_of_week_short">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+
+    <string name="sync_header">Sync</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync schedules periodically</string>
+    <string name="action_open_telegram_channel">open_telegram_channel</string>
+    <string name="action_app_version" translatable="false">app_version</string>
+    <string name="app_version">App version</string>
+    <string name="app_telegram_channel">App telegram channel</string>
+    <string name="app_telegram_link" translatable="false">https://t.me/joinchat/AAAAAEkXWzBj4EFrx0–1ag</string>
+    <string name="intent_title_open_telegram_channel">Open Telegram channel</string>
+    <string name="schedule_fragment_title">Schedule view</string>
+    <string name="add_a_schedule">Add a schedule</string>
+    <string name="settings">Settings</string>
+    <string name="subgroup_one" translatable="false">1</string>
+    <string name="subgroup_two" translatable="false">2</string>
+    <string name="switch_subgroup">Switch subgroup</string>
+</resources>
