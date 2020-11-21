@@ -52,4 +52,8 @@
         <item>Сб</item>
         <item>Нд</item>
     </string-array>
+    <string name="denominator">Знаменник</string>
+    <string name="numerator">Чисельник</string>
+    <string name="online">Онлайн</string>
+    <string name="category_about">Про програму</string>
 </resources>
