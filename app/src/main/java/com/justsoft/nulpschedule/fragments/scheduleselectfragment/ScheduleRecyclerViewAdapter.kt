@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.justsoft.nulpschedule.R
-import com.justsoft.nulpschedule.databinding.NextClassViewLayoutBinding
+import com.justsoft.nulpschedule.databinding.SchedulePreviewLayoutBinding
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.db.model.UpdateEntitySchedulePosition
 import com.justsoft.nulpschedule.db.model.ScheduleTuple
@@ -29,7 +29,7 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
-        val binding = DataBindingUtil.inflate<NextClassViewLayoutBinding>(
+        val binding = DataBindingUtil.inflate<SchedulePreviewLayoutBinding>(
             LayoutInflater.from(parent.context),
             R.layout.schedule_preview_layout,
             parent,
@@ -39,7 +39,7 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
-        val binding = DataBindingUtil.findBinding<NextClassViewLayoutBinding>(holder.itemView)
+        val binding = DataBindingUtil.findBinding<SchedulePreviewLayoutBinding>(holder.itemView)
             ?: return
         binding.timeFormatter = timeFormatter
         binding.schedule = scheduleList[position].schedule
