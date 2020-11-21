@@ -71,4 +71,6 @@
     <string name="denominator">Denominator</string>
     <string name="numerator">Numerator</string>
     <string name="online">Online</string>
+    <string name="now">Now</string>
+    <string name="next_up">Next up</string>
 </resources>

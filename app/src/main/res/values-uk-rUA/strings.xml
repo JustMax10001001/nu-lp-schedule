@@ -55,4 +55,6 @@
     <string name="denominator">Знаменник</string>
     <string name="numerator">Чисельник</string>
     <string name="online">Онлайн</string>
+    <string name="now">Зараз</string>
+    <string name="next_up">Далі</string>
 </resources>
