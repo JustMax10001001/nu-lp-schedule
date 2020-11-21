@@ -10,8 +10,8 @@
         android:id="@+id/schedule_selector_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:animateLayoutChanges="true"
         android:layout_marginHorizontal="@dimen/recycler_horizontal_margin"
+        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,38 +20,38 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/schedule_select_recycler_view"
-            android:clipToPadding="false"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="12dp"
-            android:overScrollMode="never"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
+        android:id="@+id/such_empty_schedules_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         android:text="@string/wow_such_empty"
         android:textAppearance="?attr/textAppearanceHeadline4"
         android:visibility="gone"
-        android:id="@+id/such_empty_schedules_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/add_schedule_fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:elevation="6dp"
-        android:elevation="6dp"
-        app:pressedTranslationZ="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_schedule_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/add_new_schedule"
+        android:elevation="6dp"
         android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/add_new_schedule" />
+        app:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:pressedTranslationZ="12dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

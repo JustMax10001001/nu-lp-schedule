@@ -14,9 +14,9 @@
 
         <com.justsoft.nulpschedule.ui.FixedToolbar
             android:id="@+id/toolbar"
-            android:animateLayoutChanges="true"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:animateLayoutChanges="true"
             app:popupTheme="@style/Theme.SchedulerTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

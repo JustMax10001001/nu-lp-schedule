@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="48dp"
     android:layout_height="48dp"
-    android:maxWidth="48dp"
-    android:paddingHorizontal="0dp"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    android:backgroundTint="@android:color/transparent"
+    android:checkable="true"
     android:insetLeft="0dp"
     android:insetRight="0dp"
-    android:checkable="true"
+    android:maxWidth="48dp"
+
+    android:paddingHorizontal="0dp"
     android:textSize="26sp"
-
-    app:strokeColor="@android:color/transparent"
-    android:backgroundTint="@android:color/transparent"
-    android:background="?android:attr/selectableItemBackgroundBorderless"
     android:theme="@style/Theme.SchedulerTheme.NumeratorSwitch"
+    app:strokeColor="@android:color/transparent"
 
-    tools:text="1"
-    tools:background="@color/purple_500" >
-</com.google.android.material.button.MaterialButton>
+    tools:background="@color/purple_500"
+    tools:text="1" />

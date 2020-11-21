@@ -121,11 +121,11 @@
                     tools:text="Additional description" />
 
                 <TextView
+                    android:id="@+id/bulleted_additional_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:textAppearance="?attr/textAppearanceCaption"
-                    android:id="@+id/bulleted_additional_info"
                     tools:text="bullet \u2022 text" />
             </LinearLayout>
         </LinearLayout>

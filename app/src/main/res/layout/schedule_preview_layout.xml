@@ -6,7 +6,9 @@
     android:layout_marginVertical="@dimen/recycler_vertical_margin">
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="com.justsoft.nulpschedule.db.model.EntityClassWithSubject" />
 
         <variable
