@@ -19,6 +19,10 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     RecyclerView.Adapter<ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
 
     var showCurrentClass: Boolean = true
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
     var scheduleList: List<ScheduleTuple> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
         notifyChanges(oldValue, newValue)
     }
