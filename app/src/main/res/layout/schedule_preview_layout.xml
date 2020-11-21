@@ -6,7 +6,9 @@
     android:layout_margin="12dp">
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="com.justsoft.nulpschedule.db.model.EntityClassWithSubject" />
 
         <variable
@@ -32,9 +34,9 @@
         android:checkable="false"
         android:clickable="true"
         android:focusable="true"
-        app:cardElevation="?attr/cardElevation"
+        android:theme="@style/Theme.SchedulerTheme.ClassCard"
         app:cardCornerRadius="?attr/cornerRadius"
-        android:theme="@style/Theme.SchedulerTheme.ClassCard">
+        app:cardElevation="?attr/cardElevation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,26 +46,26 @@
             <LinearLayout
                 android:layout_width="88dp"
                 android:layout_height="match_parent"
-                android:theme="@style/Theme.SchedulerTheme.ClassCard.PrimaryInfo"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:theme="@style/Theme.SchedulerTheme.ClassCard.PrimaryInfo">
 
                 <TextView
                     android:id="@+id/group_text_view"
                     android:layout_width="80dp"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom|center_horizontal"
-                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom|center_horizontal"
                     android:text="@{schedule.groupName}"
+                    android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     android:textColor="?attr/colorOnPrimarySurface"
-                    app:autoSizeTextType="uniform"
                     app:autoSizeMaxTextSize="24sp"
                     app:autoSizeMinTextSize="16sp"
                     app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -72,11 +74,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="top"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="24dp"
+                    android:layout_weight="1"
+                    android:gravity="top"
                     android:text="@{schedule.instituteName}"
                     android:textAllCaps="true"
                     android:textAppearance="?attr/textAppearanceHeadline6"
@@ -96,37 +98,55 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp"
                     android:visibility="@{currentClass != null ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/now_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Now"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Now" />
 
                     <TextView
                         android:id="@+id/current_class_subject_name_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:text="@{@string/subject_now(currentClass.subject.displayName)}"
-                        android:maxLines="1"
+                        android:layout_marginTop="4dp"
                         android:ellipsize="end"
+                        android:gravity="start"
+                        android:maxLines="1"
+                        android:text="@{currentClass.subject.displayName}"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Now: subject name" />
+                        app:layout_constraintTop_toBottomOf="@id/now_text_view"
+                        tools:text="subject name" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:text="@{currentClass != null ? @string/subject_ends_at(timeFormatter.formatEndTimeForSubjectIndex(currentClass.scheduleClass.index)) : ``}"
-                        android:textAppearance="?attr/textAppearanceSubtitle2"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        app:layout_constraintBottom_toBottomOf="@id/now_text_view"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/current_class_subject_name_text_view"
                         tools:text="Ends at 14:00" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="@{currentClass != null ? View.VISIBLE : View.GONE}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -135,29 +155,39 @@
                     android:visibility="@{nextClass != null ? View.VISIBLE : View.GONE}">
 
                     <TextView
+                        android:id="@+id/next_up_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Next up"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Next up" />
+
+                    <TextView
                         android:id="@+id/next_subject_name_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
                         android:gravity="start"
                         android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="@{@string/subject_next_up(nextClass.subject.displayName)}"
+                        android:text="@{nextClass.subject.displayName}"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Next up: subject name" />
+                        app:layout_constraintTop_toBottomOf="@id/next_up_text_view"
+                        tools:text="subject name" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="@{nextClass != null ? @string/subject_starts_at(timeFormatter.formatStartTimeForSubjectIndex(nextClass.scheduleClass.index)) : ``}"
-                        android:textAppearance="?attr/textAppearanceSubtitle2"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        app:layout_constraintBottom_toBottomOf="@id/next_up_text_view"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/next_subject_name_text_view"
                         tools:text="Starts at 14:00" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
