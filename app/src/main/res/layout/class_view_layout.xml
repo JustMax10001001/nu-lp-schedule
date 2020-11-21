@@ -6,7 +6,9 @@
     android:layout_margin="@dimen/subject_view_padding">
 
     <data>
+
         <import type="com.justsoft.nulpschedule.utils.TimeFormatter" />
+
         <import type="android.view.View" />
 
         <variable
@@ -24,9 +26,9 @@
         android:checkable="false"
         android:clickable="true"
         android:focusable="true"
-        app:cardElevation="?attr/cardElevation"
+        android:theme="@style/Theme.SchedulerTheme.ClassCard"
         app:cardCornerRadius="?attr/cornerRadius"
-        android:theme="@style/Theme.SchedulerTheme.ClassCard">
+        app:cardElevation="?attr/cardElevation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,8 +38,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="88dp"
                 android:layout_height="match_parent"
-                android:theme="@style/Theme.SchedulerTheme.ClassCard.PrimaryInfo"
-                android:paddingBottom="18dp">
+                android:paddingBottom="18dp"
+                android:theme="@style/Theme.SchedulerTheme.ClassCard.PrimaryInfo">
 
                 <TextView
                     android:id="@+id/classIndexView"
@@ -89,46 +91,22 @@
                 android:orientation="vertical"
                 android:padding="14dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/current_class_subject_name_text_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/current_class_subject_name_text_view"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:text="@{classWithSubject.subject.displayName}"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:textAppearance="?attr/textAppearanceSubtitle2"
-                        app:layout_constraintEnd_toStartOf="@id/current_class_online_icon"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Subject name" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/current_class_online_icon"
-                        android:src="@drawable/ic_online_class"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="@{classWithSubject.scheduleClass.url == null ? View.GONE : View.VISIBLE}"
-                        tools:text="Online"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/online_class_url_available" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:text="@{classWithSubject.subject.displayName}"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    tools:text="Subject name" />
 
                 <TextView
                     android:id="@+id/subject_lecturer_text_view"
-                    style="@style/Widget.AppCompat.TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:text="@{classWithSubject.scheduleClass.teacherName}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     tools:text="Lecturer Name" />
@@ -147,7 +125,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:textAppearance="?attr/textAppearanceCaption"
-                    tools:text="bullet \u2022 text"/>
+                    android:id="@+id/bulleted_additional_info"
+                    tools:text="bullet \u2022 text" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

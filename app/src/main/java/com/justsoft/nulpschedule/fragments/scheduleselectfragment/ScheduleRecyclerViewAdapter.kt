@@ -31,7 +31,7 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val binding = DataBindingUtil.inflate<NextClassViewLayoutBinding>(
             LayoutInflater.from(parent.context),
-            R.layout.next_class_view_layout,
+            R.layout.schedule_preview_layout,
             parent,
             false
         )

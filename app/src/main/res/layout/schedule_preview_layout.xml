@@ -106,26 +106,14 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:text="@{@string/subject_now(currentClass.subject.displayName)}"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
-                        app:layout_constraintEnd_toStartOf="@id/current_class_online_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Now: subject name" />
-
-                    <ImageView
-                        android:id="@+id/current_class_online_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/online_class_url_available"
-                        android:src="@drawable/ic_online_class"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="@{currentClass.scheduleClass.url == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Online" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -151,27 +139,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="start"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         android:text="@{@string/subject_next_up(nextClass.subject.displayName)}"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
-                        app:layout_constraintEnd_toStartOf="@id/next_online_class_icon_image_view"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Next up: subject name" />
-
-                    <ImageView
-                        android:id="@+id/next_online_class_icon_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/online_class_url_available"
-                        android:src="@drawable/ic_online_class"
-                        android:textAppearance="?attr/textAppearanceCaption"
-                        android:visibility="@{nextClass.scheduleClass.url == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Online" />
 
                     <TextView
                         android:layout_width="wrap_content"

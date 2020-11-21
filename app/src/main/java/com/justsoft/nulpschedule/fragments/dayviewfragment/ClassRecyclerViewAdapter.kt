@@ -4,7 +4,13 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.BulletSpan
 import android.view.*
+import android.widget.TextView
+import androidx.core.text.toSpannable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +62,10 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         val binding = DataBindingUtil.getBinding<ClassViewLayoutBinding>(holder.itemView)
         binding?.classWithSubject = classList[position]
         binding?.timeFormatter = timeFormatter
+        binding?.bulletedAdditionalInfo?.text = createAdditionalInfoSpan(
+            classList[position],
+            holder.itemView.context
+        )
 
         val onlineClassUrl = classList[position].scheduleClass.url
         holder.itemView.apply {
@@ -88,6 +98,44 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                 cardView.showContextMenu()
             }
         }
+    }
+
+    private fun createAdditionalInfoSpan(
+        entity: EntityClassWithSubject,
+        context: Context
+    ): String {
+        val builder = StringBuilder()
+        val bulletChar = '•'
+        var shouldAppendBullet = false
+
+        if (!entity.scheduleClass.isWeekAgnostic) {
+            builder.append(
+                context.getString(
+                    if (entity.scheduleClass.isNumerator) R.string.numerator
+                    else R.string.denominator
+                )
+            )
+            shouldAppendBullet = true
+        }
+        if (!entity.scheduleClass.isSubgroupAgnostic) {
+            val str = context.getString(
+                if (entity.scheduleClass.isForFirstSubgroup) R.string.subgroup_1
+                else R.string.subgroup_2
+            )
+            if (shouldAppendBullet)
+                builder.append(" $bulletChar ")
+            builder.append(str)
+            shouldAppendBullet = true
+        }
+
+        if (entity.scheduleClass.isOnline) {
+            val str = context.getString(R.string.online)
+            if (shouldAppendBullet)
+                builder.append(" $bulletChar ")
+            builder.append(str)
+            shouldAppendBullet = true
+        }
+        return builder.toString()
     }
 
     private fun buildAndShowSubjectNameEditDialog(context: Context, subjectToEdit: Subject) {

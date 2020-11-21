@@ -68,4 +68,7 @@
     <string name="subgroup_one" translatable="false">1</string>
     <string name="subgroup_two" translatable="false">2</string>
     <string name="switch_subgroup">Switch subgroup</string>
+    <string name="denominator">Denominator</string>
+    <string name="numerator">Numerator</string>
+    <string name="online">Online</string>
 </resources>
