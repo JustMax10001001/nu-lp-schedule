@@ -12,6 +12,10 @@
         <import type="com.justsoft.nulpschedule.db.model.EntityClassWithSubject" />
 
         <variable
+            name="showCurrentClass"
+            type="Boolean" />
+
+        <variable
             name="timeFormatter"
             type="com.justsoft.nulpschedule.utils.TimeFormatter" />
 
@@ -100,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:orientation="horizontal"
-                    android:visibility="@{currentClass != null ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{showCurrentClass ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:id="@+id/now_text_view"
@@ -131,7 +135,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{currentClass != null ? @string/subject_ends_at(timeFormatter.formatEndTimeForSubjectIndex(currentClass.scheduleClass.index)) : ``}"
+                        android:text="@{showCurrentClass ? @string/subject_ends_at(timeFormatter.formatEndTimeForSubjectIndex(currentClass.scheduleClass.index)) : ``}"
                         android:textAppearance="?attr/textAppearanceCaption"
                         app:layout_constraintBottom_toBottomOf="@id/now_text_view"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +150,7 @@
                     android:layout_height="1dp"
                     android:layout_marginBottom="6dp"
                     android:background="?android:attr/listDivider"
-                    android:visibility="@{currentClass != null ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{showCurrentClass ? View.VISIBLE : View.GONE}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

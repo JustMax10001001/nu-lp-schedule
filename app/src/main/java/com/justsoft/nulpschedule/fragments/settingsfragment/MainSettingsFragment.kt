@@ -20,10 +20,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
-        val versionPreference = findPreference<Preference>(getString(R.string.action_app_version))
+        val versionPreference = findPreference<Preference>(getString(R.string.key_app_version))
         versionPreference?.summary = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
-        val telegramPreference = findPreference<Preference>(getString(R.string.action_open_telegram_channel))
+        val telegramPreference = findPreference<Preference>(getString(R.string.key_open_telegram_channel))
         telegramPreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val link = getString(R.string.app_telegram_link)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))

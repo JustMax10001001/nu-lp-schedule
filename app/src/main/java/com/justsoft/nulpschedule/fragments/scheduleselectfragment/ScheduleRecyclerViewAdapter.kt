@@ -18,6 +18,7 @@ import kotlin.properties.Delegates
 class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     RecyclerView.Adapter<ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
 
+    var showCurrentClass: Boolean = true
     var scheduleList: List<ScheduleTuple> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
         notifyChanges(oldValue, newValue)
     }
@@ -44,6 +45,7 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         binding.timeFormatter = timeFormatter
         binding.schedule = scheduleList[position].schedule
         binding.currentClass = scheduleList[position].currentClass
+        binding.showCurrentClass = showCurrentClass && binding.currentClass != null
         binding.nextClass = scheduleList[position].nextClass
         holder.itemView.apply {
             setOnClickListener {

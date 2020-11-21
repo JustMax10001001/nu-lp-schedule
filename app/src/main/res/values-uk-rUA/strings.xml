@@ -34,7 +34,7 @@
     <string name="this_schedule_was_already_added">Цей розклад уже додано</string>
     <string name="sync_header">Синхронізація</string>
     <string name="sync_title">Періодично оновлювати розклади</string>
-    <string name="action_open_telegram_channel">Відкрити Телеграм канал</string>
+    <string name="key_open_telegram_channel">Відкрити Телеграм канал</string>
     <string name="app_version">Версія програми</string>
     <string name="app_telegram_channel">Телеграм канал програми</string>
     <string name="intent_title_open_telegram_channel">Відкрити Телеграм канал</string>
@@ -57,4 +57,7 @@
     <string name="online">Онлайн</string>
     <string name="now">Зараз</string>
     <string name="next_up">Далі</string>
+    <string name="show_current_class">Показувати пару зараз</string>
+    <string name="in_schedule_preview">В огляді розкладу</string>
+    <string name="appearance">Вигляд</string>
 </resources>

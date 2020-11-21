@@ -1,5 +1,6 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import androidx.core.os.postDelayed
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +43,8 @@ class ScheduleSelectFragment : Fragment() {
     @Inject
     lateinit var timeFormatter: TimeFormatter
 
+    private lateinit var mSharedPreferences: SharedPreferences
+
     private lateinit var mScheduleRecyclerView: RecyclerView
     private lateinit var mScheduleRecyclerViewAdapter: ScheduleRecyclerViewAdapter
     private lateinit var mSwipeAndDragHelper: ItemTouchHelper
@@ -63,6 +67,8 @@ class ScheduleSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
         initializeRecyclerView(view)
         setUpObservers()
 
@@ -83,11 +89,19 @@ class ScheduleSelectFragment : Fragment() {
         viewModel.scheduleListLiveData.observe(this.viewLifecycleOwner) {
             such_empty_schedules_text.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
+        mSharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            when (key) {
+                getString(R.string.key_show_current_class) -> {
+                    mScheduleRecyclerViewAdapter.showCurrentClass = mSharedPreferences.getBoolean(key, true)
+                }
+            }
+        }
     }
 
     private fun initializeRecyclerView(view: View) {
-        mScheduleRecyclerViewAdapter = ScheduleRecyclerViewAdapter(timeFormatter)
         mScheduleRecyclerView = view.findViewById(R.id.schedule_select_recycler_view)
+        mScheduleRecyclerViewAdapter = ScheduleRecyclerViewAdapter(timeFormatter)
+        mScheduleRecyclerViewAdapter.showCurrentClass = mSharedPreferences.getBoolean(getString(R.string.key_show_current_class), true)
 
         mScheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         mScheduleRecyclerView.adapter = mScheduleRecyclerViewAdapter

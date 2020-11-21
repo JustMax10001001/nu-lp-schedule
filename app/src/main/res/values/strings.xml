@@ -56,8 +56,8 @@
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync schedules periodically</string>
-    <string name="action_open_telegram_channel">open_telegram_channel</string>
-    <string name="action_app_version" translatable="false">app_version</string>
+    <string name="key_open_telegram_channel">open_telegram_channel</string>
+    <string name="key_app_version" translatable="false">app_version</string>
     <string name="app_version">App version</string>
     <string name="app_telegram_channel">App telegram channel</string>
     <string name="app_telegram_link" translatable="false">https://t.me/joinchat/AAAAAEkXWzBj4EFrx0–1ag</string>
@@ -73,4 +73,9 @@
     <string name="online">Online</string>
     <string name="now">Now</string>
     <string name="next_up">Next up</string>
+    <string name="key_refresh_schedules" translatable="false">refresh_schedules</string>
+    <string name="show_current_class">Show current class</string>
+    <string name="key_show_current_class" translatable="false">show_current_class</string>
+    <string name="in_schedule_preview">In schedule preview</string>
+    <string name="appearance">Appearance</string>
 </resources>
