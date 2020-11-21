@@ -6,9 +6,7 @@
     android:layout_margin="12dp">
 
     <data>
-
         <import type="android.view.View" />
-
         <import type="com.justsoft.nulpschedule.db.model.EntityClassWithSubject" />
 
         <variable
