@@ -150,8 +150,6 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                 else
                     onSubjectNameChange(subjectToEdit, null)
             }
-            .selectTextOnShow(true)
-            .requestEditTextFocusOnShow(true)
             .setTitle(R.string.enter_custom_subject_name)
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .create()
