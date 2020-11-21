@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subject_view_card"
-    android:layout_margin="@dimen/subject_view_padding">
+    android:layout_marginVertical="@dimen/recycler_vertical_margin">
 
     <data>
 

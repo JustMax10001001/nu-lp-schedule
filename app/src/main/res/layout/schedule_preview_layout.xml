@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/schedule_view_card"
-    android:layout_margin="12dp">
+    android:layout_marginVertical="@dimen/recycler_vertical_margin">
 
     <data>
         <import type="android.view.View" />
