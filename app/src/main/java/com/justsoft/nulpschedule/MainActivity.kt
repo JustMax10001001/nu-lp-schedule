@@ -1,11 +1,14 @@
 package com.justsoft.nulpschedule
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.content.ContentResolver
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -13,14 +16,42 @@ import androidx.navigation.ui.NavigationUI
 import com.justsoft.nulpschedule.ui.FixedToolbar
 import dagger.hilt.android.AndroidEntryPoint
 
+const val AUTHORITY_RELEASE = "com.justsoft.nulpschedule.service.sync.StubContentProvider"
+const val AUTHORITY_DEBUG = "com.justsoft.nulpschedule.beta.service.sync.StubContentProvider"
+
+// An account type, in the form of a domain name
+const val ACCOUNT_TYPE = "example.com"
+
+// The account name
+const val ACCOUNT = "placeholderaccount"
+
+const val SECONDS_PER_MINUTE = 60L
+const val SYNC_INTERVAL_IN_MINUTES = 180L
+const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var mAccount: Account
+    private lateinit var mResolver: ContentResolver
+
+    private val mAuthority = if (BuildConfig.DEBUG) AUTHORITY_DEBUG else AUTHORITY_RELEASE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<FixedToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        mResolver = contentResolver
+        mAccount = createSyncAccount()
+
+        ContentResolver.addPeriodicSync(
+            mAccount,
+            mAuthority,
+            Bundle.EMPTY,
+            if (BuildConfig.DEBUG) SYNC_INTERVAL / 10 else SYNC_INTERVAL
+        )
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
@@ -41,7 +72,31 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_FirstFragment_to_mainSettingsFragment)
                 true
             }
+            R.id.action_force_sync -> {
+                ContentResolver.requestSync(mAccount, mAuthority, Bundle.EMPTY)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    /**
+     * Create a new placeholder account for the sync adapter
+     */
+    private fun createSyncAccount(): Account {
+        val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+        return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
+            /*
+             * Add the account and account type, no password or user data
+             * If successful, return the Account object, otherwise report an error.
+             */
+            if (!accountManager.addAccountExplicitly(newAccount, null, null)) {
+                Log.w("MainActivity", "Could not add account, maybe it already exists")
+            } else {
+                ContentResolver.setIsSyncable(newAccount, mAuthority, 1);
+                ContentResolver.setSyncAutomatically(newAccount, mAuthority, true);
+                ContentResolver.requestSync(newAccount, mAuthority, Bundle.EMPTY);
+            }
         }
     }
 

@@ -85,15 +85,7 @@ class ScheduleRepository @Inject constructor(
 
     private suspend fun refreshSchedule(instituteName: String, groupName: String) {
         withContext(Dispatchers.IO) {
-            val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
-            val (schedule, subjects, classes) = boxedResult.getOrThrow()
-            scheduleDao.updatePartial(schedule.toUpdateEntity())
-
-            subjectDao.deleteAllNotFromList(schedule.id, subjects.map { it.id })
-            subjectDao.updateSubjects(subjects.map { it.toUpdateEntity() })
-
-            classDao.deleteAllNotFromList(schedule.id, classes.map { it.id })
-            classDao.updateClasses(classes.map { it.toEntity() })
+            refreshScheduleSync(instituteName, groupName)
         }
     }
 
@@ -112,15 +104,31 @@ class ScheduleRepository @Inject constructor(
         return stateFlow.asStateFlow()
     }
 
+    fun refreshAllSchedulesSync() {
+        val schedules = scheduleDao.loadAllSync()
+        for ((_, instituteName, groupName) in schedules) {
+            refreshScheduleSync(instituteName, groupName)
+        }
+    }
+
+    private fun refreshScheduleSync(instituteName: String, groupName: String) {
+        val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
+        val (schedule, subjects, classes) = boxedResult.getOrThrow()
+        scheduleDao.updatePartial(schedule.toUpdateEntity())
+
+        subjectDao.deleteAllNotFromList(schedule.id, subjects.map { it.id })
+        subjectDao.updateSubjects(subjects.map { it.toUpdateEntity() })
+
+        classDao.deleteAllNotFromList(schedule.id, classes.map { it.id })
+        classDao.updateClasses(classes.map { it.toEntity() })
+    }
+
     suspend fun refreshAllSchedules(): StateFlow<RefreshState> = withContext(Dispatchers.IO) {
         val stateFlow = MutableStateFlow(RefreshState.PREPARING)
         @Suppress("DeferredResultUnused")
         async {
             try {
-                val schedules = scheduleDao.loadAllSync()
-                for ((_, instituteName, groupName) in schedules) {
-                    refreshSchedule(instituteName, groupName)
-                }
+                refreshAllSchedulesSync()
                 Log.d("ScheduleRepository", "Successfully refreshed schedules")
                 stateFlow.emit(RefreshState.REFRESH_SUCCESS)
             } catch (e: Exception) {

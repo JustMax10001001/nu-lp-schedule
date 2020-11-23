@@ -8,6 +8,7 @@
     <string name="previous">Previous</string>
     <string name="add">ADD</string>
     <string name="undo">Undo</string>
+    <string name="provider_authority" translatable="false">com.justsoft.nulpschedule.service.sync.StubContentProvider</string>
 
     <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
     <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>

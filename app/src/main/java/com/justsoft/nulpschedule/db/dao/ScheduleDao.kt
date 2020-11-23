@@ -34,7 +34,7 @@ interface ScheduleDao {
     fun loadAllSync(): List<Schedule>
 
     @Update(entity = EntitySchedule::class)
-    suspend fun updatePartial(schedule: UpdateEntitySchedule)
+    fun updatePartial(schedule: UpdateEntitySchedule)
 
     @Update(entity = EntitySchedule::class)
     suspend fun updateSchedulePositions(schedulePositions: List<UpdateEntitySchedulePosition>)

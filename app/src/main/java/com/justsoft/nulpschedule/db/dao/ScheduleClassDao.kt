@@ -35,8 +35,8 @@ interface ScheduleClassDao {
     ): List<EntityClassWithSubject>
 
     @Query("DELETE FROM ScheduleClass WHERE scheduleId = :scheduleId AND id NOT IN (:idList)")
-    suspend fun deleteAllNotFromList(scheduleId: Long, idList: List<Long>)
+    fun deleteAllNotFromList(scheduleId: Long, idList: List<Long>)
 
     @Update
-    suspend fun updateClasses(classes: List<EntityScheduleClass>)
+    fun updateClasses(classes: List<EntityScheduleClass>)
 }
