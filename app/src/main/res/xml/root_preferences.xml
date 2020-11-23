@@ -15,7 +15,8 @@
         <SwitchPreferenceCompat
             app:icon="@drawable/ic_baseline_autorenew_24"
             app:key="@string/key_refresh_schedules"
-            app:title="@string/sync_title" />
+            app:title="@string/sync_title"
+            app:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="About">

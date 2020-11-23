@@ -4,6 +4,7 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -13,8 +14,10 @@ import androidx.navigation.ActivityNavigator
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.preference.PreferenceManager
 import com.justsoft.nulpschedule.ui.FixedToolbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.prefs.PreferenceChangeListener
 
 const val AUTHORITY_RELEASE = "com.justsoft.nulpschedule.service.sync.StubContentProvider"
 const val AUTHORITY_DEBUG = "com.justsoft.nulpschedule.beta.service.sync.StubContentProvider"
@@ -35,11 +38,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAccount: Account
     private lateinit var mResolver: ContentResolver
 
+    private lateinit var mSharedPreferences: SharedPreferences
+
     private val mAuthority = if (BuildConfig.DEBUG) AUTHORITY_DEBUG else AUTHORITY_RELEASE
+    private lateinit var mPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         val toolbar = findViewById<FixedToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -50,11 +59,25 @@ class MainActivity : AppCompatActivity() {
             mAccount,
             mAuthority,
             Bundle.EMPTY,
-            if (BuildConfig.DEBUG) SYNC_INTERVAL / 10 else SYNC_INTERVAL
+            if (BuildConfig.DEBUG) SYNC_INTERVAL / 9 else SYNC_INTERVAL
         )
+
+        mPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener(this::preferenceChangeListener)
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener)
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
+    }
+
+    private fun preferenceChangeListener(sharedPreferences: SharedPreferences, key: String) {
+        if (key == getString(R.string.key_refresh_schedules)) {
+            Log.d("MainActivity", "Preference change listener for sync")
+            ContentResolver.setSyncAutomatically(
+                mAccount,
+                mAuthority,
+                sharedPreferences.getBoolean(key, true)
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -86,16 +109,10 @@ class MainActivity : AppCompatActivity() {
     private fun createSyncAccount(): Account {
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
-            /*
-             * Add the account and account type, no password or user data
-             * If successful, return the Account object, otherwise report an error.
-             */
             if (!accountManager.addAccountExplicitly(newAccount, null, null)) {
                 Log.w("MainActivity", "Could not add account, maybe it already exists")
             } else {
-                ContentResolver.setIsSyncable(newAccount, mAuthority, 1);
-                ContentResolver.setSyncAutomatically(newAccount, mAuthority, true);
-                ContentResolver.requestSync(newAccount, mAuthority, Bundle.EMPTY);
+                ContentResolver.setSyncAutomatically(newAccount, mAuthority, true)
             }
         }
     }
