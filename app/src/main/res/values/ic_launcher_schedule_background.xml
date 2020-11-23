@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_schedule_background">#6022DC</color>
+    <color name="ic_launcher_schedule_background">@color/purple_500</color>
 </resources>
