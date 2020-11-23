@@ -95,10 +95,6 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_FirstFragment_to_mainSettingsFragment)
                 true
             }
-            R.id.action_force_sync -> {
-                ContentResolver.requestSync(mAccount, mAuthority, Bundle.EMPTY)
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -40,7 +40,7 @@ class ScheduleSyncAdapter constructor(
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle("DEBUG: background sync occurred")
                 .setContentText("Success")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_launcher_schedule_foreground)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 builder.setChannelId("sync")
                 val channel =
