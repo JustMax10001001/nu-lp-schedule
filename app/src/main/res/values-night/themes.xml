@@ -23,6 +23,5 @@
 
     <style name="Theme.SchedulerTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColor">?attr/colorOnPrimarySurface</item>
-        <item name="actionMenuTextAppearance">?attr/textAppearanceHeadline5</item>
     </style>
 </resources>

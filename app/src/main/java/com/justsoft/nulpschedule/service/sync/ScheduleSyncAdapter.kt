@@ -37,7 +37,6 @@ class ScheduleSyncAdapter constructor(
         Log.d("SyncAdapter", "Sync successful")
         if (BuildConfig.DEBUG) {
             val builder = Notification.Builder(context)
-                .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle("DEBUG: background sync occurred")
                 .setContentText("Success")
                 .setSmallIcon(R.drawable.ic_launcher_schedule_foreground)
