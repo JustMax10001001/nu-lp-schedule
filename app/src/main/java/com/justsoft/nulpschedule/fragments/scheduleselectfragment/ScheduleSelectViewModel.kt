@@ -94,7 +94,7 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
                 )
             }
             if (classToReturn != null) {
-                Log.d("SSVM", "Selected next class $classToReturn for schedule $schedule")
+                //Log.d("SSVM", "Selected next class $classToReturn for schedule $schedule")
                 return classToReturn
             }
 
