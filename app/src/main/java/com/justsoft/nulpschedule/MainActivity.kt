@@ -37,10 +37,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mAccount: Account
     private lateinit var mResolver: ContentResolver
+    private val mAuthority = if (BuildConfig.DEBUG) AUTHORITY_DEBUG else AUTHORITY_RELEASE
 
     private lateinit var mSharedPreferences: SharedPreferences
-
-    private val mAuthority = if (BuildConfig.DEBUG) AUTHORITY_DEBUG else AUTHORITY_RELEASE
     private lateinit var mPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
