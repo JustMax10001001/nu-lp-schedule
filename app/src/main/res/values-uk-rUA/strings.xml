@@ -60,4 +60,12 @@
     <string name="show_current_class">Показувати пару зараз</string>
     <string name="in_schedule_preview">В огляді розкладу</string>
     <string name="appearance">Вигляд</string>
+    <string name="schedule_switch_day">День перемикання розкладу</string>
+    <string name="schedule_switch_day_summary">%s - день, починаючи з якого показувати розклад наступного тижня</string>
+
+    <string-array name="switch_to_next_week_days_entries">
+        <item>Субота</item>
+        <item>Неділя</item>
+        <item>Наступний понеділок</item>
+    </string-array>
 </resources>
