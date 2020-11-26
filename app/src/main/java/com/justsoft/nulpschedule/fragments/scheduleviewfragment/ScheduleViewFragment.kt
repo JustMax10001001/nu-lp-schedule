@@ -35,11 +35,12 @@ class ScheduleViewFragment : Fragment() {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         // Set fragment adapter to viewPager
+        val switchDay = mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")
+            ?.toInt() ?: 0
         val dayFragmentAdapter = DayFragmentAdapter(
             this,
             viewModel.scheduleId.value!!,
-            mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")?.toInt()
-                ?: 0
+            switchDay
         )
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
