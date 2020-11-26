@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NU LP Schedule</string>
+    <string name="app_name">Расписание НУ ЛП</string>
     <string name="action_settings">Настройки</string>
-    <string name="next">Следуйщий</string>
+    <string name="next">Следующий</string>
     <string name="previous">Предыдущий</string>
     <string name="add">Добавить</string>
     <string name="undo">Отменить</string>
     <string name="online_class_url">Ссылка на онлайн пару</string>
-    <string name="url_copied">Ссылка скопирована в буффер обмена</string>
+    <string name="url_copied">Ссылка скопирована в буфер обмена</string>
     <string name="online_class_url_available">Доступна ссылка на онлайн пару</string>
     <string name="open_lesson_in_app">Открыть онлайн пару в</string>
     <string name="action_switch_to_next_group">Подгруппа %d</string>
     <string name="copy_online_class_url">Скопировать ссылку на онлайн пару</string>
     <string name="change_custom_subject_name">Сменить имя предмета</string>
-    <string name="enter_custom_subject_name">Введить имя предмета</string>
+    <string name="enter_custom_subject_name">Введите имя предмета</string>
     <string name="custom_subject_name">Имя предмета</string>
     <string name="subject_now">Сейчас: %s</string>
     <string name="subject_next_up">Далее: %s</string>
@@ -48,9 +48,9 @@
     <string name="now">Сейчас</string>
     <string name="next_up">Далее</string>
     <string name="show_current_class">Показывать пару сейчас</string>
-    <string name="in_schedule_preview">В предпосмотре расписаний</string>
+    <string name="in_schedule_preview">В предпросмотре расписаний</string>
     <string name="appearance">Вид</string>
-    <string name="schedule_switch_day">День переключания расписания</string>
+    <string name="schedule_switch_day">День переключения расписания</string>
     <string name="schedule_switch_day_summary">%s - день, начиная с которого показывать расписание следующей недели</string>
 
     <string-array name="days_of_week_short">
