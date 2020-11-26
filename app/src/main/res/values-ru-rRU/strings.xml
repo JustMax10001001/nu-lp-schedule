@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NU LP Schedule</string>
+    <string name="action_settings">Настройки</string>
+    <string name="next">Следуйщий</string>
+    <string name="previous">Предыдущий</string>
+    <string name="add">Добавить</string>
+    <string name="undo">Отменить</string>
+    <string name="online_class_url">Ссылка на онлайн пару</string>
+    <string name="url_copied">Ссылка скопирована в буффер обмена</string>
+    <string name="online_class_url_available">Доступна ссылка на онлайн пару</string>
+    <string name="open_lesson_in_app">Открыть онлайн пару в</string>
+    <string name="action_switch_to_next_group">Подгруппа %d</string>
+    <string name="copy_online_class_url">Скопировать ссылку на онлайн пару</string>
+    <string name="change_custom_subject_name">Сменить имя предмета</string>
+    <string name="enter_custom_subject_name">Введить имя предмета</string>
+    <string name="custom_subject_name">Имя предмета</string>
+    <string name="subject_now">Сейчас: %s</string>
+    <string name="subject_next_up">Далее: %s</string>
+    <string name="subject_ends_at">Конец: %s</string>
+    <string name="subject_starts_at">Начало: %s</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="add_new_schedule">Добавить расписание</string>
+    <string name="institute_group">Институт и группа</string>
+    <string name="subgroup_1">Первая подгруппа</string>
+    <string name="subgroup_2">Вторая подгруппа</string>
+    <string name="retry">Повторить</string>
+    <string name="error_loading_schedules">Ошибка при загрузке расписаний</string>
+    <string name="error_downloading_schedule">Ошибка при загрузке расписания</string>
+    <string name="wow_such_empty">Ого, так пусто</string>
+    <string name="schedule_is_removed">Расписание удалено</string>
+    <string name="switch_to_numerator">Показать числитель</string>
+    <string name="switch_to_denominator">Показать знаменатель</string>
+    <string name="this_schedule_was_already_added">Это расписание уже додано</string>
+    <string name="sync_header">Синхронизация</string>
+    <string name="sync_title">Периодически обновлять расписания</string>
+    <string name="key_open_telegram_channel">Открыть Телеграм канал</string>
+    <string name="app_version">Версия приложения</string>
+    <string name="app_telegram_channel">Телеграм канал приложения</string>
+    <string name="intent_title_open_telegram_channel">Открыть Телеграм канал</string>
+    <string name="schedule_fragment_title">Просмотр расписания</string>
+    <string name="add_a_schedule">Добавить расписание</string>
+    <string name="settings">Настройки</string>
+    <string name="switch_subgroup">Переключить подгруппу</string>
+    <string name="denominator">Знаменатель</string>
+    <string name="numerator">Числитель</string>
+    <string name="online">Онлайн</string>
+    <string name="now">Сейчас</string>
+    <string name="next_up">Далее</string>
+    <string name="show_current_class">Показывать пару сейчас</string>
+    <string name="in_schedule_preview">В предпосмотре расписаний</string>
+    <string name="appearance">Вид</string>
+    <string name="schedule_switch_day">День переключания расписания</string>
+    <string name="schedule_switch_day_summary">%s - день, начиная с которого показывать расписание следующей недели</string>
+
+    <string-array name="days_of_week_short">
+        <item>Пн</item>
+        <item>Вт</item>
+        <item>Ср</item>
+        <item>Чт</item>
+        <item>Пт</item>
+        <item>Сб</item>
+        <item>Вс</item>
+    </string-array>
+
+    <string-array name="switch_to_next_week_days_entries">
+        <item>Суббота</item>
+        <item>Воскресение</item>
+        <item>Следующий понедельник</item>
+    </string-array>
+</resources>
