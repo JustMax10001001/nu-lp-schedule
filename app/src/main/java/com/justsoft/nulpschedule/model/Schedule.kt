@@ -17,13 +17,15 @@ data class Schedule(
     val position: Int? = null
 ) {
 
-
-    fun isNumeratorOnDate(dateNow: LocalDateTime): Boolean {
+    fun isNumeratorOnDate(dateNow: LocalDateTime, dayToSwitchToNextWeekOn: Int = 5): Boolean {
         // the site updates numerator\denominator on Monday on 00:00
         // we want to show user the next weeks schedule as early as on Saturday
 
         // if we request update on Saturday or Sunday, perform this request on next virtual Monday
-        val correctedDateNow = if (dateNow.dayOfWeek.ordinal >= 5)    // today is either Sat or Sun
+        // first we check if dayToSwitchToNextWeekOn is set to Sat or Sun
+        // then we check current day against the variable
+        val correctedDateNow =
+            if (dayToSwitchToNextWeekOn >= 5 && dateNow.dayOfWeek.ordinal >= dayToSwitchToNextWeekOn)
                 dateNow.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
             else
                 dateNow

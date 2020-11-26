@@ -79,4 +79,17 @@
     <string name="key_show_current_class" translatable="false">show_current_class</string>
     <string name="in_schedule_preview">In schedule preview</string>
     <string name="appearance">Appearance</string>
+
+    <string name="monday">Monday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="schedule_switch_day">Schedule switch day</string>
+    <string name="key_schedule_switch_day">switch_schedule_on</string>
+    <string name="schedule_switch_day_summary">Showing next week\'s schedule starting on %s</string>
+
+    <string-array name="switch_to_next_week_days_entries">
+        <item>Saturday</item>
+        <item>Sunday</item>
+        <item>Monday</item>
+    </string-array>
 </resources>

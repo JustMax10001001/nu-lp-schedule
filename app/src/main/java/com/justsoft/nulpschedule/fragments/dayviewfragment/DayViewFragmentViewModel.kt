@@ -22,6 +22,9 @@ class DayViewFragmentViewModel @ViewModelInject constructor(
     val scheduleId: Long
         get() = savedStateHandle.get("schedule_id")!!
 
+    private val dayToSwitchToNextWeekOn: Int
+        get() = savedStateHandle.get("day_to_switch_to_next_week_on")!!
+
     val scheduleLiveData: LiveData<Schedule> = scheduleRepository.getSchedule(scheduleId)
     val schedule by delegateLiveData(scheduleLiveData)
 
@@ -29,7 +32,7 @@ class DayViewFragmentViewModel @ViewModelInject constructor(
         value = true
         addSource(scheduleLiveData) { schedule ->
             schedule ?: return@addSource
-            value = schedule.isNumeratorOnDate(LocalDateTime.now())
+            value = schedule.isNumeratorOnDate(LocalDateTime.now(), dayToSwitchToNextWeekOn)
         }
     }
 

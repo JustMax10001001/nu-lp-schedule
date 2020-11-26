@@ -1,14 +1,13 @@
 package com.justsoft.nulpschedule.fragments.settingsfragment
 
-import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import com.justsoft.nulpschedule.*
 
 class MainSettingsFragment : PreferenceFragmentCompat() {
@@ -35,17 +34,11 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             return@OnPreferenceClickListener true
         }
 
-        /*val syncPreference =
-            findPreference<SwitchPreferenceCompat>(getString(R.string.key_refresh_schedules))
-        syncPreference?.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { pref, value ->
-                ContentResolver.setSyncAutomatically(
-                    ACCOUNT,
-                    if (BuildConfig.DEBUG) AUTHORITY_DEBUG else AUTHORITY_RELEASE,
-                    value
-                )
-                return@OnPreferenceChangeListener true
-            }*/
+        val switchToNextDayPreference = findPreference<ListPreference>(getString(R.string.key_schedule_switch_day))
+        switchToNextDayPreference?.setSummaryProvider { preference ->
+            preference as ListPreference
+            getString(R.string.schedule_switch_day_summary, preference.entry)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
