@@ -17,16 +17,15 @@ import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import com.justsoft.nulpschedule.ui.FixedToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.prefs.PreferenceChangeListener
 
 const val AUTHORITY_RELEASE = "com.justsoft.nulpschedule.service.sync.StubContentProvider"
 const val AUTHORITY_DEBUG = "com.justsoft.nulpschedule.beta.service.sync.StubContentProvider"
 
 // An account type, in the form of a domain name
-const val ACCOUNT_TYPE = "example.com"
+const val ACCOUNT_TYPE = "nulpschedule.justsoft.com"
 
 // The account name
-const val ACCOUNT = "placeholderaccount"
+const val ACCOUNT = "ScheduleSyncAccount"
 
 const val SECONDS_PER_MINUTE = 60L
 const val SYNC_INTERVAL_IN_MINUTES = 180L
