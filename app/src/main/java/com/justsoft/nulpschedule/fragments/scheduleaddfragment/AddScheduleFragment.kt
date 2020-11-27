@@ -112,7 +112,7 @@ class AddScheduleFragment : Fragment() {
                     val errorSnackbar = Snackbar.make(
                         binding.search,
                         getString(R.string.error_loading_schedules),
-                        Snackbar.LENGTH_INDEFINITE
+                        Snackbar.LENGTH_LONG
                     )
                     errorSnackbar.setAction(getString(R.string.retry)) {
                         errorSnackbar.dismiss()
