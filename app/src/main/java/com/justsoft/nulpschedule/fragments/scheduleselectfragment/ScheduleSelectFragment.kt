@@ -19,6 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentScheduleSelectBinding
 import com.justsoft.nulpschedule.repo.RefreshState
@@ -171,6 +174,7 @@ class ScheduleSelectFragment : Fragment() {
                             mScheduleRecyclerViewAdapter.scheduleList = it
                         }
                     }.show()
+                Firebase.analytics.logEvent("remove_schedule") {  }
             }
 
             this.move { _, _ ->

@@ -8,6 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentDayViewBinding
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
@@ -57,6 +60,7 @@ class DayViewFragment : Fragment() {
         mClassAdapter = ClassRecyclerViewAdapter(timeFormatter)
         binding.daySubjectsRecyclerView.adapter = mClassAdapter
         mClassAdapter.subjectNameChange { subject, newName ->
+            Firebase.analytics.logEvent("subject_name_change") { }
             viewModel.updateSubjectName(subject.id, newName)
         }
 

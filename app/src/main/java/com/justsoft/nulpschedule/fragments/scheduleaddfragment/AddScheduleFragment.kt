@@ -10,6 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentAddScheduleBinding
 import com.justsoft.nulpschedule.utils.StatefulData.*
@@ -153,6 +157,13 @@ class AddScheduleFragment : Fragment() {
                 val result = deferredResult.getCompleted()
                 val arguments = Bundle()
                 arguments.putLong("schedule_id", result.getOrThrow())
+
+                // log successful download
+                Firebase.analytics.logEvent("add_schedule") {
+                    param("schedule_institute", viewModel.selectedInstituteAndGroupLiveData.value?.institute.toString())
+                    param("schedule_group", viewModel.selectedInstituteAndGroupLiveData.value?.group.toString())
+                }
+
                 findNavController()
                     .navigate(
                         R.id.action_addScheduleFragment_to_scheduleViewFragment,
