@@ -11,12 +11,15 @@ import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.justsoft.nulpschedule.R
+import com.justsoft.nulpschedule.databinding.FragmentScheduleViewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_schedule_view.*
 import java.time.LocalDate
 
 @AndroidEntryPoint
 class ScheduleViewFragment : Fragment() {
+
+    private var _binding: FragmentScheduleViewBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: ScheduleViewFragmentViewModel by viewModels()
     private lateinit var mTabLayoutMediator: TabLayoutMediator
@@ -26,17 +29,23 @@ class ScheduleViewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedule_view, container, false)
+    ): View {
+        _binding = FragmentScheduleViewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         // Set fragment adapter to viewPager
-        val switchDay = mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")
-            ?.toInt() ?: 0
+        val switchDay =
+            mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")
+                ?.toInt() ?: 0
         val dayFragmentAdapter = DayFragmentAdapter(
             this,
             viewModel.scheduleId.value!!,
@@ -49,9 +58,9 @@ class ScheduleViewFragment : Fragment() {
         // Initialize day tabs
         val shortDayNames = resources.getStringArray(R.array.days_of_week_short)
         mTabLayoutMediator =
-            TabLayoutMediator(day_tab_layout, subject_by_day_of_week_view_pager) { tab, position ->
-                tab.text = shortDayNames[position]
-            }
+        TabLayoutMediator(binding.dayTabLayout, binding.subjectByDayOfWeekViewPager) { tab, position ->
+            tab.text = shortDayNames[position]
+        }
         mTabLayoutMediator.attach()
         dayViewPager.post {
             val todayDayOfWeek = LocalDate.now().dayOfWeek.ordinal

@@ -7,18 +7,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.justsoft.nulpschedule.R
+import com.justsoft.nulpschedule.databinding.FragmentDayViewBinding
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.setTooltipTextCompat
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_day_view.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DayViewFragment : Fragment() {
+
+    private var _binding: FragmentDayViewBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: DayViewFragmentViewModel by viewModels()
     private val sharedViewModel: SharedDayViewFragmentViewModel by viewModels({ requireParentFragment() })
@@ -38,17 +40,22 @@ class DayViewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_day_view, container, false)
+        _binding = FragmentDayViewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val subjectRecyclerView = view.findViewById<RecyclerView>(R.id.day_subjects_recycler_view)
-        subjectRecyclerView.layoutManager = LinearLayoutManager(this.context)
+        binding.daySubjectsRecyclerView.layoutManager = LinearLayoutManager(this.context)
         mClassAdapter = ClassRecyclerViewAdapter(timeFormatter)
-        subjectRecyclerView.adapter = mClassAdapter
+        binding.daySubjectsRecyclerView.adapter = mClassAdapter
         mClassAdapter.subjectNameChange { subject, newName ->
             viewModel.updateSubjectName(subject.id, newName)
         }
@@ -141,7 +148,7 @@ class DayViewFragment : Fragment() {
                 )
             }
         }
-        such_empty_classes_text.visibility =
+        binding.suchEmptyClassesText.visibility =
             if (mClassAdapter.classList.isEmpty()) View.VISIBLE else View.GONE
     }
 }

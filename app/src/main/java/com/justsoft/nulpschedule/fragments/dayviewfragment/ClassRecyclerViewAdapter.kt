@@ -133,7 +133,7 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
             if (shouldAppendBullet)
                 builder.append(" $bulletChar ")
             builder.append(str)
-            shouldAppendBullet = true
+            //shouldAppendBullet = true
         }
         return builder.toString()
     }

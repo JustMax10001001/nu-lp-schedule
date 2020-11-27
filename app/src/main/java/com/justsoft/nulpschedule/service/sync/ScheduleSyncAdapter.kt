@@ -36,7 +36,7 @@ class ScheduleSyncAdapter constructor(
         mScheduleRepository.refreshAllSchedulesSync()
         Log.d("SyncAdapter", "Sync successful")
         if (BuildConfig.DEBUG) {
-            val builder = Notification.Builder(context)
+            @Suppress("DEPRECATION") val builder = Notification.Builder(context)
                 .setContentTitle("DEBUG: background sync occurred")
                 .setContentText("Success")
                 .setSmallIcon(R.drawable.ic_launcher_schedule_foreground)

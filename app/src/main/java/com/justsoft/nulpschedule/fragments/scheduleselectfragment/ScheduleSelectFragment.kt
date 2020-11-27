@@ -20,13 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
+import com.justsoft.nulpschedule.databinding.FragmentScheduleSelectBinding
 import com.justsoft.nulpschedule.repo.RefreshState
 import com.justsoft.nulpschedule.utils.ClassesTimetable
 import com.justsoft.nulpschedule.ui.recyclerview.SwipeAndDragCallback
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_schedule_select.*
-import kotlinx.android.synthetic.main.fragment_schedule_select.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -34,6 +33,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScheduleSelectFragment : Fragment() {
+
+    private var _binding: FragmentScheduleSelectBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: ScheduleSelectViewModel by viewModels()
 
@@ -60,8 +62,14 @@ class ScheduleSelectFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_schedule_select, container, false)
+    ): View {
+        _binding = FragmentScheduleSelectBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,7 +80,7 @@ class ScheduleSelectFragment : Fragment() {
         initializeRecyclerView(view)
         setUpObservers()
 
-        view.add_schedule_fab.setOnClickListener {
+        binding.addScheduleFab.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_addScheduleFragment)
         }
     }
@@ -87,7 +95,7 @@ class ScheduleSelectFragment : Fragment() {
             mScheduleRecyclerViewAdapter.scheduleList = it
         }
         viewModel.scheduleListLiveData.observe(this.viewLifecycleOwner) {
-            such_empty_schedules_text.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            binding.suchEmptySchedulesText.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
         mSharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
             when (key) {
@@ -146,7 +154,6 @@ class ScheduleSelectFragment : Fragment() {
     private fun createSwipeToDeleteHelper(): ItemTouchHelper =
         ItemTouchHelper(SwipeAndDragCallback(requireContext()).apply {
             this.delete { toDelete ->
-                val removedIndex = toDelete.adapterPosition
                 val removedSchedule =
                     mScheduleRecyclerViewAdapter.removeItemAt(toDelete.adapterPosition)
 

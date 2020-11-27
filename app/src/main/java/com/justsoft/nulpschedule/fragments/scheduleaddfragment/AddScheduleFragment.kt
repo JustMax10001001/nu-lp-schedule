@@ -7,52 +7,54 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
-import com.justsoft.nulpschedule.utils.StatefulData
+import com.justsoft.nulpschedule.databinding.FragmentAddScheduleBinding
 import com.justsoft.nulpschedule.utils.StatefulData.*
 import com.justsoft.nulpschedule.utils.inputMethodManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add_schedule.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AddScheduleFragment : Fragment() {
 
+    private var _binding: FragmentAddScheduleBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: AddScheduleViewModel by viewModels()
 
-    private lateinit var mAutoCompleteInstituteAndGroup: AppCompatAutoCompleteTextView
     private lateinit var mInstituteAndGroupArrayAdapter: InstituteAndGroupArrayAdapter
-    private lateinit var mSubgroupSelector: MaterialButtonToggleGroup
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_add_schedule, container, false)
+        _binding = FragmentAddScheduleBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpSubgroupSelector(view)
+        setUpSubgroupSelector()
         initializeAutoCompleteSearch(view)
         setUpObservers()
         showLoading()
     }
 
-    private fun setUpSubgroupSelector(view: View) {
-        mSubgroupSelector = view.findViewById(R.id.subgroup_selector)
-
-        mSubgroupSelector.addOnButtonCheckedListener { _, _, _ ->
+    private fun setUpSubgroupSelector() {
+        binding.subgroupSelector.addOnButtonCheckedListener { _, _, _ ->
             viewModel.selectedSubgroupLiveData.postValue(
-                when (mSubgroupSelector.checkedButtonId) {
+                when (binding.subgroupSelector.checkedButtonId) {
                     R.id.checkbutton_subgroup_1 -> 1
                     R.id.checkbutton_subgroup_2 -> 2
                     else -> null
@@ -62,27 +64,27 @@ class AddScheduleFragment : Fragment() {
     }
 
     private fun showLoading() {
-        mAutoCompleteInstituteAndGroup.isEnabled = false
-        search_wrapper.isEnabled = false
-        checkbutton_subgroup_1.isEnabled = false
-        checkbutton_subgroup_2.isEnabled = false
+        binding.search.isEnabled = false
+        binding.searchWrapper.isEnabled = false
+        binding.checkbuttonSubgroup1.isEnabled = false
+        binding.checkbuttonSubgroup2.isEnabled = false
         showLoadingCircle()
     }
 
     private fun hideLoading() {
-        mAutoCompleteInstituteAndGroup.isEnabled = true
-        search_wrapper.isEnabled = true
-        checkbutton_subgroup_1.isEnabled = true
-        checkbutton_subgroup_2.isEnabled = true
+        binding.search.isEnabled = true
+        binding.searchWrapper.isEnabled = true
+        binding.checkbuttonSubgroup1.isEnabled = true
+        binding.checkbuttonSubgroup2.isEnabled = true
         hideLoadingCircle()
     }
 
     private fun showLoadingCircle() {
-        loading_circle.visibility = View.VISIBLE
+        binding.loadingCircle.visibility = View.VISIBLE
     }
 
     private fun hideLoadingCircle() {
-        loading_circle.visibility = View.GONE
+        binding.loadingCircle.visibility = View.GONE
     }
 
     private fun setUpObservers() {
@@ -93,7 +95,7 @@ class AddScheduleFragment : Fragment() {
                     hideLoading()
                     mInstituteAndGroupArrayAdapter.setAll(it.data)
                     mInstituteAndGroupArrayAdapter.filter.filter(null)
-                    mAutoCompleteInstituteAndGroup.requestFocus()
+                    binding.search.requestFocus()
                 }
                 is Loading -> Log.d("AddScheduleFragment", "Fetching Institutes and Groups")
                 is Error -> {
@@ -104,7 +106,7 @@ class AddScheduleFragment : Fragment() {
                     )
                     hideLoadingCircle()
                     val errorSnackbar = Snackbar.make(
-                        mAutoCompleteInstituteAndGroup,
+                        binding.search,
                         getString(R.string.error_loading_schedules),
                         Snackbar.LENGTH_INDEFINITE
                     )
@@ -159,13 +161,13 @@ class AddScheduleFragment : Fragment() {
             } else {
                 if (it is SQLiteConstraintException) {
                     Snackbar.make(
-                        mAutoCompleteInstituteAndGroup,
+                        binding.search,
                         getString(R.string.this_schedule_was_already_added),
                         Snackbar.LENGTH_LONG
                     ).show()
                 } else {
                     val errorSnackbar = Snackbar.make(
-                        mAutoCompleteInstituteAndGroup,
+                        binding.search,
                         getString(
                             R.string.error_downloading_schedule
                         ), Snackbar.LENGTH_LONG
@@ -186,38 +188,37 @@ class AddScheduleFragment : Fragment() {
     }
 
     private fun initializeAutoCompleteSearch(view: View) {
-        mAutoCompleteInstituteAndGroup = view.findViewById(R.id.search)
         mInstituteAndGroupArrayAdapter = InstituteAndGroupArrayAdapter(requireContext())
 
-        mAutoCompleteInstituteAndGroup.setAdapter(mInstituteAndGroupArrayAdapter)
-        mAutoCompleteInstituteAndGroup.isEnabled = false
-        mAutoCompleteInstituteAndGroup.post {
+        binding.search.setAdapter(mInstituteAndGroupArrayAdapter)
+        binding.search.isEnabled = false
+        binding.search.post {
             mInstituteAndGroupArrayAdapter.filter.filter(null)
         }
-        mAutoCompleteInstituteAndGroup.setOnItemClickListener { _, _, position, _ ->
+        binding.search.setOnItemClickListener { _, _, position, _ ->
             val item = mInstituteAndGroupArrayAdapter.getItem(position)
             val trimmed = item.toString().substringBeforeLast("...")
 
             if (item.toString() != trimmed) {
-                mAutoCompleteInstituteAndGroup.text.clear()
-                mAutoCompleteInstituteAndGroup.text.insert(0, trimmed)
-                mAutoCompleteInstituteAndGroup.post {
-                    mAutoCompleteInstituteAndGroup.showDropDown()
+                binding.search.text.clear()
+                binding.search.text.insert(0, trimmed)
+                binding.search.post {
+                    binding.search.showDropDown()
                     mInstituteAndGroupArrayAdapter.filter.filter(trimmed)
                 }
                 viewModel.selectedInstituteAndGroupLiveData.postValue(null)
             } else {
-                mAutoCompleteInstituteAndGroup.post {
+                binding.search.post {
                     requireContext().inputMethodManager.hideSoftInputFromWindow(    // hide keyboard
                         view.windowToken,
                         0
                     )
-                    mAutoCompleteInstituteAndGroup.clearFocus()
+                    binding.search.clearFocus()
                 }
                 viewModel.selectedInstituteAndGroupLiveData.postValue(item)
             }
         }
-        mAutoCompleteInstituteAndGroup.addTextChangedListener(object : TextWatcher {
+        binding.search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 

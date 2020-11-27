@@ -3,14 +3,10 @@ package com.justsoft.nulpschedule.utils
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
-import android.widget.FrameLayout
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.justsoft.nulpschedule.R
-import kotlinx.android.synthetic.main.alert_dialog_text_input_layout.view.*
+import com.justsoft.nulpschedule.databinding.AlertDialogTextInputLayoutBinding
 
 
 class AlertDialogExtensions private constructor() {
@@ -19,38 +15,39 @@ class AlertDialogExtensions private constructor() {
     class TextDialogBuilder(context: Context, @StyleRes resId: Int) :
         AlertDialog.Builder(context, resId) {
 
-        private val mTextInputLayout: TextInputLayout
-        private val mTextInputEditText: TextInputEditText
+        private var _binding: AlertDialogTextInputLayoutBinding? = null
+        private val binding get() = _binding!!
 
         private var requestEditTextFocusOnShow = false
         private var selectAll = false
 
         init {
-            val frame = LayoutInflater.from(context)
-                .inflate(R.layout.alert_dialog_text_input_layout, null)
-            super.setView(frame)
-            mTextInputLayout = frame.text_input_layout
-            mTextInputEditText = frame.text_input_edit_text
+            _binding = AlertDialogTextInputLayoutBinding.inflate(
+                LayoutInflater.from(context),
+                null,
+                false
+            )
+            super.setView(binding.root)
         }
 
         fun setText(text: CharSequence) = this.apply {
-            mTextInputEditText.setText(text)
+            binding.textInputEditText.setText(text)
         }
 
         fun setHint(@StringRes resId: Int) = this.apply {
-            mTextInputLayout.hint = context.getString(resId)
+            binding.textInputLayout.hint = context.getString(resId)
         }
 
         fun requestEditTextFocusOnShow(value: Boolean) = this.apply {
             requestEditTextFocusOnShow = value
             if (requestEditTextFocusOnShow)
-                mTextInputEditText.post { mTextInputEditText.requestFocusAndKeyboard() }
+                binding.textInputEditText.post { binding.textInputEditText.requestFocusAndKeyboard() }
         }
 
         fun selectTextOnShow(value: Boolean) = this.apply {
             selectAll = value
             if (selectAll)
-                mTextInputEditText.post { mTextInputEditText.selectAll() }
+                binding.textInputEditText.post { binding.textInputEditText.selectAll() }
         }
 
         fun setTextInputListener(
@@ -58,7 +55,7 @@ class AlertDialogExtensions private constructor() {
             listener: OnTextInputListener
         ) = this.apply {
             setPositiveButton(positiveButtonText) { dialog, _ ->
-                listener.onTextInput(dialog, mTextInputEditText.text?.toString() ?: "")
+                listener.onTextInput(dialog, binding.textInputEditText.text?.toString() ?: "")
             }
         }
     }
