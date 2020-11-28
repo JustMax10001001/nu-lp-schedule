@@ -81,27 +81,6 @@ class ScheduleRepository @Inject constructor(
     private fun getGroups(instituteName: String): Result<List<String>> =
         scheduleApi.getGroups(instituteName)
 
-    private suspend fun refreshSchedule(instituteName: String, groupName: String) {
-        withContext(Dispatchers.IO) {
-            refreshScheduleSync(instituteName, groupName)
-        }
-    }
-
-    suspend fun refreshSchedule(scheduleId: Long): StateFlow<RefreshState> {
-        val stateFlow = MutableStateFlow(RefreshState.PREPARING)
-        withContext(Dispatchers.IO) {
-            try {
-                val schedule = scheduleDao.getScheduleById(scheduleId)
-                refreshSchedule(schedule.instituteName, schedule.groupName)
-                stateFlow.emit(RefreshState.REFRESH_SUCCESS)
-            } catch (e: Exception) {
-                Log.e("ScheduleRepository", "Error while refreshing schedule", e)
-                stateFlow.emit(RefreshState.REFRESH_FAILED)
-            }
-        }
-        return stateFlow.asStateFlow()
-    }
-
     fun refreshAllSchedulesSync() {
         val schedules = scheduleDao.loadAllSync()
         for ((_, instituteName, groupName) in schedules) {
@@ -174,10 +153,6 @@ class ScheduleRepository @Inject constructor(
         subjectIndex: Int
     ): List<EntityClassWithSubject> {
         return classDao.getClassWithSubjectForDayAtIndex(scheduleId, dayOfWeek, subjectIndex)
-    }
-
-    suspend fun removeSchedule(schedule: Schedule) {
-        scheduleDao.deleteSchedule(schedule.id)
     }
 
     suspend fun updateSchedulePositions(schedulePositions: List<UpdateEntitySchedulePosition>) {
