@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.justsoft.nulpschedule.db.model.*
+import com.justsoft.nulpschedule.model.RefreshState
 import com.justsoft.nulpschedule.model.Schedule
-import com.justsoft.nulpschedule.repo.RefreshState
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.delegateLiveData
 import kotlinx.coroutines.*
@@ -69,14 +69,14 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
         return schedules
             .filter { !scheduleIdsToDelete.contains(it.id) }
             .map { schedule ->
-            val currentClass = getCurrentClassForSchedule(schedule)
-            val nextClass = getNextClassForSchedule(schedule)
-            ScheduleTuple(
-                schedule,
-                currentClass,
-                nextClass
-            )
-        }.sortedBy { it.schedule.position }
+                val currentClass = getCurrentClassForSchedule(schedule)
+                val nextClass = getNextClassForSchedule(schedule)
+                ScheduleTuple(
+                    schedule,
+                    currentClass,
+                    nextClass
+                )
+            }.sortedBy { it.schedule.position }
     }
 
     private suspend fun getNextClassForSchedule(schedule: Schedule): EntityClassWithSubject? {
@@ -130,12 +130,12 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
     fun postScheduleForDeletion(schedule: Schedule) {
         scheduleDeletionTask?.cancel()
         scheduleDeletionTask = timerTask {
-                synchronized(scheduleIdsToDelete) {
-                    scheduleRepository.removeSchedules(scheduleIdsToDelete)
-                    scheduleIdsToDelete.clear()
-                    scheduleDeletionTask = null
-                }
+            synchronized(scheduleIdsToDelete) {
+                scheduleRepository.removeSchedules(scheduleIdsToDelete)
+                scheduleIdsToDelete.clear()
+                scheduleDeletionTask = null
             }
+        }
         synchronized(scheduleIdsToDelete) {
             scheduleIdsToDelete.add(schedule.id)
         }
@@ -149,9 +149,12 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
     fun refreshSchedules(): StateFlow<RefreshState> {
         val flow = MutableStateFlow(RefreshState.PREPARING)
         viewModelScope.launch {
-            scheduleRepository.refreshAllSchedules().collect {
-                Log.d("ScheduleSelectVM", "onEach received $it")
-                flow.emit(it)
+            try {
+                scheduleRepository.refreshAllSchedules()
+                flow.emit(RefreshState.REFRESH_SUCCESS)
+            } catch (e: Exception) {
+                Log.e("ScheduleSelectViewModel", "Error refreshing schedules", e)
+                flow.emit(RefreshState.REFRESH_FAILED)
             }
         }
         return flow.asStateFlow()

@@ -1,6 +1,5 @@
 package com.justsoft.nulpschedule.repo
 
-import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.time.DayOfWeek
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.Exception
 
 class ScheduleRepository @Inject constructor(
     private val scheduleDao: ScheduleDao,
@@ -123,21 +121,8 @@ class ScheduleRepository @Inject constructor(
         classDao.updateClasses(classes.map { it.toEntity() })
     }
 
-    suspend fun refreshAllSchedules(): StateFlow<RefreshState> = withContext(Dispatchers.IO) {
-        val stateFlow = MutableStateFlow(RefreshState.PREPARING)
-        @Suppress("DeferredResultUnused")
-        async {
-            try {
-                refreshAllSchedulesSync()
-                Log.d("ScheduleRepository", "Successfully refreshed schedules")
-                stateFlow.emit(RefreshState.REFRESH_SUCCESS)
-            } catch (e: Exception) {
-                Log.e("ScheduleRepository", "Refresh schedules failed", e)
-                stateFlow.emit(RefreshState.REFRESH_FAILED)
-            }
-        }
-        Log.d("ScheduleRepository", "Returning")
-        return@withContext stateFlow.asStateFlow()
+    suspend fun refreshAllSchedules() = withContext(Dispatchers.IO) {
+        refreshAllSchedulesSync()
     }
 
     /**
@@ -149,18 +134,18 @@ class ScheduleRepository @Inject constructor(
         groupName: String,
         subgroup: Int
     ): Result<Long> =
-            withContext(Dispatchers.IO) {
-                val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
-                if (boxedResult.isSuccess) {
-                    val unboxedResult = boxedResult.getOrNull()!!
-                    scheduleDao.saveSchedule(unboxedResult.schedule.toEntity())
-                    scheduleDao.update(unboxedResult.schedule.copy(subgroup = subgroup).toEntity())
-                    subjectDao.saveAll(unboxedResult.subjects.map(ApiSubject::toEntity))
-                    classDao.saveAll(unboxedResult.classes.map(ApiScheduleClass::toEntity))
-                    return@withContext Result.success(unboxedResult.schedule.id)
-                }
-                return@withContext Result.failure(boxedResult.exceptionOrNull()!!)
+        withContext(Dispatchers.IO) {
+            val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
+            if (boxedResult.isSuccess) {
+                val unboxedResult = boxedResult.getOrNull()!!
+                scheduleDao.saveSchedule(unboxedResult.schedule.toEntity())
+                scheduleDao.update(unboxedResult.schedule.copy(subgroup = subgroup).toEntity())
+                subjectDao.saveAll(unboxedResult.subjects.map(ApiSubject::toEntity))
+                classDao.saveAll(unboxedResult.classes.map(ApiScheduleClass::toEntity))
+                return@withContext Result.success(unboxedResult.schedule.id)
             }
+            return@withContext Result.failure(boxedResult.exceptionOrNull()!!)
+        }
 
     fun getSchedule(scheduleId: Long): LiveData<Schedule> {
         return scheduleDao.load(scheduleId)
@@ -210,10 +195,6 @@ class ScheduleRepository @Inject constructor(
     fun removeSchedules(scheduleIdsToDelete: Set<Long>) {
         scheduleDao.removeSchedules(scheduleIdsToDelete)
     }
-}
-
-enum class RefreshState {
-    PREPARING, REFRESH_FAILED, REFRESH_SUCCESS
 }
 
 @Module

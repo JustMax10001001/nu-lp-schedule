@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.postDelayed
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,13 +22,13 @@ import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentScheduleSelectBinding
-import com.justsoft.nulpschedule.repo.RefreshState
-import com.justsoft.nulpschedule.utils.ClassesTimetable
+import com.justsoft.nulpschedule.model.RefreshState
 import com.justsoft.nulpschedule.ui.recyclerview.SwipeAndDragCallback
+import com.justsoft.nulpschedule.utils.ClassesTimetable
 import com.justsoft.nulpschedule.utils.TimeFormatter
+import com.justsoft.nulpschedule.utils.launch
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -98,12 +96,14 @@ class ScheduleSelectFragment : Fragment() {
             mScheduleRecyclerViewAdapter.scheduleList = it
         }
         viewModel.scheduleListLiveData.observe(this.viewLifecycleOwner) {
-            binding.suchEmptySchedulesText.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            binding.suchEmptySchedulesText.visibility =
+                if (it.isEmpty()) View.VISIBLE else View.GONE
         }
         mSharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
             when (key) {
                 getString(R.string.key_show_current_class) -> {
-                    mScheduleRecyclerViewAdapter.showCurrentClass = mSharedPreferences.getBoolean(key, true)
+                    mScheduleRecyclerViewAdapter.showCurrentClass =
+                        mSharedPreferences.getBoolean(key, true)
                 }
             }
         }
@@ -112,7 +112,8 @@ class ScheduleSelectFragment : Fragment() {
     private fun initializeRecyclerView(view: View) {
         mScheduleRecyclerView = view.findViewById(R.id.schedule_select_recycler_view)
         mScheduleRecyclerViewAdapter = ScheduleRecyclerViewAdapter(timeFormatter)
-        mScheduleRecyclerViewAdapter.showCurrentClass = mSharedPreferences.getBoolean(getString(R.string.key_show_current_class), true)
+        mScheduleRecyclerViewAdapter.showCurrentClass =
+            mSharedPreferences.getBoolean(getString(R.string.key_show_current_class), true)
 
         mScheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         mScheduleRecyclerView.adapter = mScheduleRecyclerViewAdapter
@@ -134,10 +135,10 @@ class ScheduleSelectFragment : Fragment() {
     }
 
     private fun onRefreshListener() {
-        lifecycleScope.launch {
+        launch {
             viewModel.refreshSchedules().collect {
-                Log.d("ScheduleSelectFragment", "onEach received $it")
                 when (it) {
+                    RefreshState.PREPARING -> Log.d("ScheduleSelectFragment", "Preparing refresh")
                     RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
                     RefreshState.REFRESH_FAILED -> {
                         mSwipeRefreshLayout.isRefreshing = false
@@ -145,9 +146,9 @@ class ScheduleSelectFragment : Fragment() {
                             mSwipeRefreshLayout,
                             R.string.something_went_wrong,
                             Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                    else -> {
+                        ).setAction(getString(R.string.retry)) {
+                            onRefreshListener()
+                        }.show()
                     }
                 }
             }
@@ -174,7 +175,7 @@ class ScheduleSelectFragment : Fragment() {
                             mScheduleRecyclerViewAdapter.scheduleList = it
                         }
                     }.show()
-                Firebase.analytics.logEvent("remove_schedule") {  }
+                Firebase.analytics.logEvent("remove_schedule") { }
             }
 
             this.move { _, _ ->
