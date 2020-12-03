@@ -55,11 +55,10 @@ class InstituteAndGroupArrayAdapter(context: Context) :
         private fun distinctByCourseAndGroup(values: List<InstituteAndGroup>) =
             values.distinctBy { it.group.substring(0, it.group.indexOf("-") + 2) }
 
-        override fun performFiltering(constraint: CharSequence?): FilterResults? {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
             Log.d("Filter", "Original values size: ${mSourceValues.size}")
 
-
-            var result = if (constraint == null)
+            var result = if (constraint.isNullOrBlank())
                 mSourceValues
             else {
                 if (constraint.contains(" ")) {
