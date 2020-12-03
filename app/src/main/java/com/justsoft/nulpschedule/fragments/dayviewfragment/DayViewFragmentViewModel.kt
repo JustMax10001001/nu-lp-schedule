@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
-import com.justsoft.nulpschedule.utils.delegateLiveData
 import com.justsoft.nulpschedule.utils.isInitialized
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -25,33 +24,44 @@ class DayViewFragmentViewModel @ViewModelInject constructor(
     private val dayToSwitchToNextWeekOn: Int
         get() = savedStateHandle.get("day_to_switch_to_next_week_on")!!
 
-    val scheduleLiveData: LiveData<Schedule> = scheduleRepository.getSchedule(scheduleId)
-    val schedule by delegateLiveData(scheduleLiveData)
+    val scheduleLiveData: LiveData<Schedule> by lazy {
+        scheduleRepository.getSchedule(scheduleId)
+    }
 
-    val isNumeratorLiveData: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        value = true
-        addSource(scheduleLiveData) { schedule ->
-            schedule ?: return@addSource
-            value = schedule.isNumeratorOnDate(LocalDateTime.now(), dayToSwitchToNextWeekOn)
+    val schedule
+        get() = scheduleLiveData.value!!
+
+    val isNumeratorLiveData: LiveData<Boolean> by lazy {
+        MediatorLiveData<Boolean>().apply {
+            value = true
+            addSource(scheduleLiveData) { schedule ->
+                schedule ?: return@addSource
+                value = schedule.isNumeratorOnDate(LocalDateTime.now(), dayToSwitchToNextWeekOn)
+            }
         }
     }
 
-    val isNumerator by delegateLiveData(isNumeratorLiveData)
+    val isNumerator
+        get() = isNumeratorLiveData.value!!
 
-    val subgroupLiveData: LiveData<Int> = MediatorLiveData<Int>().apply {
-        value = 1
-        addSource(scheduleLiveData) {schedule ->
-            schedule ?: return@addSource
-            value = schedule.subgroup
+    val subgroupLiveData: LiveData<Int> by lazy {
+        MediatorLiveData<Int>().apply {
+            value = 1
+            addSource(scheduleLiveData) { schedule ->
+                schedule ?: return@addSource
+                value = schedule.subgroup
+            }
         }
     }
 
-    val subgroup by delegateLiveData(subgroupLiveData)
+    val subgroup
+        get() = subgroupLiveData.value!!
 
-    val classesListLiveData: LiveData<List<EntityClassWithSubject>> =
+    val classesListLiveData: LiveData<List<EntityClassWithSubject>> by lazy {
         scheduleRepository.getClassesWithSubjects(scheduleId, DayOfWeek.values()[dayOfWeekId])
+    }
 
-    val classesList by delegateLiveData(classesListLiveData)
+    //val classesList by delegateLiveData(classesListLiveData)
 
     fun updateSubjectSubgroup(newSubgroup: Int) {
         if (scheduleLiveData.isInitialized)

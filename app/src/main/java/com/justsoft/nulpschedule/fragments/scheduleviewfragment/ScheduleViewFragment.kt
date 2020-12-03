@@ -53,7 +53,7 @@ class ScheduleViewFragment : Fragment() {
         )
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
-        dayViewPager.offscreenPageLimit = 4
+        dayViewPager.offscreenPageLimit = 2
 
         // Initialize day tabs
         val shortDayNames = resources.getStringArray(R.array.days_of_week_short)
