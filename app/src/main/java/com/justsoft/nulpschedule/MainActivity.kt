@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
             if (BuildConfig.DEBUG) SYNC_INTERVAL / 9 else SYNC_INTERVAL
         )
 
-        mPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener(this::preferenceChangeListener)
+        mPreferenceChangeListener =
+            SharedPreferences.OnSharedPreferenceChangeListener(this::preferenceChangeListener)
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener)
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
