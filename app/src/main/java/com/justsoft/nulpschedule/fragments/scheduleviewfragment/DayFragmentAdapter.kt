@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.justsoft.nulpschedule.fragments.dayviewfragment.DayViewFragment
 
-class DayFragmentAdapter(fragment: Fragment, private val scheduleId: Long, private val switchDay: Int) :
+class DayFragmentAdapter(fragment: Fragment, private val scheduleId: Long) :
     FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int = 5
@@ -19,7 +19,6 @@ class DayFragmentAdapter(fragment: Fragment, private val scheduleId: Long, priva
         dayFragment.arguments = bundleOf(
             "schedule_id" to scheduleId,
             "schedule_day" to position,
-            "day_to_switch_to_next_week_on" to switchDay,
         )
         return dayFragment
     }

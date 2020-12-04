@@ -124,6 +124,10 @@ class ScheduleSelectFragment : Fragment() {
         mScheduleRecyclerViewAdapter.selectSchedule {
             val arguments = Bundle()
             arguments.putLong("schedule_id", it.id)
+            val switchDay =
+                mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")
+                    ?.toInt() ?: 0
+            arguments.putInt("day_to_switch_to_next_week_on", switchDay)
             findNavController().navigate(
                 R.id.action_FirstFragment_to_scheduleViewFragment,
                 arguments
