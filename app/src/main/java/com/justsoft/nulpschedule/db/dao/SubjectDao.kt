@@ -3,6 +3,7 @@ package com.justsoft.nulpschedule.db.dao
 import androidx.room.*
 import com.justsoft.nulpschedule.db.model.EntitySubject
 import com.justsoft.nulpschedule.db.model.UpdateEntitySubject
+import com.justsoft.nulpschedule.model.Subject
 
 @Dao
 interface SubjectDao {
@@ -30,4 +31,7 @@ interface SubjectDao {
 
     @Query("UPDATE Subject SET customName = :newName WHERE id = :id")
     suspend fun updateSubjectName(id: Long, newName: String?)
+
+    @Insert(entity = EntitySubject::class, onConflict = OnConflictStrategy.IGNORE)
+    fun insertNew(subjectEntities: Collection<EntitySubject>)
 }

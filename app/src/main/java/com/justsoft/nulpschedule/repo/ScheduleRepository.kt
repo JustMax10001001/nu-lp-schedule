@@ -1,6 +1,5 @@
 package com.justsoft.nulpschedule.repo
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.justsoft.nulpschedule.api.ScheduleApi
@@ -20,9 +19,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.time.DayOfWeek
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -94,10 +90,13 @@ class ScheduleRepository @Inject constructor(
         scheduleDao.updatePartial(schedule.toUpdateEntity())
 
         subjectDao.deleteAllNotFromList(schedule.id, subjects.map { it.id })
+        subjectDao.insertNew(subjects.map { it.toEntity() })
         subjectDao.updateSubjects(subjects.map { it.toUpdateEntity() })
 
+        val classEntities = classes.map { it.toEntity() }
         classDao.deleteAllNotFromList(schedule.id, classes.map { it.id })
-        classDao.updateClasses(classes.map { it.toEntity() })
+        classDao.insertNew(classEntities)
+        classDao.updateClasses(classEntities)
     }
 
     suspend fun refreshAllSchedules() = withContext(Dispatchers.IO) {
