@@ -42,7 +42,7 @@ class ScheduleViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        // Set fragment adapter to viewPager
+        val dayOfWeekToday = LocalDate.now().dayOfWeek.ordinal
         val switchDay =
             mSharedPreferences.getString(getString(R.string.key_schedule_switch_day), "0")
                 ?.toInt() ?: 0
@@ -51,26 +51,28 @@ class ScheduleViewFragment : Fragment() {
             viewModel.scheduleId.value!!,
             switchDay
         )
+        // Set fragment adapter to viewPager
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
+        dayViewPager.setCurrentItem(
+            when {
+                dayOfWeekToday < 5 -> dayOfWeekToday
+                else -> 0
+            },
+            false
+        )
         dayViewPager.offscreenPageLimit = 2
 
         // Initialize day tabs
         val shortDayNames = resources.getStringArray(R.array.days_of_week_short)
         mTabLayoutMediator =
-        TabLayoutMediator(binding.dayTabLayout, binding.subjectByDayOfWeekViewPager) { tab, position ->
-            tab.text = shortDayNames[position]
-        }
+            TabLayoutMediator(
+                binding.dayTabLayout,
+                binding.subjectByDayOfWeekViewPager
+            ) { tab, position ->
+                tab.text = shortDayNames[position]
+            }
         mTabLayoutMediator.attach()
-        dayViewPager.post {
-            val todayDayOfWeek = LocalDate.now().dayOfWeek.ordinal
-            dayViewPager.setCurrentItem(
-                when {
-                    todayDayOfWeek < 5 -> todayDayOfWeek
-                    else -> 0
-                }, true
-            )
-        }
     }
 }
 
