@@ -203,8 +203,6 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                     oldClass.flags == newClass.flags &&
                     oldClass.teacherName == newClass.teacherName &&
                     oldSubject.displayName == newSubject.displayName
-
         }
-
     }
 }

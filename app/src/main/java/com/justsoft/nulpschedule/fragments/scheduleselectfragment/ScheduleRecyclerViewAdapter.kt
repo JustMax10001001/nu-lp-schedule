@@ -132,7 +132,6 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                     oldItem.currentClass?.scheduleClass?.index == newItem.currentClass?.scheduleClass?.index &&
                     oldItem.nextClass?.subject?.displayName == newItem.nextClass?.subject?.displayName &&
                     oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index
-
         }
     }
 }
