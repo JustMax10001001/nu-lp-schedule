@@ -8,7 +8,7 @@ import java.time.DayOfWeek
 
 @Dao
 interface ScheduleClassDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAll(classes: List<EntityScheduleClass>)
 
     @Transaction
