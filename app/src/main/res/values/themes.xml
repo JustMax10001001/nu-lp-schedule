@@ -25,6 +25,8 @@
 
     <style name="Theme.SchedulerTheme.AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert" />
 
+    <style name="Theme.SchedulerTheme.Widget.PopupMenu" parent="Widget.AppCompat.PopupMenu" />
+
     <style name="Theme.SchedulerTheme.NoActionBar" parent="Theme.SchedulerTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -4,13 +4,12 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.BulletSpan
-import android.view.*
-import android.widget.TextView
-import androidx.core.text.toSpannable
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -59,43 +58,81 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val binding = DataBindingUtil.getBinding<ClassViewLayoutBinding>(holder.itemView)
-        binding?.classWithSubject = classList[position]
-        binding?.timeFormatter = timeFormatter
-        binding?.bulletedAdditionalInfo?.text = createAdditionalInfoSpan(
+        val binding = DataBindingUtil.getBinding<ClassViewLayoutBinding>(holder.itemView)!!
+        val context = holder.itemView.context
+        binding.classWithSubject = classList[position]
+        binding.timeFormatter = timeFormatter
+        binding.bulletedAdditionalInfo.text = createAdditionalInfoSpan(
             classList[position],
             holder.itemView.context
         )
 
         val onlineClassUrl = classList[position].scheduleClass.url
-        holder.itemView.apply {
-            setOnClickListener {
-                onlineClassUrl?.let { openClassUrl(it, holder.itemView.context) }
-            }
-            setOnCreateContextMenuListener { menu, view, _ ->
-                val menuInflater = MenuInflater(view.context)
-                menuInflater.inflate(R.menu.context_menu_class_card, menu)
+        binding.root.setOnClickListener {
+            onlineClassUrl?.let { openClassUrl(it, context) }
+        }
 
-                val copyUrlItem = menu.findItem(R.id.action_copy_class_url)
-                copyUrlItem.isEnabled = onlineClassUrl != null
-                copyUrlItem.setOnMenuItemClickListener { _ ->
-                    onlineClassUrl?.let { url ->
-                        copyUrlToClipboard(url, holder.itemView.context)
-                        Snackbar.make(holder.itemView, R.string.url_copied, Snackbar.LENGTH_SHORT)
-                            .show()
-                        return@setOnMenuItemClickListener true
-                    }
-                    return@setOnMenuItemClickListener false
-                }
+        val popup = prepareButtonPopup(context, binding.buttonMore, position)
+        binding.buttonMore.setOnClickListener { popup.show() }
 
-                val changeSubjectNameItem = menu.findItem(R.id.action_change_custom_subject_name)
-                changeSubjectNameItem.setOnMenuItemClickListener {
-                    buildAndShowSubjectNameEditDialog(context, classList[position].subject)
+        //viewBinding.buttonMore
+
+
+        /*setOnCreateContextMenuListener { menu, view, _ ->
+            val menuInflater = MenuInflater(view.context)
+            menuInflater.inflate(R.menu.context_menu_class_card, menu)
+
+            val copyUrlItem = menu.findItem(R.id.action_copy_class_url)
+            copyUrlItem.isEnabled = onlineClassUrl != null
+            copyUrlItem.setOnMenuItemClickListener { _ ->
+                onlineClassUrl?.let { url ->
+                    copyUrlToClipboard(url, holder.itemView.context)
+                    Snackbar.make(holder.itemView, R.string.url_copied, Snackbar.LENGTH_SHORT)
+                        .show()
                     return@setOnMenuItemClickListener true
                 }
+                return@setOnMenuItemClickListener false
             }
-            setOnLongClickListener { cardView ->
-                cardView.showContextMenu()
+
+            val changeSubjectNameItem = menu.findItem(R.id.action_change_custom_subject_name)
+            changeSubjectNameItem.setOnMenuItemClickListener {
+                buildAndShowSubjectNameEditDialog(context, classList[position].subject)
+                return@setOnMenuItemClickListener true
+            }
+        }
+        setOnLongClickListener { cardView ->
+            cardView.showContextMenu()
+        }*/
+    }
+
+    private fun prepareButtonPopup(
+        context: Context,
+        button: ImageButton,
+        position: Int
+    ): PopupMenu {
+        val onlineClassUrl = classList[position].scheduleClass.url
+
+        return PopupMenu(context, button, Gravity.END).apply {
+            inflate(R.menu.context_menu_class_card)
+
+            menu.findItem(R.id.action_copy_class_url).isEnabled = onlineClassUrl != null
+
+            setOnMenuItemClickListener { selectedItem ->
+                when (selectedItem.itemId) {
+                    R.id.action_copy_class_url -> {
+                        onlineClassUrl?.let { url ->
+                            copyUrlToClipboard(url, context)
+                            Snackbar.make(button, R.string.url_copied, Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                        return@setOnMenuItemClickListener true
+                    }
+                    R.id.action_change_custom_subject_name -> {
+                        buildAndShowSubjectNameEditDialog(context, classList[position].subject)
+                        return@setOnMenuItemClickListener true
+                    }
+                }
+                return@setOnMenuItemClickListener false
             }
         }
     }

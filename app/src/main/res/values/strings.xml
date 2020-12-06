@@ -22,7 +22,7 @@
     <string name="open_lesson_in_app">Open online class in</string>
     <string name="action_switch_to_next_group">Subgroup %d</string>
     <string name="copy_online_class_url">Copy online class URL</string>
-    <string name="change_custom_subject_name">Set custom name for subject</string>
+    <string name="change_custom_subject_name">Change subject name</string>
     <string name="enter_custom_subject_name">Enter custom subject name</string>
     <string name="custom_subject_name">Custom subject name</string>
     <string name="subject_now">Now: %s</string>

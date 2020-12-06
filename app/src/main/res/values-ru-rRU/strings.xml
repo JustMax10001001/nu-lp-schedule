@@ -11,7 +11,7 @@
     <string name="online_class_url_available">Доступна ссылка на онлайн пару</string>
     <string name="open_lesson_in_app">Открыть онлайн пару в</string>
     <string name="action_switch_to_next_group">Подгруппа %d</string>
-    <string name="copy_online_class_url">Скопировать ссылку на онлайн пару</string>
+    <string name="copy_online_class_url">Скопировать ссылку</string>
     <string name="change_custom_subject_name">Сменить имя предмета</string>
     <string name="enter_custom_subject_name">Введите имя предмета</string>
     <string name="custom_subject_name">Имя предмета</string>
