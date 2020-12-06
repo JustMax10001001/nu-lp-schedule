@@ -22,8 +22,8 @@
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="add_new_schedule">Добавить расписание</string>
     <string name="institute_group">Институт и группа</string>
-    <string name="subgroup_1">Первая подгруппа</string>
-    <string name="subgroup_2">Вторая подгруппа</string>
+    <string name="subgroup_1">Подгруппа 1</string>
+    <string name="subgroup_2">Подгруппа 2</string>
     <string name="retry">Повторить</string>
     <string name="error_loading_schedules">Ошибка при загрузке расписаний</string>
     <string name="error_downloading_schedule">Ошибка при загрузке расписания</string>

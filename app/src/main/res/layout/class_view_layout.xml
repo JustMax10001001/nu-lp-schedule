@@ -85,11 +85,11 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="14dp">
+                android:paddingStart="14dp"
+                android:paddingTop="14dp">
 
                 <TextView
                     android:id="@+id/current_class_subject_name_text_view"
@@ -98,8 +98,11 @@
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="1"
+                    android:paddingEnd="14dp"
                     android:text="@{classWithSubject.subject.displayName}"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Subject name" />
 
                 <TextView
@@ -109,6 +112,8 @@
                     android:layout_marginTop="8dp"
                     android:text="@{classWithSubject.scheduleClass.teacherName}"
                     android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/current_class_subject_name_text_view"
                     tools:text="Lecturer Name" />
 
                 <TextView
@@ -118,16 +123,36 @@
                     android:layout_marginTop="4dp"
                     android:text="@{classWithSubject.scheduleClass.classDescription}"
                     android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/subject_lecturer_text_view"
                     tools:text="Additional description" />
 
                 <TextView
                     android:id="@+id/bulleted_additional_info"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
+                    android:paddingBottom="14dp"
                     android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/subject_description_text_view"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonMore"
+                    app:layout_constraintHorizontal_bias="0"
                     tools:text="bullet \u2022 text" />
-            </LinearLayout>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:id="@+id/buttonMore"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/more"
+                    android:src="@drawable/ic_baseline_more_vert_24"
+                    android:tint="?android:attr/textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
