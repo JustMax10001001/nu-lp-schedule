@@ -74,35 +74,6 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
 
         val popup = prepareButtonPopup(context, binding.buttonMore, position)
         binding.buttonMore.setOnClickListener { popup.show() }
-
-        //viewBinding.buttonMore
-
-
-        /*setOnCreateContextMenuListener { menu, view, _ ->
-            val menuInflater = MenuInflater(view.context)
-            menuInflater.inflate(R.menu.context_menu_class_card, menu)
-
-            val copyUrlItem = menu.findItem(R.id.action_copy_class_url)
-            copyUrlItem.isEnabled = onlineClassUrl != null
-            copyUrlItem.setOnMenuItemClickListener { _ ->
-                onlineClassUrl?.let { url ->
-                    copyUrlToClipboard(url, holder.itemView.context)
-                    Snackbar.make(holder.itemView, R.string.url_copied, Snackbar.LENGTH_SHORT)
-                        .show()
-                    return@setOnMenuItemClickListener true
-                }
-                return@setOnMenuItemClickListener false
-            }
-
-            val changeSubjectNameItem = menu.findItem(R.id.action_change_custom_subject_name)
-            changeSubjectNameItem.setOnMenuItemClickListener {
-                buildAndShowSubjectNameEditDialog(context, classList[position].subject)
-                return@setOnMenuItemClickListener true
-            }
-        }
-        setOnLongClickListener { cardView ->
-            cardView.showContextMenu()
-        }*/
     }
 
     private fun prepareButtonPopup(
