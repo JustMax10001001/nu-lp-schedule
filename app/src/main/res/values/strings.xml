@@ -84,6 +84,9 @@
     <string name="key_schedule_switch_day" translatable="false">switch_schedule_on</string>
     <string name="schedule_switch_day_summary">Showing next week\'s schedule starting on %s</string>
     <string name="more">More</string>
+    <string name="menu_action_share_class">Share class</string>
+    <string name="class_share_text_no_url">%d. %s\n%s\n%s</string>
+    <string name="class_share_text_with_url">%d. %s\n%s\n%s\nLink: %s</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>

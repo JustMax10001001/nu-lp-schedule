@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_copy_class_url"
-        android:title="@string/copy_online_class_url"
-        android:icon="@drawable/ic_outline_content_copy_24"/>
+        android:id="@+id/action_change_custom_subject_name"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/change_custom_subject_name" />
 
     <item
-        android:id="@+id/action_change_custom_subject_name"
-        android:title="@string/change_custom_subject_name"
-        android:icon="@drawable/ic_baseline_edit_24"/>
+        android:id="@+id/action_share_class"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="@string/menu_action_share_class" />
+
+    <item
+        android:id="@+id/action_copy_class_url"
+        android:icon="@drawable/ic_outline_content_copy_24"
+        android:title="@string/copy_online_class_url" />
 </menu>

@@ -105,10 +105,40 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                         buildAndShowSubjectNameEditDialog(context, classList[position].subject)
                         return@setOnMenuItemClickListener true
                     }
+                    R.id.action_share_class -> {
+                        shareClass(position, context)
+                        return@setOnMenuItemClickListener true
+                    }
                 }
                 return@setOnMenuItemClickListener false
             }
         }
+    }
+
+    private fun shareClass(position: Int, context: Context) {
+        val scheduleClass = classList[position].scheduleClass
+        val onlineClassUrl = classList[position].scheduleClass.url
+        val text = if (onlineClassUrl != null)
+            context.getString(
+                R.string.class_share_text_with_url,
+                scheduleClass.index + 1,
+                classList[position].subject.displayName,
+                scheduleClass.teacherName,
+                scheduleClass.classDescription,
+                onlineClassUrl
+            )
+        else
+            context.getString(
+                R.string.class_share_text_no_url,
+                scheduleClass.index + 1,
+                scheduleClass.teacherName,
+                scheduleClass.classDescription,
+                classList[position].subject.displayName
+            )
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/*"
+        intent.putExtra(Intent.EXTRA_TEXT, text)
+        context.startActivity(intent)
     }
 
     private fun createAdditionalInfoSpan(
