@@ -87,6 +87,9 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
             inflate(R.menu.context_menu_class_card)
 
             menu.findItem(R.id.action_copy_class_url).isEnabled = onlineClassUrl != null
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                setForceShowIcon(true)
+            }
 
             setOnMenuItemClickListener { selectedItem ->
                 when (selectedItem.itemId) {
