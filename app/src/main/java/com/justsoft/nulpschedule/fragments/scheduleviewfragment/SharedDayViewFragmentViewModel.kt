@@ -25,7 +25,7 @@ class SharedDayViewFragmentViewModel @ViewModelInject constructor(
         get() = scheduleLiveData.value!!
 
     private val dayToSwitchToNextWeekOn: Int
-        get() = savedStateHandle.get("day_to_switch_to_next_week_on")!!
+        get() = savedStateHandle.get("day_to_switch_to_next_week_on") ?: 0
 
     val isNumeratorLiveData: LiveData<Boolean> by lazy {
         MediatorLiveData<Boolean>().apply {
