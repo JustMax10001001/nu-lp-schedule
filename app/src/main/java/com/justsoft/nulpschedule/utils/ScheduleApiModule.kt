@@ -9,16 +9,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import java.security.KeyStore
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ScheduleApiModule {
     @Provides
     @Singleton
     fun getScheduleApi(@ApplicationContext context: Context): ScheduleApi {
-
         return ScheduleApi(
             SSLSocketFactoryWithAdditionalKeyStores(loadKeyStore(context))
         )
