@@ -16,12 +16,12 @@
     <string name="lesson_duration_format" translatable="false">%1$d:%2$02d-%3$d:%4$02d</string>
 
     <string name="keystore_password" translatable="false">lpnu-password</string>
-    <string name="online_class_url">Online class URL</string>
-    <string name="url_copied">URL copied to clipboard</string>
-    <string name="online_class_url_available">Online class URL available</string>
+    <string name="online_class_url">Online class link</string>
+    <string name="url_copied">Link copied to clipboard</string>
+    <string name="online_class_url_available">Online class link available</string>
     <string name="open_lesson_in_app">Open online class in</string>
     <string name="action_switch_to_next_group">Subgroup %d</string>
-    <string name="copy_online_class_url">Copy online class URL</string>
+    <string name="copy_online_class_url">Copy online class link</string>
     <string name="change_custom_subject_name">Change subject name</string>
     <string name="enter_custom_subject_name">Enter custom subject name</string>
     <string name="custom_subject_name">Custom subject name</string>
@@ -85,8 +85,8 @@
     <string name="schedule_switch_day_summary">Showing next week\'s schedule starting on %s</string>
     <string name="more">More</string>
     <string name="menu_action_share_class">Share class</string>
-    <string name="class_share_text_no_url">%d. %s\n%s\n%s</string>
-    <string name="class_share_text_with_url">%d. %s\n%s\n%s\nLink: %s</string>
+    <string name="class_share_text_no_url" translatable="false">%d. %s\n%s\n%s</string>
+    <string name="class_share_text_with_url">%d. %s %s %s Link: %s</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>

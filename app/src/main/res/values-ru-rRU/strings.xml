@@ -68,4 +68,7 @@
         <item>Воскресение</item>
         <item>Следующий понедельник</item>
     </string-array>
+    <string name="more">Дополнительно</string>
+    <string name="menu_action_share_class">Поделиться парой</string>
+    <string name="class_share_text_with_url">%d. %s %s %s Ссылка: %s</string>
 </resources>

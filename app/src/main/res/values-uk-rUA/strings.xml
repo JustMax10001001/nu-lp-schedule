@@ -68,4 +68,7 @@
         <item>Неділя</item>
         <item>Наступний понеділок</item>
     </string-array>
+    <string name="more">Додатково</string>
+    <string name="menu_action_share_class">Поділитись парою</string>
+    <string name="class_share_text_with_url">%d. %s %s %s Посилання: %s</string>
 </resources>
