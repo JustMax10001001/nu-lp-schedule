@@ -6,11 +6,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
@@ -155,13 +156,28 @@ class AddScheduleFragment : Fragment() {
             item.isEnabled = true
             if (it == null) {
                 val result = deferredResult.getCompleted()
-                val arguments = Bundle()
-                arguments.putLong("schedule_id", result.getOrThrow())
+
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                val switchDay = sharedPreferences.getInt(
+                    getString(
+                        R.string.key_schedule_switch_day
+                    ), 0
+                )
+                val arguments = bundleOf(
+                    "schedule_id" to result.getOrThrow(),
+                    "day_to_switch_to_next_week_on" to switchDay
+                )
 
                 // log successful download
                 Firebase.analytics.logEvent("add_schedule") {
-                    param("schedule_institute", viewModel.selectedInstituteAndGroupLiveData.value?.institute.toString())
-                    param("schedule_group", viewModel.selectedInstituteAndGroupLiveData.value?.group.toString())
+                    param(
+                        "schedule_institute",
+                        viewModel.selectedInstituteAndGroupLiveData.value?.institute.toString()
+                    )
+                    param(
+                        "schedule_group",
+                        viewModel.selectedInstituteAndGroupLiveData.value?.group.toString()
+                    )
                 }
 
                 findNavController()
