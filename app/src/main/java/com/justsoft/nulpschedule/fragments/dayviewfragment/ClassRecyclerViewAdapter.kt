@@ -10,12 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
-import androidx.databinding.DataBindingUtil
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
-import com.justsoft.nulpschedule.databinding.ClassViewLayoutBinding
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.model.Subject
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
@@ -41,14 +40,9 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
-        val binding = DataBindingUtil.inflate<ClassViewLayoutBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.class_view_layout,
-            parent,
-            false
-        )
-
-        return SubjectViewHolder(binding.root)
+        val root =
+            LayoutInflater.from(parent.context).inflate(R.layout.class_view_layout, parent, false)
+        return SubjectViewHolder(root)
     }
 
     private fun notifyChanges(
@@ -62,22 +56,35 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val binding = DataBindingUtil.getBinding<ClassViewLayoutBinding>(holder.itemView)!!
-        val context = holder.itemView.context
-        binding.classWithSubject = classList[position]
-        binding.timeFormatter = timeFormatter
-        binding.bulletedAdditionalInfo.text = createAdditionalInfoSpan(
-            classList[position],
-            holder.itemView.context
-        )
+        val currentClass = classList[position].scheduleClass
+        val currentSubject = classList[position].subject
 
-        val onlineClassUrl = classList[position].scheduleClass.url
-        binding.root.setOnClickListener {
-            onlineClassUrl?.let { openClassUrl(it, context) }
+        val onlineClassUrl = currentClass.url
+
+        holder.apply {
+            classIndexTextView.text = currentClass.index.toString()
+            classStartTimeTextView.text =
+                timeFormatter.formatStartTimeForSubjectIndex(currentClass.index)
+            classEndTimeTextView.text =
+                timeFormatter.formatEndTimeForSubjectIndex(currentClass.index)
+
+            subjectNameTextView.text = currentSubject.displayName
+            lecturerNameTextView.text = currentClass.teacherName
+            classDescriptionTextView.text = currentClass.classDescription
+            bulletedAdditionalInfoTextView.text =
+                createAdditionalInfoSpan(classList[position], itemView.context)
+
+            itemView.setOnClickListener {
+                onlineClassUrl?.let { openClassUrl(it, itemView.context) }
+            }
+
+            // we inflate menu there, so we might as well do it
+            // later while having more responsive recycler view
+            itemView.post {
+                val popup = prepareButtonPopup(itemView.context, verticalElipsisImageButton, position)
+                verticalElipsisImageButton.setOnClickListener { popup.show() }
+            }
         }
-
-        val popup = prepareButtonPopup(context, binding.buttonMore, position)
-        binding.buttonMore.setOnClickListener { popup.show() }
     }
 
     private fun prepareButtonPopup(
@@ -218,7 +225,23 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     override fun getItemCount(): Int = classList.size
 
     class SubjectViewHolder(subjectView: View) :
-        RecyclerView.ViewHolder(subjectView)
+        RecyclerView.ViewHolder(subjectView) {
+
+        val subjectNameTextView = subjectView.findViewById<TextView>(R.id.subject_name_text_view)
+        val classDescriptionTextView =
+            subjectView.findViewById<TextView>(R.id.class_description_text_view)
+        val lecturerNameTextView = subjectView.findViewById<TextView>(R.id.lecturer_name_text_view)
+        val bulletedAdditionalInfoTextView =
+            subjectView.findViewById<TextView>(R.id.bulleted_additional_info_text_view)
+
+        val verticalElipsisImageButton =
+            subjectView.findViewById<ImageButton>(R.id.vertical_elipsis_button)
+
+        val classIndexTextView = subjectView.findViewById<TextView>(R.id.class_index_text_view)
+        val classStartTimeTextView =
+            subjectView.findViewById<TextView>(R.id.class_start_time_text_view)
+        val classEndTimeTextView = subjectView.findViewById<TextView>(R.id.class_end_time_text_view)
+    }
 
     internal class ClassesDiffCallback(
         private val oldClasses: List<EntityClassWithSubject>,
