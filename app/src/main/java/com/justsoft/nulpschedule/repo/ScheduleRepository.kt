@@ -38,31 +38,33 @@ class ScheduleRepository @Inject constructor(
     @Suppress("DeferredResultUnused")
     suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> = liveData {
         emitSource(instituteAndGroupListLiveData)
-        if (instituteAndGroupListLiveData.value !is Success) {
-            withContext(Dispatchers.IO) {
-                try {
-                    instituteAndGroupListLiveData.postValue(Loading())
-                    val alreadyDownloaded = getDownloadedInstitutesAndGroups()
-                    val jobs = mutableListOf<Job>()
-                    val institutesWithGroup = mutableListOf<InstituteAndGroup>()
-                    for (institute in getInstitutes().getOrThrow().sorted()) {
-                        if (institute == "All")
-                            continue
-                        jobs.add(launch {
-                            val groups = getGroups(institute).getOrThrow()
-                            val result = groups.filter { it != "All" }
-                                .map { InstituteAndGroup(institute, it) }
-                                .filter { !alreadyDownloaded.contains(it) }
-                            synchronized(institutesWithGroup) {
-                                institutesWithGroup.addAll(result)
-                            }
-                        })
-                    }
-                    jobs.joinAll()
-                    instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
-                } catch (e: Exception) {
-                    instituteAndGroupListLiveData.postValue(Error(e))
+
+        if (instituteAndGroupListLiveData.value is Success)
+            return@liveData
+
+        withContext(Dispatchers.IO) {
+            try {
+                instituteAndGroupListLiveData.postValue(Loading())
+                val alreadyDownloaded = getDownloadedInstitutesAndGroups()
+                val jobs = mutableListOf<Job>()
+                val institutesWithGroup = mutableListOf<InstituteAndGroup>()
+                for (institute in getInstitutes().getOrThrow().sorted()) {
+                    if (institute == "All")
+                        continue
+                    jobs.add(launch {
+                        val groups = getGroups(institute).getOrThrow()
+                        val result = groups.filter { it != "All" }
+                            .map { InstituteAndGroup(institute, it) }
+                            .filter { !alreadyDownloaded.contains(it) }
+                        synchronized(institutesWithGroup) {
+                            institutesWithGroup.addAll(result)
+                        }
+                    })
                 }
+                jobs.joinAll()
+                instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
+            } catch (e: Exception) {
+                instituteAndGroupListLiveData.postValue(Error(e))
             }
         }
     }
