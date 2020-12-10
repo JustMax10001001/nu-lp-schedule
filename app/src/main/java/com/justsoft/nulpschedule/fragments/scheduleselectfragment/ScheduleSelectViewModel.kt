@@ -164,4 +164,11 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             scheduleRepository.updateSchedulePositions(schedulePositions)
         }
+
+    fun invalidateScheduleList() {
+        // very hacky way to refresh shown schedule
+        // this will cause the currentClassIndexLiveData to force refresh on scheduleTupleListLivedata
+        // as it is added as source
+        currentClassIndexLiveData.value = currentClassIndex
+    }
 }

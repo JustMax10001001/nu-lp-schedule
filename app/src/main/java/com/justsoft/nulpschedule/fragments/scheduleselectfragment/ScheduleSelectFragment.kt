@@ -89,6 +89,7 @@ class ScheduleSelectFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateTimeRunnable()
+        viewModel.invalidateScheduleList()
     }
 
     private fun setUpObservers() {
