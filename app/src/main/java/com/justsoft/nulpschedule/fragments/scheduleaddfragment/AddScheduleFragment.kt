@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentAddScheduleBinding
 import com.justsoft.nulpschedule.utils.StatefulData.*
+import com.justsoft.nulpschedule.utils.animationEnd
 import com.justsoft.nulpschedule.utils.inputMethodManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -85,11 +86,26 @@ class AddScheduleFragment : Fragment() {
     }
 
     private fun showLoadingCircle() {
-        binding.loadingCircle.visibility = View.VISIBLE
+        with(binding.loadingCircle) {
+            alpha = 0.0f
+            visibility = View.VISIBLE
+            animate()
+                .alpha(1.0f)
+                .start()
+        }
     }
 
     private fun hideLoadingCircle() {
-        binding.loadingCircle.visibility = View.GONE
+        with(binding.loadingCircle) {
+            alpha = 1.0f
+            visibility = View.VISIBLE
+            animate()
+                .alpha(0.0f)
+                .animationEnd {
+                    visibility = View.GONE
+                }
+                .start()
+        }
     }
 
     private fun setUpObservers() {
