@@ -117,7 +117,7 @@
                         tools:text="Now" />
 
                     <TextView
-                        android:id="@+id/current_class_subject_name_text_view"
+                        android:id="@+id/current_subject_name_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
