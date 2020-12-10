@@ -52,18 +52,15 @@ class ScheduleViewFragment : Fragment() {
             R.anim.rotate_180
         )
 
-        val dayOfWeekToday = LocalDate.now().dayOfWeek.ordinal
+        val dayOfWeekTodayOrdinal = LocalDate.now().dayOfWeek.ordinal
 
-        val dayFragmentAdapter = DayFragmentAdapter(
-            this,
-            viewModel.scheduleId.value!!
-        )
+        val dayFragmentAdapter = DayFragmentAdapter(this, viewModel.scheduleId.value!!)
         // Set fragment adapter to viewPager
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
         dayViewPager.setCurrentItem(
             when {
-                dayOfWeekToday < 5 -> dayOfWeekToday
+                dayOfWeekTodayOrdinal < 5 -> dayOfWeekTodayOrdinal
                 else -> 0
             },
             false
