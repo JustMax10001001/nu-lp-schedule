@@ -18,7 +18,6 @@ import com.justsoft.nulpschedule.utils.StatefulLiveData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import java.time.DayOfWeek
@@ -79,7 +78,7 @@ class ScheduleRepository @Inject constructor(
     private fun getGroups(instituteName: String): Result<List<String>> =
         scheduleApi.getGroups(instituteName)
 
-    fun refreshAllSchedulesSync() {
+    fun refreshAllSchedules() {
         val schedules = scheduleDao.loadAllSync()
         for ((_, instituteName, groupName) in schedules) {
             refreshScheduleSync(instituteName, groupName)
@@ -98,10 +97,6 @@ class ScheduleRepository @Inject constructor(
         classDao.deleteAllNotFromList(schedule.id, classes.map { it.id })
         classDao.insertNew(classEntities)
         classDao.updateClasses(classEntities)
-    }
-
-    suspend fun refreshAllSchedules() = withContext(Dispatchers.IO) {
-        refreshAllSchedulesSync()
     }
 
     /**

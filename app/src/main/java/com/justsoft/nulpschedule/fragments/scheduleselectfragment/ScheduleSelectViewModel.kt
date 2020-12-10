@@ -146,18 +146,16 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
         scheduleDeletionTask?.cancel()
     }
 
-    fun refreshSchedules(): StateFlow<RefreshState> {
-        val flow = MutableStateFlow(RefreshState.PREPARING)
-        viewModelScope.launch {
-            try {
+    fun refreshSchedules(): Flow<RefreshState> = flow {
+        try {
+            withContext(Dispatchers.IO) {
                 scheduleRepository.refreshAllSchedules()
-                flow.emit(RefreshState.REFRESH_SUCCESS)
-            } catch (e: Exception) {
-                Log.e("ScheduleSelectViewModel", "Error refreshing schedules", e)
-                flow.emit(RefreshState.REFRESH_FAILED)
             }
+            emit(RefreshState.REFRESH_SUCCESS)
+        } catch (e: Exception) {
+            Log.e("ScheduleSelectViewModel", "Error refreshing schedules", e)
+            emit(RefreshState.REFRESH_FAILED)
         }
-        return flow.asStateFlow()
     }
 
     fun updateSchedulePositions(schedulePositions: List<UpdateEntitySchedulePosition>) =

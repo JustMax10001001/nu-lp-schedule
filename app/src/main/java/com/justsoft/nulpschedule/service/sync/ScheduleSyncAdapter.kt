@@ -33,7 +33,7 @@ class ScheduleSyncAdapter constructor(
         syncResult: SyncResult?
     ) {
         Log.d("SyncAdapter", "Syncing...")
-        mScheduleRepository.refreshAllSchedulesSync()
+        mScheduleRepository.refreshAllSchedules()
         Log.d("SyncAdapter", "Sync successful")
         if (BuildConfig.DEBUG) {
             @Suppress("DEPRECATION") val builder = Notification.Builder(context)
