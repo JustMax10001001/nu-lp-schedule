@@ -19,6 +19,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import java.time.DayOfWeek
 import javax.inject.Inject
@@ -172,7 +173,7 @@ class ScheduleRepository @Inject constructor(
 }
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ScheduleRepositoryModule {
 
     @Provides
