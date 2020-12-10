@@ -91,9 +91,7 @@ class ScheduleViewFragment : Fragment() {
                 this.isChecked = sharedViewModel.isNumeratorOverrideLiveData.value ?: it
             }
             sharedViewModel.isNumeratorOverrideLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
-                it?.let {
-                    this.isChecked = it
-                }
+                it?.let { this.isChecked = it }
             }
 
             isChecked = sharedViewModel.isNumeratorOverride ?: sharedViewModel.isNumerator
