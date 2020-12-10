@@ -90,7 +90,6 @@ class ScheduleRepository @Inject constructor(
         val (schedule, subjects, classes) = boxedResult.getOrThrow()
         scheduleDao.updatePartial(schedule.toUpdateEntity())
 
-        subjectDao.deleteAllNotFromList(schedule.id, subjects.map { it.id })
         subjectDao.insertNew(subjects.map { it.toEntity() })
         subjectDao.updateSubjects(subjects.map { it.toUpdateEntity() })
 
