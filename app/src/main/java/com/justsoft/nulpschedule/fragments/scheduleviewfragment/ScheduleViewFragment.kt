@@ -92,7 +92,6 @@ class ScheduleViewFragment : Fragment() {
                 this.isChecked = it ?: return@observe
             }
 
-            //isChecked = sharedViewModel.isNumeratorOverride ?: sharedViewModel.isNumeratorToday
             setTooltipTextCompat(if (isChecked) R.string.switch_to_denominator else R.string.switch_to_numerator)
             addOnCheckedChangeListener { _, isChecked ->
                 startAnimation(numeratorTurnAnimation)
