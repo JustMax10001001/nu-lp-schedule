@@ -5,6 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
+import com.justsoft.nulpschedule.utils.delegateLiveData
 import com.justsoft.nulpschedule.utils.isInitialized
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -27,23 +28,33 @@ class SharedDayViewFragmentViewModel @ViewModelInject constructor(
     private val dayToSwitchToNextWeekOn: Int
         get() = savedStateHandle.get("day_to_switch_to_next_week_on") ?: 0
 
-    val isNumeratorLiveData: LiveData<Boolean> by lazy {
-        MediatorLiveData<Boolean>().apply {
-            value = true
-            addSource(scheduleLiveData) { schedule ->
-                schedule ?: return@addSource
-                value = schedule.isNumeratorOnDate(LocalDateTime.now(), dayToSwitchToNextWeekOn)
-            }
+    private val isNumeratorTodayLiveData: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        value = true
+        addSource(scheduleLiveData) { schedule ->
+            schedule ?: return@addSource
+            value = schedule.isNumeratorOnDate(LocalDateTime.now(), dayToSwitchToNextWeekOn)
         }
     }
 
-    val isNumerator
-        get() = isNumeratorLiveData.value!!
+    private val isNumeratorToday
+        get() = isNumeratorTodayLiveData.value!!
 
-    val isNumeratorOverrideLiveData: MutableLiveData<Boolean> = MutableLiveData(null)
+    private val isNumeratorOverrideLiveData: MutableLiveData<Boolean> = MutableLiveData(null)
 
-    val isNumeratorOverride
+    private val isNumeratorOverride
         get() = isNumeratorOverrideLiveData.value
+
+    val isNumeratorLiveData: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        value = isNumeratorToday
+        addSource(isNumeratorTodayLiveData) {
+            value = isNumeratorOverride ?: it
+        }
+        addSource(isNumeratorOverrideLiveData) {
+            value = it ?: return@addSource
+        }
+    }
+
+    val isNumerator by delegateLiveData(isNumeratorLiveData)
 
     val subgroupLiveData: LiveData<Int> by lazy {
         MediatorLiveData<Int>().apply {
@@ -67,5 +78,9 @@ class SharedDayViewFragmentViewModel @ViewModelInject constructor(
 
     fun updateSubjectName(id: Long, newName: String?) = viewModelScope.launch {
         scheduleRepository.updateSubjectName(id, newName)
+    }
+
+    fun setNumeratorOverride(value: Boolean) {
+        isNumeratorOverrideLiveData.value = value
     }
 }

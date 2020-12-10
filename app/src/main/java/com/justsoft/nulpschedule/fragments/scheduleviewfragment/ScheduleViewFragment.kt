@@ -85,24 +85,23 @@ class ScheduleViewFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_schedule_view, menu)
+
         menu.findItem(R.id.switch_numerator).actionView.apply {
             this as MaterialButton
             sharedViewModel.isNumeratorLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
-                this.isChecked = sharedViewModel.isNumeratorOverrideLiveData.value ?: it
-            }
-            sharedViewModel.isNumeratorOverrideLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
-                it?.let { this.isChecked = it }
+                this.isChecked = it ?: return@observe
             }
 
-            isChecked = sharedViewModel.isNumeratorOverride ?: sharedViewModel.isNumerator
+            //isChecked = sharedViewModel.isNumeratorOverride ?: sharedViewModel.isNumeratorToday
             setTooltipTextCompat(if (isChecked) R.string.switch_to_denominator else R.string.switch_to_numerator)
             addOnCheckedChangeListener { _, isChecked ->
                 startAnimation(numeratorTurnAnimation)
 
-                sharedViewModel.isNumeratorOverrideLiveData.postValue(isChecked)
+                sharedViewModel.setNumeratorOverride(isChecked)
                 setTooltipTextCompat(if (isChecked) R.string.switch_to_denominator else R.string.switch_to_numerator)
             }
         }
+
         menu.findItem(R.id.switch_subgroup).apply {
             sharedViewModel.subgroupLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 title = sharedViewModel.subgroup.toString()
