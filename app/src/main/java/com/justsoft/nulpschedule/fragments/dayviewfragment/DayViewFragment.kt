@@ -47,8 +47,11 @@ class DayViewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.daySubjectsRecyclerView.layoutManager = LinearLayoutManager(this.context)
         mClassAdapter = ClassRecyclerViewAdapter(timeFormatter)
+        mClassAdapter.setHasStableIds(true)
+        binding.daySubjectsRecyclerView.layoutManager = LinearLayoutManager(this.context)
+        binding.daySubjectsRecyclerView.setHasFixedSize(true)
+        binding.daySubjectsRecyclerView.setItemViewCacheSize(10)    // we don't really expect to have more than 10 classes
         binding.daySubjectsRecyclerView.adapter = mClassAdapter
         mClassAdapter.subjectNameChange { subject, newName ->
             Firebase.analytics.logEvent("subject_name_change") { }

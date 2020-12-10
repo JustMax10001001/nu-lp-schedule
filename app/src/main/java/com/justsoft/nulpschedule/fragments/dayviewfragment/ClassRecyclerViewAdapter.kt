@@ -36,6 +36,10 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         onSubjectNameChange = action
     }
 
+    override fun getItemId(position: Int): Long {
+        return classList[position].scheduleClass.id
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
         val binding = DataBindingUtil.inflate<ClassViewLayoutBinding>(
             LayoutInflater.from(parent.context),
