@@ -2,6 +2,7 @@ package com.justsoft.nulpschedule.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.justsoft.nulpschedule.api.ScheduleApi
 import com.justsoft.nulpschedule.api.model.ApiScheduleClass
 import com.justsoft.nulpschedule.api.model.ApiSubject
@@ -35,37 +36,35 @@ class ScheduleRepository @Inject constructor(
         )
 
     @Suppress("DeferredResultUnused")
-    suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> {
+    suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> = liveData {
+        emitSource(instituteAndGroupListLiveData)
         if (instituteAndGroupListLiveData.value !is Success) {
             withContext(Dispatchers.IO) {
-                async {
-                    try {
-                        instituteAndGroupListLiveData.postValue(Loading())
-                        val alreadyDownloaded = getDownloadedInstitutesAndGroups()
-                        val jobs = mutableListOf<Job>()
-                        val institutesWithGroup = mutableListOf<InstituteAndGroup>()
-                        for (institute in getInstitutes().getOrThrow().sorted()) {
-                            if (institute == "All")
-                                continue
-                            jobs.add(launch {
-                                val groups = getGroups(institute).getOrThrow()
-                                val result = groups.filter { it != "All" }
-                                    .map { InstituteAndGroup(institute, it) }
-                                    .filter { !alreadyDownloaded.contains(it) }
-                                synchronized(institutesWithGroup) {
-                                    institutesWithGroup.addAll(result)
-                                }
-                            })
-                        }
-                        jobs.joinAll()
-                        instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
-                    } catch (e: Exception) {
-                        instituteAndGroupListLiveData.postValue(Error(e))
+                try {
+                    instituteAndGroupListLiveData.postValue(Loading())
+                    val alreadyDownloaded = getDownloadedInstitutesAndGroups()
+                    val jobs = mutableListOf<Job>()
+                    val institutesWithGroup = mutableListOf<InstituteAndGroup>()
+                    for (institute in getInstitutes().getOrThrow().sorted()) {
+                        if (institute == "All")
+                            continue
+                        jobs.add(launch {
+                            val groups = getGroups(institute).getOrThrow()
+                            val result = groups.filter { it != "All" }
+                                .map { InstituteAndGroup(institute, it) }
+                                .filter { !alreadyDownloaded.contains(it) }
+                            synchronized(institutesWithGroup) {
+                                institutesWithGroup.addAll(result)
+                            }
+                        })
                     }
+                    jobs.joinAll()
+                    instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
+                } catch (e: Exception) {
+                    instituteAndGroupListLiveData.postValue(Error(e))
                 }
             }
         }
-        return instituteAndGroupListLiveData
     }
 
     private suspend fun getDownloadedInstitutesAndGroups(scheduleType: ScheduleType = ScheduleType.STUDENT): List<InstituteAndGroup> =
