@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
@@ -64,10 +65,6 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         return SubjectViewHolder(mAsyncLayoutInflater, temporaryLayout)
     }
 
-    // converts dp to px
-    private val Int.dp: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
     private fun notifyChanges(
         oldSubjectList: List<EntityClassWithSubject>,
         newSubjectList: List<EntityClassWithSubject>
@@ -97,7 +94,7 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
             bulletedAdditionalInfoTextView.text =
                 createAdditionalInfoSpan(classList[position], itemView.context)
 
-            itemView.setOnClickListener {
+            classCardView.setOnClickListener {
                 onlineClassUrl?.let { openClassUrl(it, itemView.context) }
             }
 
@@ -287,6 +284,10 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
             } else {
                 this.onInflated = onInflated
             }
+        }
+
+        val classCardView: MaterialCardView by lazy {
+            itemView.findViewById(R.id.class_card_view)
         }
 
         val subjectNameTextView: TextView by lazy {
