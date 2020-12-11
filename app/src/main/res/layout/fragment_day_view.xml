@@ -12,7 +12,6 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         android:paddingVertical="@dimen/recycler_vertical_margin"
-        android:paddingHorizontal="@dimen/recycler_horizontal_margin"
         android:layoutAnimation="@anim/recycler_card_layout_animation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

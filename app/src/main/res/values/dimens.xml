@@ -6,4 +6,5 @@
     <dimen name="subject_secondary_info_text_size">12sp</dimen>
     <dimen name="subject_card_corner_radius">4dp</dimen>
     <dimen name="recycler_horizontal_margin">24dp</dimen>
+    <dimen name="class_view_card_height">136dp</dimen>
 </resources>

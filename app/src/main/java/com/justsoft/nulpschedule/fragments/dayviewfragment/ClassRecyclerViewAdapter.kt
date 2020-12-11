@@ -3,14 +3,12 @@ package com.justsoft.nulpschedule.fragments.dayviewfragment
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -29,6 +27,8 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         notifyChanges(oldValue, newValue)
     }
 
+    private lateinit var mAsyncLayoutInflater: AsyncLayoutInflater
+
     private var onSubjectNameChange: (Subject, String?) -> Unit = { _, _ -> }
 
     fun subjectNameChange(action: (Subject, String?) -> Unit) {
@@ -40,10 +40,27 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
-        val root =
-            LayoutInflater.from(parent.context).inflate(R.layout.class_view_layout, parent, false)
-        return SubjectViewHolder(root)
+        if (!this::mAsyncLayoutInflater.isInitialized)
+            mAsyncLayoutInflater = AsyncLayoutInflater(parent.context)
+
+        val context = parent.context
+
+        val temporaryLayout = FrameLayout(context).apply {
+            val paddingVertical = context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
+            val paddingHorizontal = context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin)
+            val cardHeight = context.resources.getDimensionPixelSize(R.dimen.class_view_card_height)
+            layoutParams =
+                ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, cardHeight + paddingVertical * 2)
+            clipToPadding = false
+            setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
+
+        }
+        return SubjectViewHolder(mAsyncLayoutInflater, temporaryLayout)
     }
+
+    // converts dp to px
+    private val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     private fun notifyChanges(
         oldSubjectList: List<EntityClassWithSubject>,
@@ -61,7 +78,7 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
 
         val onlineClassUrl = currentClass.url
 
-        holder.apply {
+        holder.invokeOnInflated {
             classIndexTextView.text = currentClass.index.toString()
             classStartTimeTextView.text =
                 timeFormatter.formatStartTimeForSubjectIndex(currentClass.index)
@@ -81,8 +98,9 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
             // we inflate menu there, so we might as well do it
             // later while having more responsive recycler view
             itemView.post {
-                val popup = prepareButtonPopup(itemView.context, verticalElipsisImageButton, position)
-                verticalElipsisImageButton.setOnClickListener { popup.show() }
+                val popup =
+                    prepareButtonPopup(itemView.context, verticalEllipsisImageButton, position)
+                verticalEllipsisImageButton.setOnClickListener { popup.show() }
             }
         }
     }
@@ -224,23 +242,67 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
 
     override fun getItemCount(): Int = classList.size
 
-    class SubjectViewHolder(subjectView: View) :
-        RecyclerView.ViewHolder(subjectView) {
+    class SubjectViewHolder(
+        asyncLayoutInflater: AsyncLayoutInflater,
+        private val temporaryLayout: ViewGroup
+    ) : RecyclerView.ViewHolder(temporaryLayout) {
 
-        val subjectNameTextView = subjectView.findViewById<TextView>(R.id.subject_name_text_view)
-        val classDescriptionTextView =
-            subjectView.findViewById<TextView>(R.id.class_description_text_view)
-        val lecturerNameTextView = subjectView.findViewById<TextView>(R.id.lecturer_name_text_view)
-        val bulletedAdditionalInfoTextView =
-            subjectView.findViewById<TextView>(R.id.bulleted_additional_info_text_view)
+        lateinit var onInflated: SubjectViewHolder.() -> Unit
+        var isInflationComplete = false
 
-        val verticalElipsisImageButton =
-            subjectView.findViewById<ImageButton>(R.id.vertical_elipsis_button)
+        init {
+            asyncLayoutInflater.inflate(
+                R.layout.class_view_layout,
+                temporaryLayout
+            ) { view, _, _ ->
+                temporaryLayout.addView(
+                    view,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                    )
+                )
+                isInflationComplete = true
+                if (this::onInflated.isInitialized) {
+                    onInflated()
+                }
+            }
+        }
 
-        val classIndexTextView = subjectView.findViewById<TextView>(R.id.class_index_text_view)
-        val classStartTimeTextView =
-            subjectView.findViewById<TextView>(R.id.class_start_time_text_view)
-        val classEndTimeTextView = subjectView.findViewById<TextView>(R.id.class_end_time_text_view)
+        fun invokeOnInflated(onInflated: SubjectViewHolder.() -> Unit) {
+            if (isInflationComplete) {
+                onInflated()
+            } else {
+                this.onInflated = onInflated
+            }
+        }
+
+        val subjectNameTextView: TextView by lazy {
+            itemView.findViewById(R.id.subject_name_text_view)
+        }
+        val classDescriptionTextView: TextView by lazy {
+            itemView.findViewById(R.id.class_description_text_view)
+        }
+        val lecturerNameTextView: TextView by lazy {
+            itemView.findViewById(R.id.lecturer_name_text_view)
+        }
+        val bulletedAdditionalInfoTextView: TextView by lazy {
+            itemView.findViewById(R.id.bulleted_additional_info_text_view)
+        }
+
+        val verticalEllipsisImageButton: ImageButton by lazy {
+            itemView.findViewById(R.id.vertical_elipsis_button)
+        }
+
+        val classIndexTextView: TextView by lazy {
+            itemView.findViewById(R.id.class_index_text_view)
+        }
+        val classStartTimeTextView: TextView by lazy {
+            itemView.findViewById(R.id.class_start_time_text_view)
+        }
+        val classEndTimeTextView: TextView by lazy {
+            itemView.findViewById(R.id.class_end_time_text_view)
+        }
     }
 
     internal class ClassesDiffCallback(
