@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.net.Uri
 import android.view.Gravity
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.recyclerview.widget.DiffUtil
@@ -255,6 +256,7 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                 R.layout.class_view_layout,
                 temporaryLayout
             ) { view, _, _ ->
+                view.alpha = 0.1f
                 temporaryLayout.addView(
                     view,
                     FrameLayout.LayoutParams(
@@ -262,6 +264,11 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                         FrameLayout.LayoutParams.WRAP_CONTENT
                     )
                 )
+                view.animate()
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .setDuration(250)
+                    .alpha(1f)
+                    .start()
                 isInflationComplete = true
                 if (this::onInflated.isInitialized) {
                     onInflated()
