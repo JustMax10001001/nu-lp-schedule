@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
+            android:stateListAnimator="@animator/card_state_list_animator"
             android:paddingHorizontal="@dimen/recycler_horizontal_margin"
             android:paddingVertical="@dimen/recycler_vertical_margin"
             android:clipToPadding="false" />

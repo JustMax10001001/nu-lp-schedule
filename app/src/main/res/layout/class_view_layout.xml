@@ -8,6 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:theme="@style/Theme.SchedulerTheme.ClassCard"
+    android:stateListAnimator="@animator/card_state_list_animator"
     app:cardCornerRadius="?attr/cornerRadius"
     app:cardElevation="?attr/cardElevation"
     tools:viewBindingIgnore="true">
