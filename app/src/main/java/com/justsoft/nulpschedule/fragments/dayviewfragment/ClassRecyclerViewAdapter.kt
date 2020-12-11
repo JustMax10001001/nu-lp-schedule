@@ -47,11 +47,16 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         val context = parent.context
 
         val temporaryLayout = FrameLayout(context).apply {
-            val paddingVertical = context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
-            val paddingHorizontal = context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin)
+            val paddingVertical =
+                context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
+            val paddingHorizontal =
+                context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin)
             val cardHeight = context.resources.getDimensionPixelSize(R.dimen.class_view_card_height)
             layoutParams =
-                ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, cardHeight + paddingVertical * 2)
+                ViewGroup.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    cardHeight + paddingVertical * 2
+                )
             clipToPadding = false
             setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
 
