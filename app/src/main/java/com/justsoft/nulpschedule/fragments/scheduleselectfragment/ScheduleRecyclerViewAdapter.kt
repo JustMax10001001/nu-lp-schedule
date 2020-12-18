@@ -130,11 +130,8 @@ class ScheduleRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
                     oldItem.schedule.subgroup == newItem.schedule.subgroup &&
                     oldItem.currentClass?.subject?.displayName == newItem.currentClass?.subject?.displayName &&
                     oldItem.currentClass?.scheduleClass?.index == newItem.currentClass?.scheduleClass?.index &&
-                    (oldItem.currentClass?.scheduleClass?.url != null) == (newItem.currentClass?.scheduleClass?.url != null) &&
                     oldItem.nextClass?.subject?.displayName == newItem.nextClass?.subject?.displayName &&
-                    oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index &&
-                    (oldItem.nextClass?.scheduleClass?.url != null) == (newItem.nextClass?.scheduleClass?.url != null)
-
+                    oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index
         }
     }
 }
