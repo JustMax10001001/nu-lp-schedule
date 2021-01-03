@@ -3,7 +3,6 @@ package com.justsoft.nulpschedule.fragments.dayviewfragment
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.view.Gravity
 import android.view.ViewGroup
@@ -22,14 +21,16 @@ import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.clipboardManager
 import kotlin.properties.Delegates
 
-class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
+class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
     RecyclerView.Adapter<ClassRecyclerViewAdapter.SubjectViewHolder>() {
 
     var classList: List<EntityClassWithSubject> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
         notifyChanges(oldValue, newValue)
     }
 
-    private lateinit var mAsyncLayoutInflater: AsyncLayoutInflater
+    private val mAsyncLayoutInflater: AsyncLayoutInflater by lazy {
+        AsyncLayoutInflater(context)
+    }
 
     private var onSubjectNameChange: (Subject, String?) -> Unit = { _, _ -> }
 
@@ -42,28 +43,40 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
-        if (!this::mAsyncLayoutInflater.isInitialized)
-            mAsyncLayoutInflater = AsyncLayoutInflater(parent.context)
-
         val context = parent.context
 
-        val temporaryLayout = FrameLayout(context).apply {
-            val paddingVertical =
-                context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
-            val paddingHorizontal =
-                context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin)
-            val cardHeight = context.resources.getDimensionPixelSize(R.dimen.class_view_card_height)
+        val temporaryLayout = createTemporaryLayout(context)
+        return SubjectViewHolder(mAsyncLayoutInflater, temporaryLayout)
+    }
+
+    private val cardPaddingVertical by lazy {
+        context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
+    }
+
+    private val cardPaddingHorizontal by lazy {
+        context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin) / 2
+    }
+
+    private val cardHeight by lazy {
+        context.resources.getDimensionPixelSize(R.dimen.class_view_card_height)
+    }
+
+    private fun createTemporaryLayout(context: Context): FrameLayout =
+        FrameLayout(context).apply {
             layoutParams =
                 ViewGroup.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    cardHeight + paddingVertical * 2
+                    cardHeight + cardPaddingVertical * 2
                 )
             clipToPadding = false
-            setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
-
+            setPadding(
+                cardPaddingHorizontal,
+                cardPaddingVertical,
+                cardPaddingHorizontal,
+                cardPaddingVertical
+            )
         }
-        return SubjectViewHolder(mAsyncLayoutInflater, temporaryLayout)
-    }
+
 
     private fun notifyChanges(
         oldSubjectList: List<EntityClassWithSubject>,
