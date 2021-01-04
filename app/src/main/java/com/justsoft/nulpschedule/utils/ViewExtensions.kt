@@ -4,6 +4,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import android.widget.EditText
+import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import com.google.android.material.button.MaterialButton
@@ -16,4 +17,8 @@ fun View.requestFocusAndKeyboard() {
 
 fun View.setTooltipTextCompat(@StringRes resId: Int) {
     TooltipCompat.setTooltipText(this, context.getString(resId))
+}
+
+fun <T: View> View.lazyFind(@IdRes viewId: Int) = lazy {
+    this.findViewById<T>(viewId)
 }
