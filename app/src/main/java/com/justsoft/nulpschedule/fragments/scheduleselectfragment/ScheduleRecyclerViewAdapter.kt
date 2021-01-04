@@ -3,10 +3,7 @@ package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.annotation.LayoutRes
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -117,8 +114,8 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     class ScheduleViewHolder(
         context: Context,
         @LayoutRes layoutId: Int,
-        temporaryLayoutFactory: (Context) -> ViewGroup
-    ) : AsyncLoadedViewHolder(context, layoutId, temporaryLayoutFactory) {
+        initialLayoutFactory: (Context) -> ViewGroup
+    ) : AsyncLoadedViewHolder(context, layoutId, initialLayoutFactory) {
 
 
     }

@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 open class AsyncLoadedViewHolder(
     context: Context,
     @LayoutRes layoutId: Int,
-    temporaryLayoutFactory: (Context) -> ViewGroup
-) : RecyclerView.ViewHolder(temporaryLayoutFactory(context)) {
+    initialLayoutFactory: (Context) -> ViewGroup
+) : RecyclerView.ViewHolder(initialLayoutFactory(context)) {
 
     private val temporaryLayout: ViewGroup = itemView as ViewGroup
 
