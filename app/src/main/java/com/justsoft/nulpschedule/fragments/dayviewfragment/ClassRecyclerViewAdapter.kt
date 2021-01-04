@@ -6,8 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.view.Gravity
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
+import androidx.annotation.LayoutRes
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.model.Subject
+import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.clipboardManager
@@ -23,7 +24,7 @@ import com.justsoft.nulpschedule.utils.lazyFind
 import kotlin.properties.Delegates
 
 class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
-    RecyclerView.Adapter<ClassRecyclerViewAdapter.SubjectViewHolder>() {
+    RecyclerView.Adapter<ClassRecyclerViewAdapter.ClassViewHolder>() {
 
     var classList: List<EntityClassWithSubject> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
         notifyChanges(oldValue, newValue)
@@ -43,11 +44,11 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         return classList[position].scheduleClass.id
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
         val context = parent.context
 
         val temporaryLayout = createTemporaryLayout(context)
-        return SubjectViewHolder(mAsyncLayoutInflater, temporaryLayout)
+        return ClassViewHolder(context, R.layout.class_view_layout, temporaryLayout)
     }
 
     private val cardPaddingVertical by lazy {
@@ -89,13 +90,15 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
         val currentClass = classList[position].scheduleClass
         val currentSubject = classList[position].subject
 
         val onlineClassUrl = currentClass.url
 
         holder.invokeOnInflated {
+            this as ClassViewHolder
+
             classIndexTextView.text = currentClass.index.toString()
             classStartTimeTextView.text =
                 timeFormatter.formatStartTimeForSubjectIndex(currentClass.index)
@@ -259,46 +262,11 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
 
     override fun getItemCount(): Int = classList.size
 
-    class SubjectViewHolder(
-        asyncLayoutInflater: AsyncLayoutInflater,
+    class ClassViewHolder(
+        context: Context,
+        @LayoutRes layoutId: Int,
         private val temporaryLayout: ViewGroup
-    ) : RecyclerView.ViewHolder(temporaryLayout) {
-
-        lateinit var onInflated: SubjectViewHolder.() -> Unit
-        var isInflationComplete = false
-
-        init {
-            asyncLayoutInflater.inflate(
-                R.layout.class_view_layout,
-                temporaryLayout
-            ) { view, _, _ ->
-                view.alpha = 0.1f
-                temporaryLayout.addView(
-                    view,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT
-                    )
-                )
-                view.animate()
-                    .setInterpolator(AccelerateDecelerateInterpolator())
-                    .setDuration(250)
-                    .alpha(1f)
-                    .start()
-                isInflationComplete = true
-                if (this::onInflated.isInitialized) {
-                    onInflated()
-                }
-            }
-        }
-
-        fun invokeOnInflated(onInflated: SubjectViewHolder.() -> Unit) {
-            if (isInflationComplete) {
-                onInflated()
-            } else {
-                this.onInflated = onInflated
-            }
-        }
+    ) : AsyncLoadedViewHolder(context, layoutId, temporaryLayout) {
 
         val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
 
