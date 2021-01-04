@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 open class AsyncLoadedViewHolder(
     context: Context,
     @LayoutRes layoutId: Int,
-    private val temporaryLayout: ViewGroup
-) : RecyclerView.ViewHolder(temporaryLayout) {
+    temporaryLayoutFactory: (Context) -> ViewGroup
+) : RecyclerView.ViewHolder(temporaryLayoutFactory(context)) {
+
+    private val temporaryLayout: ViewGroup = itemView as ViewGroup
 
     lateinit var onInflated: AsyncLoadedViewHolder.() -> Unit
     var isInflationComplete = false

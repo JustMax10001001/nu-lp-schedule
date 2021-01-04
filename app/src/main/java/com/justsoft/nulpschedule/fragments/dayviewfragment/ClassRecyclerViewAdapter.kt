@@ -45,10 +45,9 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
-        val context = parent.context
-
-        val temporaryLayout = createTemporaryLayout(context)
-        return ClassViewHolder(context, R.layout.class_view_layout, temporaryLayout)
+        return ClassViewHolder(parent.context, R.layout.class_view_layout) {
+            createTemporaryLayout(it)
+        }
     }
 
     private val cardPaddingVertical by lazy {
@@ -265,8 +264,8 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     class ClassViewHolder(
         context: Context,
         @LayoutRes layoutId: Int,
-        private val temporaryLayout: ViewGroup
-    ) : AsyncLoadedViewHolder(context, layoutId, temporaryLayout) {
+        temporaryLayoutFactory: (Context) -> ViewGroup,
+    ) : AsyncLoadedViewHolder(context, layoutId, temporaryLayoutFactory) {
 
         val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
 
