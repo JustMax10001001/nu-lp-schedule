@@ -19,6 +19,7 @@ import com.justsoft.nulpschedule.model.Subject
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.clipboardManager
+import com.justsoft.nulpschedule.utils.lazyFind
 import kotlin.properties.Delegates
 
 class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
@@ -299,36 +300,18 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
             }
         }
 
-        val classCardView: MaterialCardView by lazy {
-            itemView.findViewById(R.id.class_card_view)
-        }
+        val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
 
-        val subjectNameTextView: TextView by lazy {
-            itemView.findViewById(R.id.subject_name_text_view)
-        }
-        val classDescriptionTextView: TextView by lazy {
-            itemView.findViewById(R.id.class_description_text_view)
-        }
-        val lecturerNameTextView: TextView by lazy {
-            itemView.findViewById(R.id.lecturer_name_text_view)
-        }
-        val bulletedAdditionalInfoTextView: TextView by lazy {
-            itemView.findViewById(R.id.bulleted_additional_info_text_view)
-        }
+        val subjectNameTextView: TextView by itemView.lazyFind(R.id.subject_name_text_view)
+        val classDescriptionTextView: TextView by itemView.lazyFind(R.id.class_description_text_view)
+        val lecturerNameTextView: TextView by itemView.lazyFind(R.id.lecturer_name_text_view)
+        val bulletedAdditionalInfoTextView: TextView by itemView.lazyFind(R.id.bulleted_additional_info_text_view)
 
-        val verticalEllipsisImageButton: ImageButton by lazy {
-            itemView.findViewById(R.id.vertical_elipsis_button)
-        }
+        val verticalEllipsisImageButton: ImageButton by itemView.lazyFind(R.id.vertical_elipsis_button)
 
-        val classIndexTextView: TextView by lazy {
-            itemView.findViewById(R.id.class_index_text_view)
-        }
-        val classStartTimeTextView: TextView by lazy {
-            itemView.findViewById(R.id.class_start_time_text_view)
-        }
-        val classEndTimeTextView: TextView by lazy {
-            itemView.findViewById(R.id.class_end_time_text_view)
-        }
+        val classIndexTextView: TextView by itemView.lazyFind(R.id.class_index_text_view)
+        val classStartTimeTextView: TextView by itemView.lazyFind(R.id.class_start_time_text_view)
+        val classEndTimeTextView: TextView by itemView.lazyFind(R.id.class_end_time_text_view)
     }
 
     internal class ClassesDiffCallback(
