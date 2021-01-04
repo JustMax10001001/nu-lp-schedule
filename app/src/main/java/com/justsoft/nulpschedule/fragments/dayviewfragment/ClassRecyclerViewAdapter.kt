@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.LayoutRes
@@ -30,9 +31,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         notifyChanges(oldValue, newValue)
     }
 
-    private val mAsyncLayoutInflater: AsyncLayoutInflater by lazy {
-        AsyncLayoutInflater(context)
-    }
+    private val mLayoutInflater = LayoutInflater.from(context)
 
     private var onSubjectNameChange: (Subject, String?) -> Unit = { _, _ -> }
 
@@ -46,38 +45,9 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
         return ClassViewHolder(parent.context, R.layout.class_view_layout) {
-            createTemporaryLayout(it)
+            mLayoutInflater.inflate(R.layout.card_layout, parent, false) as MaterialCardView
         }
     }
-
-    private val cardPaddingVertical by lazy {
-        context.resources.getDimensionPixelSize(R.dimen.recycler_vertical_margin) / 2
-    }
-
-    private val cardPaddingHorizontal by lazy {
-        context.resources.getDimensionPixelSize(R.dimen.recycler_horizontal_margin) / 2
-    }
-
-    private val cardHeight by lazy {
-        context.resources.getDimensionPixelSize(R.dimen.class_view_card_height)
-    }
-
-    private fun createTemporaryLayout(context: Context): FrameLayout =
-        FrameLayout(context).apply {
-            layoutParams =
-                ViewGroup.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    cardHeight + cardPaddingVertical * 2
-                )
-            clipToPadding = false
-            setPadding(
-                cardPaddingHorizontal,
-                cardPaddingVertical,
-                cardPaddingHorizontal,
-                cardPaddingVertical
-            )
-        }
-
 
     private fun notifyChanges(
         oldSubjectList: List<EntityClassWithSubject>,
