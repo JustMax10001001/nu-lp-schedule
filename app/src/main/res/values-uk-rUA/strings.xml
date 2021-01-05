@@ -15,10 +15,10 @@
     <string name="change_custom_subject_name">Змінити ім\'я предмету</string>
     <string name="enter_custom_subject_name">Введіть ім\'я предмету</string>
     <string name="custom_subject_name">Ім\'я предмету</string>
-    <string name="subject_now">Зараз: %s</string>
-    <string name="subject_next_up">Далі: %s</string>
-    <string name="subject_ends_at">Кінець: %s</string>
-    <string name="subject_starts_at">Початок: %s</string>
+    <string name="class_now">Зараз: %s</string>
+    <string name="class_next_up">Далі: %s</string>
+    <string name="class_ends_at">Кінець: %s</string>
+    <string name="class_starts_at">Початок: %s</string>
     <string name="something_went_wrong">Щось пішло не так</string>
     <string name="add_new_schedule">Додати розклад</string>
     <string name="institute_group">Інститут та група</string>
