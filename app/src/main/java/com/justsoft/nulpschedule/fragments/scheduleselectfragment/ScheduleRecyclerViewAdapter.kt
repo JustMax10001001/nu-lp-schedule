@@ -2,7 +2,9 @@ package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import com.justsoft.nulpschedule.db.model.UpdateEntitySchedulePosition
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
 import com.justsoft.nulpschedule.utils.TimeFormatter
+import com.justsoft.nulpschedule.utils.lazyFind
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
 
@@ -54,18 +57,14 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
-        /*val binding = DataBindingUtil.findBinding<SchedulePreviewLayoutBinding>(holder.itemView)
-            ?: return
-        binding.timeFormatter = timeFormatter
-        binding.schedule = scheduleList[position].schedule
-        binding.currentClass = scheduleList[position].currentClass
-        binding.showCurrentClass = showCurrentClass && binding.currentClass != null
-        binding.nextClass = scheduleList[position].nextClass
-        holder.itemView.apply {
-            setOnClickListener {
-                onSelectSchedule(binding.schedule!!)
-            }
-        }*/
+        val schedule = scheduleList[position].schedule
+        val currentClass = scheduleList[position].currentClass
+        val nextClass = scheduleList[position].nextClass
+
+        holder.invokeOnInflated {
+            this as ScheduleViewHolder
+
+        }
     }
 
     override fun getItemCount(): Int {
@@ -117,7 +116,26 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         initialLayoutFactory: (Context) -> ViewGroup
     ) : AsyncLoadedViewHolder(context, layoutId, initialLayoutFactory) {
 
+        val groupNameTextView: TextView by itemView.lazyFind(R.id.group_text_view)
+        val instituteNameTextView: TextView by itemView.lazyFind(R.id.institute_text_view)
 
+        val nowClass = NowClass()
+
+        val dividerView: View by itemView.lazyFind(R.id.divider)
+
+        val nextClass = NextClass()
+
+        inner class NowClass {
+            val nowTextView: TextView by itemView.lazyFind(R.id.now_text_view)
+            val subjectNameTextView: TextView by itemView.lazyFind(R.id.current_subject_name_text_view)
+            val classEndTimeTextView: TextView by itemView.lazyFind(R.id.current_class_end_time_text_view)
+        }
+
+        inner class NextClass {
+            val nextUpTextView: TextView by itemView.lazyFind(R.id.next_up_text_view)
+            val subjectNameTextView: TextView by itemView.lazyFind(R.id.next_subject_name_text_view)
+            val classStartTimeTextView: TextView by itemView.lazyFind(R.id.next_class_start_time_text_view)
+        }
     }
 
     internal class ScheduleDiffCallback(
