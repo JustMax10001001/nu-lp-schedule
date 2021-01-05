@@ -64,6 +64,34 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         holder.invokeOnInflated {
             this as ScheduleViewHolder
 
+            groupNameTextView.text = schedule.groupName
+            instituteNameTextView.text = schedule.instituteName
+
+            val showCurrentClass =
+                currentClass != null && this@ScheduleRecyclerViewAdapter.showCurrentClass
+            val context = holder.itemView.context
+            if (showCurrentClass) {
+                nowClassPanel.visibility = View.VISIBLE
+                dividerView.visibility = View.VISIBLE
+                nowClass.subjectNameTextView.text = currentClass?.subject?.displayName
+                nowClass.classEndTimeTextView.text = context.getString(
+                    R.string.class_ends_at,
+                    timeFormatter.formatEndTimeForSubjectIndex(
+                        currentClass?.scheduleClass?.index ?: 1
+                    )
+                )
+            } else {
+                nowClassPanel.visibility = View.GONE
+                dividerView.visibility = View.GONE
+            }
+
+            nextUpClass.subjectNameTextView.text = nextClass?.subject?.displayName
+            nextUpClass.classStartTimeTextView.text = context.getString(
+                R.string.class_starts_at,
+                timeFormatter.formatStartTimeForSubjectIndex(
+                    nextClass?.scheduleClass?.index ?: 1
+                )
+            )
         }
     }
 
@@ -120,10 +148,11 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         val instituteNameTextView: TextView by itemView.lazyFind(R.id.institute_text_view)
 
         val nowClass = NowClass()
+        val nowClassPanel: ViewGroup by itemView.lazyFind(R.id.now_class_panel)
 
         val dividerView: View by itemView.lazyFind(R.id.divider)
 
-        val nextClass = NextClass()
+        val nextUpClass = NextClass()
 
         inner class NowClass {
             val nowTextView: TextView by itemView.lazyFind(R.id.now_text_view)
