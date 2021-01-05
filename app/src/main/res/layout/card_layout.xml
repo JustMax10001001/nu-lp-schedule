@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/schedule_view_card"
     android:layout_width="match_parent"
-    android:layout_height="128dp"
+    android:layout_height="@dimen/subject_list_height"
     android:layout_marginVertical="@dimen/recycler_vertical_margin"
     android:checkable="false"
     android:clickable="true"

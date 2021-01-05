@@ -31,7 +31,7 @@ open class AsyncLoadedViewHolder(
                 view,
                 LayoutParams(
                     LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT
+                    LayoutParams.MATCH_PARENT
                 )
             )
             view.animate()
