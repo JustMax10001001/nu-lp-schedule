@@ -16,8 +16,9 @@ open class AsyncLoadedViewHolder(
 
     private val temporaryLayout: ViewGroup = itemView as ViewGroup
 
-    lateinit var onInflated: AsyncLoadedViewHolder.() -> Unit
+    private lateinit var onInflated: AsyncLoadedViewHolder.() -> Unit
     var isInflationComplete = false
+        private set
 
     init {
         val asyncLayoutInflater = AsyncLayoutInflater(context)
