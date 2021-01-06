@@ -1,11 +1,9 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.content.Context
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
@@ -53,8 +51,8 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
-        return ScheduleViewHolder(parent.context, R.layout.schedule_preview_layout) {
-            mLayoutInflater.inflate(R.layout.card_layout, parent, false) as MaterialCardView
+        return ScheduleViewHolder(parent.context, R.layout.schedule_content_card_layout) {
+            mLayoutInflater.inflate(R.layout.schedule_background_card_layout, parent, false) as MaterialCardView
         }
     }
 

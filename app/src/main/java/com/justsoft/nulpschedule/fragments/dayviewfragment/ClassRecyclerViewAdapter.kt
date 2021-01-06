@@ -43,8 +43,12 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
-        return ClassViewHolder(parent.context, R.layout.class_view_layout) {
-            mLayoutInflater.inflate(R.layout.card_layout, parent, false) as MaterialCardView
+        return ClassViewHolder(parent.context, R.layout.class_content_card_layout) {
+            (mLayoutInflater.inflate(
+                R.layout.class_background_card_layout,
+                parent,
+                false
+            ) as MaterialCardView)
         }
     }
 
