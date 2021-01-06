@@ -79,7 +79,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
             bulletedAdditionalInfoTextView.text =
                 createAdditionalInfoSpan(classList[position], itemView.context)
 
-            classCardView.setOnClickListener {
+            itemView.setOnClickListener {
                 onlineClassUrl?.let { openClassUrl(it, itemView.context) }
             }
 
@@ -236,7 +236,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         initialLayoutFactory: (Context) -> ViewGroup,
     ) : AsyncLoadedViewHolder(context, layoutId, initialLayoutFactory) {
 
-        val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
+        //val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
 
         val subjectNameTextView: TextView by itemView.lazyFind(R.id.subject_name_text_view)
         val classDescriptionTextView: TextView by itemView.lazyFind(R.id.class_description_text_view)
