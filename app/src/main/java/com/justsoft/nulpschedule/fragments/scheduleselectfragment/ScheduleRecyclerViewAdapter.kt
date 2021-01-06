@@ -1,9 +1,11 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
@@ -70,9 +72,18 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
             val showCurrentClass =
                 currentClass != null && this@ScheduleRecyclerViewAdapter.showCurrentClass
             val context = holder.itemView.context
+
+            fun setLowerHalfVisibility(visibility: Int) {
+                dividerView.visibility = visibility
+                nextUpClass.subjectNameTextView.visibility = visibility
+                nextUpClass.classStartTimeTextView.visibility = visibility
+                nextUpClass.nextUpTextView.visibility = visibility
+            }
+
             if (showCurrentClass) {
-                //nowClassPanel.visibility = View.VISIBLE
-                dividerView.visibility = View.VISIBLE
+                setLowerHalfVisibility(View.VISIBLE)
+
+                nowClass.nowTextView.setText(R.string.now)
                 nowClass.subjectNameTextView.text = currentClass?.subject?.displayName
                 nowClass.classEndTimeTextView.text = context.getString(
                     R.string.class_ends_at,
@@ -80,18 +91,32 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                         currentClass?.scheduleClass?.index ?: 1
                     )
                 )
+
+                nextUpClass.nextUpTextView.setText(R.string.next_up)
+                nextUpClass.classStartTimeTextView.text = context.getString(
+                    R.string.class_starts_at,
+                    timeFormatter.formatStartTimeForSubjectIndex(
+                        nextClass?.scheduleClass?.index ?: 1
+                    )
+                )
+                nextUpClass.subjectNameTextView.text = nextClass?.subject?.displayName
             } else {
-                //nowClassPanel.visibility = View.GONE
-                dividerView.visibility = View.GONE
+                setLowerHalfVisibility(View.INVISIBLE)
+
+                // set up upper half for next up
+                nowClass.nowTextView.setText(R.string.next_up)
+                nowClass.classEndTimeTextView.text = context.getString(
+                    R.string.class_starts_at,
+                    timeFormatter.formatStartTimeForSubjectIndex(
+                        nextClass?.scheduleClass?.index ?: 1
+                    )
+                )
+                nowClass.subjectNameTextView.text = nextClass?.subject?.displayName
             }
 
-            nextUpClass.subjectNameTextView.text = nextClass?.subject?.displayName
-            nextUpClass.classStartTimeTextView.text = context.getString(
-                R.string.class_starts_at,
-                timeFormatter.formatStartTimeForSubjectIndex(
-                    nextClass?.scheduleClass?.index ?: 1
-                )
-            )
+            itemView.setOnClickListener {
+                onSelectSchedule(schedule)
+            }
         }
     }
 
