@@ -25,10 +25,10 @@
     <string name="change_custom_subject_name">Change subject name</string>
     <string name="enter_custom_subject_name">Enter custom subject name</string>
     <string name="custom_subject_name">Custom subject name</string>
-    <string name="subject_now">Now: %s</string>
-    <string name="subject_next_up">Next up: %s</string>
-    <string name="subject_ends_at">Ends at %s</string>
-    <string name="subject_starts_at">Starts at %s</string>
+    <string name="class_now">Now: %s</string>
+    <string name="class_next_up">Next up: %s</string>
+    <string name="class_ends_at">Ends at %s</string>
+    <string name="class_starts_at">Starts at %s</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="add_new_schedule">Add new schedule</string>
     <string name="institute_group">Institute group</string>

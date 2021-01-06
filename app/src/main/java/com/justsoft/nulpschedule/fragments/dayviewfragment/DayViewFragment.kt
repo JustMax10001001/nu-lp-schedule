@@ -47,7 +47,7 @@ class DayViewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mClassAdapter = ClassRecyclerViewAdapter(timeFormatter)
+        mClassAdapter = ClassRecyclerViewAdapter(requireContext(), timeFormatter)
         mClassAdapter.setHasStableIds(true)
         binding.daySubjectsRecyclerView.layoutManager = LinearLayoutManager(this.context)
         binding.daySubjectsRecyclerView.setHasFixedSize(true)
