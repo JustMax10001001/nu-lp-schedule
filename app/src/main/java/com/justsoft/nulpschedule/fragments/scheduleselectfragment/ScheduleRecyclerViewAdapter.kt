@@ -43,7 +43,7 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     private val mLayoutInflater = LayoutInflater.from(context)
 
     override fun getItemViewType(position: Int): Int {
-        return if (showCurrentClass && scheduleList[position].nextClass != null) {
+        return if (showCurrentClass && scheduleList[position].currentClass != null) {
             VIEW_TYPE_FULL
         } else {
             VIEW_TYPE_HALF
@@ -51,8 +51,18 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
-        return ScheduleViewHolder(parent.context, R.layout.schedule_content_card_layout) {
-            mLayoutInflater.inflate(R.layout.schedule_background_card_layout, parent, false) as MaterialCardView
+        val contentLayoutId = when (viewType) {
+            VIEW_TYPE_FULL -> R.layout.schedule_content_card_layout
+            VIEW_TYPE_HALF -> R.layout.schedule_content_card_half_layout
+            else -> throw IllegalArgumentException("Unknown view type!")
+        }
+        val previewLayoutId = when (viewType) {
+            VIEW_TYPE_FULL -> R.layout.schedule_background_card_layout
+            VIEW_TYPE_HALF -> R.layout.schedule_background_card_half_layout
+            else -> throw IllegalArgumentException("Unknown view type!")
+        }
+        return ScheduleViewHolder(parent.context, contentLayoutId) {
+            mLayoutInflater.inflate(previewLayoutId, parent, false) as MaterialCardView
         }
     }
 
@@ -79,9 +89,6 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
             }
 
             if (showCurrentClass) {
-                setLowerHalfVisibility(View.VISIBLE)
-
-                nowClass.nowTextView.setText(R.string.now)
                 nowClass.subjectNameTextView.text = currentClass?.subject?.displayName
                 nowClass.classEndTimeTextView.text = context.getString(
                     R.string.class_ends_at,
@@ -89,28 +96,14 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                         currentClass?.scheduleClass?.index ?: 1
                     )
                 )
-
-                nextUpClass.nextUpTextView.setText(R.string.next_up)
-                nextUpClass.classStartTimeTextView.text = context.getString(
-                    R.string.class_starts_at,
-                    timeFormatter.formatStartTimeForSubjectIndex(
-                        nextClass?.scheduleClass?.index ?: 1
-                    )
-                )
-                nextUpClass.subjectNameTextView.text = nextClass?.subject?.displayName
-            } else {
-                setLowerHalfVisibility(View.INVISIBLE)
-
-                // set up upper half for next up
-                nowClass.nowTextView.setText(R.string.next_up)
-                nowClass.classEndTimeTextView.text = context.getString(
-                    R.string.class_starts_at,
-                    timeFormatter.formatStartTimeForSubjectIndex(
-                        nextClass?.scheduleClass?.index ?: 1
-                    )
-                )
-                nowClass.subjectNameTextView.text = nextClass?.subject?.displayName
             }
+            nextUpClass.classStartTimeTextView.text = context.getString(
+                R.string.class_starts_at,
+                timeFormatter.formatStartTimeForSubjectIndex(
+                    nextClass?.scheduleClass?.index ?: 1
+                )
+            )
+            nextUpClass.subjectNameTextView.text = nextClass?.subject?.displayName
 
             itemView.setOnClickListener {
                 onSelectSchedule(schedule)
