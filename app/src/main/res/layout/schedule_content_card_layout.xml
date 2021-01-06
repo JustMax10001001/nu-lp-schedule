@@ -26,15 +26,7 @@
         android:layout_rowSpan="2"
         android:layout_column="0"
         android:layout_gravity="bottom"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textAppearance="?attr/textAppearanceHeadline5"
-        android:textColor="?attr/colorOnPrimarySurface"
-        app:autoSizeMaxTextSize="24sp"
-        app:autoSizeMinTextSize="16sp"
-        app:autoSizeStepGranularity="2sp"
-        app:autoSizeTextType="uniform"
-        tools:ignore="RtlCompat"
+        style="@style/Theme.SchedulerTheme.ClassCard.GroupName"
         tools:text="ПЗ-14" />
 
     <TextView

@@ -23,18 +23,8 @@
             android:layout_width="@dimen/card_primary_info_width"
             android:layout_height="48dp"
             android:layout_gravity="bottom"
-            android:textAlignment="center"
-            android:textAllCaps="true"
             android:paddingTop="16dp"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="?attr/colorOnPrimarySurface"
-            android:maxLines="1"
-            android:lines="1"
-            app:autoSizeMaxTextSize="24sp"
-            app:autoSizeMinTextSize="16sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-            tools:ignore="RtlCompat"
+            style="@style/Theme.SchedulerTheme.ClassCard.GroupName"
             tools:text="ПЗ-14" />
 
         <TextView
