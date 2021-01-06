@@ -71,7 +71,7 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                 currentClass != null && this@ScheduleRecyclerViewAdapter.showCurrentClass
             val context = holder.itemView.context
             if (showCurrentClass) {
-                nowClassPanel.visibility = View.VISIBLE
+                //nowClassPanel.visibility = View.VISIBLE
                 dividerView.visibility = View.VISIBLE
                 nowClass.subjectNameTextView.text = currentClass?.subject?.displayName
                 nowClass.classEndTimeTextView.text = context.getString(
@@ -81,7 +81,7 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                     )
                 )
             } else {
-                nowClassPanel.visibility = View.GONE
+                //nowClassPanel.visibility = View.GONE
                 dividerView.visibility = View.GONE
             }
 
@@ -148,7 +148,7 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         val instituteNameTextView: TextView by itemView.lazyFind(R.id.institute_text_view)
 
         val nowClass = NowClass()
-        val nowClassPanel: ViewGroup by itemView.lazyFind(R.id.now_class_panel)
+        //val nowClassPanel: ViewGroup by itemView.lazyFind(R.id.now_class_panel)
 
         val dividerView: View by itemView.lazyFind(R.id.divider)
 

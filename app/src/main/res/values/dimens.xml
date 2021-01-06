@@ -1,6 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="subject_list_height">128dp</dimen>
+    <dimen name="schedule_preview_card_height">136dp</dimen>
     <dimen name="recycler_vertical_margin">12dp</dimen>
     <dimen name="subject_primary_info_text_size">14sp</dimen>
     <dimen name="subject_secondary_info_text_size">12sp</dimen>
@@ -8,5 +8,6 @@
     <dimen name="card_elevation_normal">6dp</dimen>
     <dimen name="card_elevation_pressed">1dp</dimen>
     <dimen name="recycler_horizontal_margin">24dp</dimen>
-    <dimen name="class_view_card_height">136dp</dimen>
+    <dimen name="class_view_card_height">128dp</dimen>
+    <dimen name="card_primary_info_width">88dp</dimen>
 </resources>
