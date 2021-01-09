@@ -23,6 +23,8 @@
             android:layout_width="@dimen/card_primary_info_width"
             android:layout_height="48dp"
             android:layout_gravity="bottom"
+            android:gravity="bottom|center_horizontal"
+            android:textAlignment="center"
             android:paddingTop="16dp"
             style="@style/Theme.SchedulerTheme.ClassCard.GroupName"
             tools:text="ПЗ-14" />
