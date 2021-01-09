@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Расписание НУ ЛП</string>
     <string name="action_settings">Настройки</string>
     <string name="next">Следующий</string>
     <string name="previous">Предыдущий</string>
@@ -71,4 +70,6 @@
     <string name="more">Дополнительно</string>
     <string name="menu_action_share_class">Поделиться парой</string>
     <string name="class_share_text_with_url">%d. %s %s %s Ссылка: %s</string>
+    <string name="app_name_extended">Расписание НУ ЛП</string>
+    <string name="app_name">Расписание</string>
 </resources>

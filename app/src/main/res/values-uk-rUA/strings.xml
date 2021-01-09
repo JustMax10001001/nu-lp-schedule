@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Розклад НУ ЛП</string>
     <string name="action_settings">Налаштування</string>
     <string name="next">Наступний</string>
     <string name="previous">Попередній</string>
@@ -71,4 +70,6 @@
     <string name="more">Додатково</string>
     <string name="menu_action_share_class">Поділитись парою</string>
     <string name="class_share_text_with_url">%d. %s %s %s Посилання: %s</string>
+    <string name="app_name_extended">Розклад НУ ЛП</string>
+    <string name="app_name">Розклад</string>
 </resources>

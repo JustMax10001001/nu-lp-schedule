@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">NU LP Schedule</string>
+    <string name="app_name">Schedule</string>
+    <string name="app_name_extended">NU LP Schedule</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
