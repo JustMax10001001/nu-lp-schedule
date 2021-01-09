@@ -78,13 +78,6 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                 currentClass != null && this@ScheduleRecyclerViewAdapter.showCurrentClass
             val context = holder.itemView.context
 
-            fun setLowerHalfVisibility(visibility: Int) {
-                dividerView.visibility = visibility
-                nextUpClass.subjectNameTextView.visibility = visibility
-                nextUpClass.classStartTimeTextView.visibility = visibility
-                nextUpClass.nextUpTextView.visibility = visibility
-            }
-
             if (showCurrentClass) {
                 nowClass.subjectNameTextView.text = currentClass?.subject?.displayName
                 nowClass.classEndTimeTextView.text = context.getString(
@@ -128,13 +121,6 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         return removed
     }
 
-    fun returnItemAtPosition(adapterPosition: Int, removedSchedule: ScheduleTuple) {
-        scheduleList = mutableListOf<ScheduleTuple>().apply {
-            addAll(scheduleList)
-            add(adapterPosition, removedSchedule)
-        }
-    }
-
     fun move(from: Int, to: Int) {
         scheduleList = mutableListOf<ScheduleTuple>().apply {
             addAll(scheduleList)
@@ -161,20 +147,15 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         val instituteNameTextView: TextView by itemView.lazyFind(R.id.institute_text_view)
 
         val nowClass = NowClass()
-        //val nowClassPanel: ViewGroup by itemView.lazyFind(R.id.now_class_panel)
-
-        val dividerView: View by itemView.lazyFind(R.id.divider)
 
         val nextUpClass = NextClass()
 
         inner class NowClass {
-            val nowTextView: TextView by itemView.lazyFind(R.id.now_text_view)
             val subjectNameTextView: TextView by itemView.lazyFind(R.id.current_subject_name_text_view)
             val classEndTimeTextView: TextView by itemView.lazyFind(R.id.current_class_end_time_text_view)
         }
 
         inner class NextClass {
-            val nextUpTextView: TextView by itemView.lazyFind(R.id.next_up_text_view)
             val subjectNameTextView: TextView by itemView.lazyFind(R.id.next_subject_name_text_view)
             val classStartTimeTextView: TextView by itemView.lazyFind(R.id.next_class_start_time_text_view)
         }
