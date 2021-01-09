@@ -22,9 +22,6 @@ import kotlin.properties.Delegates
 class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
     RecyclerView.Adapter<ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
 
-    private val VIEW_TYPE_HALF = 1
-    private val VIEW_TYPE_FULL = 2
-
     var showCurrentClass: Boolean = true
         set(value) {
             field = value
@@ -215,5 +212,10 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                     oldItem.nextClass?.subject?.displayName == newItem.nextClass?.subject?.displayName &&
                     oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index
         }
+    }
+
+    companion object {
+        private const val VIEW_TYPE_HALF = 1
+        private const val VIEW_TYPE_FULL = 2
     }
 }
