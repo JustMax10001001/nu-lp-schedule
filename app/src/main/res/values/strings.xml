@@ -11,9 +11,6 @@
     <string name="undo">Undo</string>
     <string name="provider_authority" translatable="false">com.justsoft.nulpschedule.service.sync.StubContentProvider</string>
 
-    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
-    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
-
     <string name="lesson_duration_format" translatable="false">%1$d:%2$02d-%3$d:%4$02d</string>
 
     <string name="keystore_password" translatable="false">lpnu-password</string>
