@@ -86,6 +86,8 @@
     <string name="class_share_text_no_url" translatable="false">%d. %s\n%s\n%s</string>
     <string name="class_share_text_with_url">%d. %s %s %s Link: %s</string>
 
+    <string name="easteregg_text">Congrats! 🥳🎉</string>
+
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>
         <item>Sunday</item>
