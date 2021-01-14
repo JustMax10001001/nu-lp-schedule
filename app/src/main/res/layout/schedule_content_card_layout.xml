@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/schedule_view_card"
     android:layout_width="match_parent"
     android:layout_height="@dimen/schedule_preview_card_height"
     android:columnCount="3"
     android:orientation="horizontal"
-
     android:rowCount="5">
 
     <View
