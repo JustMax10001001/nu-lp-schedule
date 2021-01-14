@@ -89,6 +89,7 @@ class ScheduleSelectFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateTimeRunnable()
+        viewModel.invalidateScheduleList()
     }
 
     private fun setUpObservers() {
@@ -111,7 +112,7 @@ class ScheduleSelectFragment : Fragment() {
 
     private fun initializeRecyclerView(view: View) {
         mScheduleRecyclerView = view.findViewById(R.id.schedule_select_recycler_view)
-        mScheduleRecyclerViewAdapter = ScheduleRecyclerViewAdapter(timeFormatter)
+        mScheduleRecyclerViewAdapter = ScheduleRecyclerViewAdapter(requireContext(), timeFormatter)
         mScheduleRecyclerViewAdapter.showCurrentClass =
             mSharedPreferences.getBoolean(getString(R.string.key_show_current_class), true)
 

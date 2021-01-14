@@ -13,7 +13,7 @@
         android:name=".NulpSchedulerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_schedule_2"
-        android:label="@string/app_name"
+        android:label="@string/app_name_extended"
         android:roundIcon="@mipmap/ic_launcher_schedule_2_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchedulerTheme">

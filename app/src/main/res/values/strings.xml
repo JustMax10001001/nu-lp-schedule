@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">NU LP Schedule</string>
+    <string name="app_name">Schedule</string>
+    <string name="app_name_extended">NU LP Schedule</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
@@ -10,30 +11,27 @@
     <string name="undo">Undo</string>
     <string name="provider_authority" translatable="false">com.justsoft.nulpschedule.service.sync.StubContentProvider</string>
 
-    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
-    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
-
     <string name="lesson_duration_format" translatable="false">%1$d:%2$02d-%3$d:%4$02d</string>
 
     <string name="keystore_password" translatable="false">lpnu-password</string>
-    <string name="online_class_url">Online class URL</string>
-    <string name="url_copied">URL copied to clipboard</string>
-    <string name="online_class_url_available">Online class URL available</string>
+    <string name="online_class_url">Online class link</string>
+    <string name="url_copied">Link copied to clipboard</string>
+    <string name="online_class_url_available">Online class link available</string>
     <string name="open_lesson_in_app">Open online class in</string>
     <string name="action_switch_to_next_group">Subgroup %d</string>
-    <string name="copy_online_class_url">Copy online class URL</string>
-    <string name="change_custom_subject_name">Set custom name for subject</string>
+    <string name="copy_online_class_url">Copy online class link</string>
+    <string name="change_custom_subject_name">Change subject name</string>
     <string name="enter_custom_subject_name">Enter custom subject name</string>
     <string name="custom_subject_name">Custom subject name</string>
-    <string name="subject_now">Now: %s</string>
-    <string name="subject_next_up">Next up: %s</string>
-    <string name="subject_ends_at">Ends at %s</string>
-    <string name="subject_starts_at">Starts at %s</string>
+    <string name="class_now">Now: %s</string>
+    <string name="class_next_up">Next up: %s</string>
+    <string name="class_ends_at">Ends at %s</string>
+    <string name="class_starts_at">Starts at %s</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="add_new_schedule">Add new schedule</string>
     <string name="institute_group">Institute group</string>
-    <string name="subgroup_1">First subgroup</string>
-    <string name="subgroup_2">Second subgroup</string>
+    <string name="subgroup_1">Subgroup 1</string>
+    <string name="subgroup_2">Subgroup 2</string>
     <string name="retry">Retry</string>
     <string name="error_loading_schedules">Error loading schedules</string>
     <string name="error_downloading_schedule">Error downloading schedule</string>
@@ -83,6 +81,12 @@
     <string name="schedule_switch_day">Schedule switch day</string>
     <string name="key_schedule_switch_day" translatable="false">switch_schedule_on</string>
     <string name="schedule_switch_day_summary">Showing next week\'s schedule starting on %s</string>
+    <string name="more">More</string>
+    <string name="menu_action_share_class">Share class</string>
+    <string name="class_share_text_no_url" translatable="false">%d. %s\n%s\n%s</string>
+    <string name="class_share_text_with_url">%d. %s %s %s Link: %s</string>
+
+    <string name="easteregg_text">Congrats! 🥳🎉</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>

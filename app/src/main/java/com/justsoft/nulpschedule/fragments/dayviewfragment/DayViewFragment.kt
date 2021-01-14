@@ -1,8 +1,9 @@
 package com.justsoft.nulpschedule.fragments.dayviewfragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -46,8 +47,12 @@ class DayViewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mClassAdapter = ClassRecyclerViewAdapter(requireContext(), timeFormatter)
+        mClassAdapter.setHasStableIds(true)
         binding.daySubjectsRecyclerView.layoutManager = LinearLayoutManager(this.context)
-        mClassAdapter = ClassRecyclerViewAdapter(timeFormatter)
+        binding.daySubjectsRecyclerView.setHasFixedSize(true)
+        binding.daySubjectsRecyclerView.setItemViewCacheSize(10)    // we don't really expect to have more than 10 classes
+
         binding.daySubjectsRecyclerView.adapter = mClassAdapter
         mClassAdapter.subjectNameChange { subject, newName ->
             Firebase.analytics.logEvent("subject_name_change") { }
@@ -59,16 +64,25 @@ class DayViewFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.classesListLiveData.observe(owner = this.viewLifecycleOwner) {
-            updateSubjectList(it, sharedViewModel.subgroup, sharedViewModel.isNumerator)
+            updateSubjectList(
+                it,
+                sharedViewModel.subgroup,
+                sharedViewModel.isNumerator
+            )
         }
         sharedViewModel.subgroupLiveData.observe(owner = this.viewLifecycleOwner) {
-            updateSubjectList(viewModel.classesListLiveData.value, it, sharedViewModel.isNumerator)
+            updateSubjectList(
+                viewModel.classesListLiveData.value,
+                it,
+                sharedViewModel.isNumerator
+            )
         }
         sharedViewModel.isNumeratorLiveData.observe(owner = this.viewLifecycleOwner) { isNumerator ->
-            updateSubjectList(viewModel.classesListLiveData.value, sharedViewModel.subgroup, isNumerator)
-        }
-        sharedViewModel.isNumeratorOverrideLiveData.observe(owner = this.viewLifecycleOwner) {
-            updateSubjectList(viewModel.classesListLiveData.value, sharedViewModel.subgroup, false)
+            updateSubjectList(
+                viewModel.classesListLiveData.value,
+                sharedViewModel.subgroup,
+                isNumerator
+            )
         }
     }
 
@@ -79,12 +93,7 @@ class DayViewFragment : Fragment() {
     ) {
         newList ?: return
         mClassAdapter.classList = newList.filter { subject ->
-            with(subject.scheduleClass) {
-                classMatches(
-                    newSubgroup,
-                    sharedViewModel.isNumeratorOverride ?: newIsNumerator
-                )
-            }
+            subject.scheduleClass.classMatches(newSubgroup, newIsNumerator)
         }
         binding.suchEmptyClassesText.visibility =
             if (mClassAdapter.classList.isEmpty()) View.VISIBLE else View.GONE

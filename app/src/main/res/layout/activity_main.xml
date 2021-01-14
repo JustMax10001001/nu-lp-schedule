@@ -10,14 +10,14 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
+        android:animateLayoutChanges="false"
         android:theme="@style/Theme.SchedulerTheme.AppBarOverlay">
 
         <com.justsoft.nulpschedule.ui.FixedToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:animateLayoutChanges="true"
+            android:animateLayoutChanges="false"
             app:popupTheme="@style/Theme.SchedulerTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

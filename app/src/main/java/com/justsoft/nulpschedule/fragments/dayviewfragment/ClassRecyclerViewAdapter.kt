@@ -4,32 +4,33 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.BulletSpan
-import android.view.*
-import android.widget.TextView
-import androidx.core.text.toSpannable
-import androidx.databinding.DataBindingUtil
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.*
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
-import com.justsoft.nulpschedule.databinding.ClassViewLayoutBinding
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.model.Subject
+import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.clipboardManager
+import com.justsoft.nulpschedule.utils.lazyFind
 import kotlin.properties.Delegates
 
-class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
-    RecyclerView.Adapter<ClassRecyclerViewAdapter.SubjectViewHolder>() {
+class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
+    RecyclerView.Adapter<ClassRecyclerViewAdapter.ClassViewHolder>() {
 
     var classList: List<EntityClassWithSubject> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
         notifyChanges(oldValue, newValue)
     }
+
+    private val mLayoutInflater = LayoutInflater.from(context)
 
     private var onSubjectNameChange: (Subject, String?) -> Unit = { _, _ -> }
 
@@ -37,15 +38,18 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         onSubjectNameChange = action
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
-        val binding = DataBindingUtil.inflate<ClassViewLayoutBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.class_view_layout,
-            parent,
-            false
-        )
+    override fun getItemId(position: Int): Long {
+        return classList[position].scheduleClass.id
+    }
 
-        return SubjectViewHolder(binding.root)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
+        return ClassViewHolder(parent.context, R.layout.class_content_card_layout) {
+            (mLayoutInflater.inflate(
+                R.layout.class_background_card_layout,
+                parent,
+                false
+            ) as MaterialCardView)
+        }
     }
 
     private fun notifyChanges(
@@ -58,46 +62,104 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val binding = DataBindingUtil.getBinding<ClassViewLayoutBinding>(holder.itemView)
-        binding?.classWithSubject = classList[position]
-        binding?.timeFormatter = timeFormatter
-        binding?.bulletedAdditionalInfo?.text = createAdditionalInfoSpan(
-            classList[position],
-            holder.itemView.context
-        )
+    override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
+        val currentClass = classList[position].scheduleClass
+        val currentSubject = classList[position].subject
 
-        val onlineClassUrl = classList[position].scheduleClass.url
-        holder.itemView.apply {
-            setOnClickListener {
-                onlineClassUrl?.let { openClassUrl(it, holder.itemView.context) }
+        val onlineClassUrl = currentClass.url
+
+        holder.invokeOnInflated {
+            this as ClassViewHolder
+
+            classIndexTextView.text = currentClass.index.toString()
+            classStartTimeTextView.text =
+                timeFormatter.formatStartTimeForSubjectIndex(currentClass.index)
+            classEndTimeTextView.text =
+                timeFormatter.formatEndTimeForSubjectIndex(currentClass.index)
+
+            subjectNameTextView.text = currentSubject.displayName
+            lecturerNameTextView.text = currentClass.teacherName
+            classDescriptionTextView.text = currentClass.classDescription
+            bulletedAdditionalInfoTextView.text =
+                createAdditionalInfoSpan(classList[position], itemView.context)
+
+            itemView.setOnClickListener {
+                onlineClassUrl?.let { openClassUrl(it, itemView.context) }
             }
-            setOnCreateContextMenuListener { menu, view, _ ->
-                val menuInflater = MenuInflater(view.context)
-                menuInflater.inflate(R.menu.context_menu_class_card, menu)
 
-                val copyUrlItem = menu.findItem(R.id.action_copy_class_url)
-                copyUrlItem.isEnabled = onlineClassUrl != null
-                copyUrlItem.setOnMenuItemClickListener { _ ->
-                    onlineClassUrl?.let { url ->
-                        copyUrlToClipboard(url, holder.itemView.context)
-                        Snackbar.make(holder.itemView, R.string.url_copied, Snackbar.LENGTH_SHORT)
-                            .show()
-                        return@setOnMenuItemClickListener true
-                    }
-                    return@setOnMenuItemClickListener false
-                }
-
-                val changeSubjectNameItem = menu.findItem(R.id.action_change_custom_subject_name)
-                changeSubjectNameItem.setOnMenuItemClickListener {
-                    buildAndShowSubjectNameEditDialog(context, classList[position].subject)
-                    return@setOnMenuItemClickListener true
-                }
-            }
-            setOnLongClickListener { cardView ->
-                cardView.showContextMenu()
+            // we inflate menu there, so we might as well do it
+            // later while having more responsive recycler view
+            itemView.post {
+                val popup =
+                    prepareButtonPopup(itemView.context, verticalEllipsisImageButton, position)
+                verticalEllipsisImageButton.setOnClickListener { popup.show() }
             }
         }
+    }
+
+    private fun prepareButtonPopup(
+        context: Context,
+        button: ImageButton,
+        position: Int
+    ): PopupMenu {
+        val onlineClassUrl = classList[position].scheduleClass.url
+
+        return PopupMenu(context, button, Gravity.END).apply {
+            inflate(R.menu.context_menu_class_card)
+
+            menu.findItem(R.id.action_copy_class_url).isEnabled = onlineClassUrl != null
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                setForceShowIcon(true)
+            }
+
+            setOnMenuItemClickListener { selectedItem ->
+                when (selectedItem.itemId) {
+                    R.id.action_copy_class_url -> {
+                        onlineClassUrl?.let { url ->
+                            copyUrlToClipboard(url, context)
+                            Snackbar.make(button, R.string.url_copied, Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                        return@setOnMenuItemClickListener true
+                    }
+                    R.id.action_change_custom_subject_name -> {
+                        buildAndShowSubjectNameEditDialog(context, classList[position].subject)
+                        return@setOnMenuItemClickListener true
+                    }
+                    R.id.action_share_class -> {
+                        shareClass(position, context)
+                        return@setOnMenuItemClickListener true
+                    }
+                }
+                return@setOnMenuItemClickListener false
+            }
+        }
+    }
+
+    private fun shareClass(position: Int, context: Context) {
+        val scheduleClass = classList[position].scheduleClass
+        val onlineClassUrl = classList[position].scheduleClass.url
+        val text = if (onlineClassUrl != null)
+            context.getString(
+                R.string.class_share_text_with_url,
+                scheduleClass.index + 1,
+                classList[position].subject.displayName,
+                scheduleClass.teacherName,
+                scheduleClass.classDescription,
+                onlineClassUrl
+            )
+        else
+            context.getString(
+                R.string.class_share_text_no_url,
+                scheduleClass.index + 1,
+                scheduleClass.teacherName,
+                scheduleClass.classDescription,
+                classList[position].subject.displayName
+            )
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/*"
+        intent.putExtra(Intent.EXTRA_TEXT, text)
+        context.startActivity(intent)
     }
 
     private fun createAdditionalInfoSpan(
@@ -172,8 +234,25 @@ class ClassRecyclerViewAdapter(private val timeFormatter: TimeFormatter) :
 
     override fun getItemCount(): Int = classList.size
 
-    class SubjectViewHolder(subjectView: View) :
-        RecyclerView.ViewHolder(subjectView)
+    class ClassViewHolder(
+        context: Context,
+        @LayoutRes layoutId: Int,
+        initialLayoutFactory: (Context) -> ViewGroup,
+    ) : AsyncLoadedViewHolder(context, layoutId, initialLayoutFactory) {
+
+        //val classCardView: MaterialCardView by itemView.lazyFind(R.id.class_card_view)
+
+        val subjectNameTextView: TextView by itemView.lazyFind(R.id.subject_name_text_view)
+        val classDescriptionTextView: TextView by itemView.lazyFind(R.id.class_description_text_view)
+        val lecturerNameTextView: TextView by itemView.lazyFind(R.id.lecturer_name_text_view)
+        val bulletedAdditionalInfoTextView: TextView by itemView.lazyFind(R.id.bulleted_additional_info_text_view)
+
+        val verticalEllipsisImageButton: ImageButton by itemView.lazyFind(R.id.vertical_elipsis_button)
+
+        val classIndexTextView: TextView by itemView.lazyFind(R.id.class_index_text_view)
+        val classStartTimeTextView: TextView by itemView.lazyFind(R.id.class_start_time_text_view)
+        val classEndTimeTextView: TextView by itemView.lazyFind(R.id.class_end_time_text_view)
+    }
 
     internal class ClassesDiffCallback(
         private val oldClasses: List<EntityClassWithSubject>,

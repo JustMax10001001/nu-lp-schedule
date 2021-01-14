@@ -5,8 +5,8 @@ import android.text.format.DateFormat.getTimeFormat
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import java.text.DateFormat
 import java.util.*
 import javax.inject.Singleton
@@ -36,7 +36,7 @@ class TimeFormatter private constructor(
     }
 
     @Module
-    @InstallIn(ApplicationComponent::class)
+    @InstallIn(SingletonComponent::class)
     class TimeFormatterModule {
         @Provides
         fun provideTimeFormatter(

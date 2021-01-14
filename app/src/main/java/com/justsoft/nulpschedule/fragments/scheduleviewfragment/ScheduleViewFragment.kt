@@ -52,18 +52,15 @@ class ScheduleViewFragment : Fragment() {
             R.anim.rotate_180
         )
 
-        val dayOfWeekToday = LocalDate.now().dayOfWeek.ordinal
+        val dayOfWeekTodayOrdinal = LocalDate.now().dayOfWeek.ordinal
 
-        val dayFragmentAdapter = DayFragmentAdapter(
-            this,
-            viewModel.scheduleId.value!!
-        )
+        val dayFragmentAdapter = DayFragmentAdapter(this, viewModel.scheduleId.value!!)
         // Set fragment adapter to viewPager
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
         dayViewPager.setCurrentItem(
             when {
-                dayOfWeekToday < 5 -> dayOfWeekToday
+                dayOfWeekTodayOrdinal < 5 -> dayOfWeekTodayOrdinal
                 else -> 0
             },
             false
@@ -85,26 +82,22 @@ class ScheduleViewFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_schedule_view, menu)
+
         menu.findItem(R.id.switch_numerator).actionView.apply {
             this as MaterialButton
             sharedViewModel.isNumeratorLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
-                this.isChecked = sharedViewModel.isNumeratorOverrideLiveData.value ?: it
-            }
-            sharedViewModel.isNumeratorOverrideLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
-                it?.let {
-                    this.isChecked = it
-                }
+                this.isChecked = it ?: return@observe
             }
 
-            isChecked = sharedViewModel.isNumeratorOverride ?: sharedViewModel.isNumerator
             setTooltipTextCompat(if (isChecked) R.string.switch_to_denominator else R.string.switch_to_numerator)
             addOnCheckedChangeListener { _, isChecked ->
                 startAnimation(numeratorTurnAnimation)
 
-                sharedViewModel.isNumeratorOverrideLiveData.postValue(isChecked)
+                sharedViewModel.setNumeratorOverride(isChecked)
                 setTooltipTextCompat(if (isChecked) R.string.switch_to_denominator else R.string.switch_to_numerator)
             }
         }
+
         menu.findItem(R.id.switch_subgroup).apply {
             sharedViewModel.subgroupLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 title = sharedViewModel.subgroup.toString()

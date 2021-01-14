@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">[BETA]NulpSchedule</string>
+    <string name="app_name_extended">[BETA] NulpSchedule</string>
+    <string name="app_name">[BETA] Schedule</string>
     <string name="provider_authority" translatable="false">com.justsoft.nulpschedule.beta.service.sync.StubContentProvider</string>
 </resources>

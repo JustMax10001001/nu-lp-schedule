@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Расписание НУ ЛП</string>
     <string name="action_settings">Настройки</string>
     <string name="next">Следующий</string>
     <string name="previous">Предыдущий</string>
@@ -11,19 +10,19 @@
     <string name="online_class_url_available">Доступна ссылка на онлайн пару</string>
     <string name="open_lesson_in_app">Открыть онлайн пару в</string>
     <string name="action_switch_to_next_group">Подгруппа %d</string>
-    <string name="copy_online_class_url">Скопировать ссылку на онлайн пару</string>
+    <string name="copy_online_class_url">Скопировать ссылку</string>
     <string name="change_custom_subject_name">Сменить имя предмета</string>
     <string name="enter_custom_subject_name">Введите имя предмета</string>
     <string name="custom_subject_name">Имя предмета</string>
-    <string name="subject_now">Сейчас: %s</string>
-    <string name="subject_next_up">Далее: %s</string>
-    <string name="subject_ends_at">Конец: %s</string>
-    <string name="subject_starts_at">Начало: %s</string>
+    <string name="class_now">Сейчас: %s</string>
+    <string name="class_next_up">Далее: %s</string>
+    <string name="class_ends_at">Конец: %s</string>
+    <string name="class_starts_at">Начало: %s</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="add_new_schedule">Добавить расписание</string>
     <string name="institute_group">Институт и группа</string>
-    <string name="subgroup_1">Первая подгруппа</string>
-    <string name="subgroup_2">Вторая подгруппа</string>
+    <string name="subgroup_1">Подгруппа 1</string>
+    <string name="subgroup_2">Подгруппа 2</string>
     <string name="retry">Повторить</string>
     <string name="error_loading_schedules">Ошибка при загрузке расписаний</string>
     <string name="error_downloading_schedule">Ошибка при загрузке расписания</string>
@@ -68,4 +67,10 @@
         <item>Воскресение</item>
         <item>Следующий понедельник</item>
     </string-array>
+    <string name="more">Дополнительно</string>
+    <string name="menu_action_share_class">Поделиться парой</string>
+    <string name="class_share_text_with_url">%d. %s %s %s Ссылка: %s</string>
+    <string name="app_name_extended">Расписание НУ ЛП</string>
+    <string name="app_name">Расписание</string>
+    <string name="easteregg_text">Поздравляю! 🥳🎉</string>
 </resources>

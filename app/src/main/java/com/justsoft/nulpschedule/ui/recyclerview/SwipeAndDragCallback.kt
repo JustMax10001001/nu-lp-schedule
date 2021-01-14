@@ -25,7 +25,7 @@ class SwipeAndDragCallback(
     private val background = GradientDrawable()
     private val backgroundColor = ContextCompat.getColor(context, R.color.red_900)
     private val backgroundCornerRadius =
-        context.resources.getDimensionPixelSize(R.dimen.subject_card_corner_radius)
+        context.resources.getDimensionPixelSize(R.dimen.card_corner_radius)
 
     private lateinit var onDeleteCallback: (RecyclerView.ViewHolder) -> Unit
     private lateinit var onMoveCallback: OnMoveCallback

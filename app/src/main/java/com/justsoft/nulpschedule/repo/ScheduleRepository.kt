@@ -2,6 +2,7 @@ package com.justsoft.nulpschedule.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.justsoft.nulpschedule.api.ScheduleApi
 import com.justsoft.nulpschedule.api.model.ApiScheduleClass
 import com.justsoft.nulpschedule.api.model.ApiSubject
@@ -17,7 +18,7 @@ import com.justsoft.nulpschedule.utils.StatefulLiveData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import java.time.DayOfWeek
 import javax.inject.Inject
@@ -35,37 +36,37 @@ class ScheduleRepository @Inject constructor(
         )
 
     @Suppress("DeferredResultUnused")
-    suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> {
-        if (instituteAndGroupListLiveData.value !is Success) {
-            withContext(Dispatchers.IO) {
-                async {
-                    try {
-                        instituteAndGroupListLiveData.postValue(Loading())
-                        val alreadyDownloaded = getDownloadedInstitutesAndGroups()
-                        val jobs = mutableListOf<Job>()
-                        val institutesWithGroup = mutableListOf<InstituteAndGroup>()
-                        for (institute in getInstitutes().getOrThrow().sorted()) {
-                            if (institute == "All")
-                                continue
-                            jobs.add(launch {
-                                val groups = getGroups(institute).getOrThrow()
-                                val result = groups.filter { it != "All" }
-                                    .map { InstituteAndGroup(institute, it) }
-                                    .filter { !alreadyDownloaded.contains(it) }
-                                synchronized(institutesWithGroup) {
-                                    institutesWithGroup.addAll(result)
-                                }
-                            })
+    suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> = liveData {
+        emitSource(instituteAndGroupListLiveData)
+
+        if (instituteAndGroupListLiveData.value is Success)
+            return@liveData
+
+        withContext(Dispatchers.IO) {
+            try {
+                instituteAndGroupListLiveData.postValue(Loading())
+                val alreadyDownloaded = getDownloadedInstitutesAndGroups()
+                val jobs = mutableListOf<Job>()
+                val institutesWithGroup = mutableListOf<InstituteAndGroup>()
+                for (institute in getInstitutes().getOrThrow().sorted()) {
+                    if (institute == "All")
+                        continue
+                    jobs.add(launch {
+                        val groups = getGroups(institute).getOrThrow()
+                        val result = groups.filter { it != "All" }
+                            .map { InstituteAndGroup(institute, it) }
+                            .filter { !alreadyDownloaded.contains(it) }
+                        synchronized(institutesWithGroup) {
+                            institutesWithGroup.addAll(result)
                         }
-                        jobs.joinAll()
-                        instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
-                    } catch (e: Exception) {
-                        instituteAndGroupListLiveData.postValue(Error(e))
-                    }
+                    })
                 }
+                jobs.joinAll()
+                instituteAndGroupListLiveData.postValue(Success(institutesWithGroup))
+            } catch (e: Exception) {
+                instituteAndGroupListLiveData.postValue(Error(e))
             }
         }
-        return instituteAndGroupListLiveData
     }
 
     private suspend fun getDownloadedInstitutesAndGroups(scheduleType: ScheduleType = ScheduleType.STUDENT): List<InstituteAndGroup> =
@@ -77,7 +78,7 @@ class ScheduleRepository @Inject constructor(
     private fun getGroups(instituteName: String): Result<List<String>> =
         scheduleApi.getGroups(instituteName)
 
-    fun refreshAllSchedulesSync() {
+    fun refreshAllSchedules() {
         val schedules = scheduleDao.loadAllSync()
         for ((_, instituteName, groupName) in schedules) {
             refreshScheduleSync(instituteName, groupName)
@@ -89,7 +90,6 @@ class ScheduleRepository @Inject constructor(
         val (schedule, subjects, classes) = boxedResult.getOrThrow()
         scheduleDao.updatePartial(schedule.toUpdateEntity())
 
-        subjectDao.deleteAllNotFromList(schedule.id, subjects.map { it.id })
         subjectDao.insertNew(subjects.map { it.toEntity() })
         subjectDao.updateSubjects(subjects.map { it.toUpdateEntity() })
 
@@ -97,10 +97,6 @@ class ScheduleRepository @Inject constructor(
         classDao.deleteAllNotFromList(schedule.id, classes.map { it.id })
         classDao.insertNew(classEntities)
         classDao.updateClasses(classEntities)
-    }
-
-    suspend fun refreshAllSchedules() = withContext(Dispatchers.IO) {
-        refreshAllSchedulesSync()
     }
 
     /**
@@ -172,7 +168,7 @@ class ScheduleRepository @Inject constructor(
 }
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ScheduleRepositoryModule {
 
     @Provides
