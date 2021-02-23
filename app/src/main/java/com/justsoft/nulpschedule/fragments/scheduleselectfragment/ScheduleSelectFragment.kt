@@ -48,12 +48,16 @@ class ScheduleSelectFragment : Fragment() {
     @Inject
     lateinit var timeFormatter: TimeFormatter
 
+    private var mRefreshErrorSnackbar: Snackbar? = null
+    private var mCancelDeletionSnackbar: Snackbar? = null
+
     private lateinit var mSharedPreferences: SharedPreferences
 
     private lateinit var mScheduleRecyclerView: RecyclerView
-    private lateinit var mScheduleRecyclerViewAdapter: ScheduleRecyclerViewAdapter
-    private lateinit var mSwipeAndDragHelper: ItemTouchHelper
 
+    private lateinit var mScheduleRecyclerViewAdapter: ScheduleRecyclerViewAdapter
+
+    private lateinit var mSwipeAndDragHelper: ItemTouchHelper
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +97,8 @@ class ScheduleSelectFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.flushDeletions()
         }
+        mRefreshErrorSnackbar?.dismiss()
+        mCancelDeletionSnackbar?.dismiss()
     }
 
     override fun onResume() {
@@ -156,17 +162,24 @@ class ScheduleSelectFragment : Fragment() {
                     RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
                     RefreshState.REFRESH_FAILED -> {
                         mSwipeRefreshLayout.isRefreshing = false
-                        Snackbar.make(
-                            requireView(),
-                            R.string.something_went_wrong,
-                            Snackbar.LENGTH_SHORT
-                        ).setAction(getString(R.string.retry)) {
-                            onRefreshListener()
-                        }.show()
+                        makeRefreshErrorSnackBar()
                     }
                 }
             }
         }
+    }
+
+    private fun makeRefreshErrorSnackBar() {
+        Snackbar.make(
+            requireView(),
+            R.string.something_went_wrong,
+            Snackbar.LENGTH_SHORT
+        ).setAction(getString(R.string.retry)) {
+            onRefreshListener()
+            mRefreshErrorSnackbar = null
+        }.also {
+            mRefreshErrorSnackbar = it
+        }.show()
     }
 
     private fun createSwipeToDeleteHelper(): ItemTouchHelper =
@@ -177,18 +190,7 @@ class ScheduleSelectFragment : Fragment() {
 
                 viewModel.postScheduleForDeletion(removedSchedule.schedule)
 
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.schedule_is_removed),
-                    Snackbar.LENGTH_LONG
-                )
-                    .setAnchorView(R.id.add_schedule_fab)
-                    .setAction(getString(R.string.undo)) {
-                        viewModel.cancelDeletion()
-                        viewModel.scheduleTupleListLiveData.value?.let {
-                            mScheduleRecyclerViewAdapter.scheduleList = it
-                        }
-                    }.show()
+                makeCancelDeletionSnackBar()
                 Firebase.analytics.logEvent("remove_schedule") { }
             }
 
@@ -196,6 +198,24 @@ class ScheduleSelectFragment : Fragment() {
                 viewModel.updateSchedulePositions(mScheduleRecyclerViewAdapter.getSchedulePositions())
             }
         })
+
+    private fun makeCancelDeletionSnackBar() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.schedule_is_removed),
+            Snackbar.LENGTH_LONG
+        )
+            .setAnchorView(R.id.add_schedule_fab)
+            .setAction(getString(R.string.undo)) {
+                viewModel.cancelDeletion()
+                viewModel.scheduleTupleListLiveData.value?.let {
+                    mScheduleRecyclerViewAdapter.scheduleList = it
+                }
+                mCancelDeletionSnackbar = null
+            }.also {
+                mCancelDeletionSnackbar = it
+            }.show()
+    }
 
     private val mUpdateTimeHandler = Handler(Looper.getMainLooper())
 
