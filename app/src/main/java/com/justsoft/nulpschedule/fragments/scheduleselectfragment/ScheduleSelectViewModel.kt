@@ -171,4 +171,9 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
         // as it is added as source
         currentClassIndexLiveData.value = currentClassIndex
     }
+
+    suspend fun flushDeletions() = withContext(Dispatchers.IO) {
+        scheduleDeletionTask?.run()
+        scheduleIdsToDelete.clear()
+    }
 }
