@@ -2,9 +2,11 @@ package com.justsoft.nulpschedule.fragments.scheduleviewfragment
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
@@ -118,9 +120,41 @@ class ScheduleViewFragment : Fragment() {
             R.id.action_switch_numerator -> {
                 return true
             }
+            R.id.action_schedule_details -> {
+                showDetailsAlert()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDetailsAlert() {
+        AlertDialog.Builder(requireContext(), R.style.Theme_SchedulerTheme_AlertDialog)
+            .setTitle(getString(R.string.schedule_details_alert_title))
+            .setMessage(buildScheduleDetails())
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
+    }
+
+    private fun buildScheduleDetails(): String {
+        val dateFormat = DateFormat.getDateFormat(requireContext())
+        return buildString {
+            appendLine(
+                getString(
+                    R.string.added_on,
+                    dateFormat.format(sharedViewModel.schedule.addTime)
+                )
+            )
+            appendLine(
+                getString(
+                    R.string.last_updated_on,
+                    dateFormat.format(sharedViewModel.schedule.updateTime)
+                )
+            )
+        }
     }
 }
 

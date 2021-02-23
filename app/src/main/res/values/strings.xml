@@ -88,6 +88,9 @@
 
     <string name="easteregg_text">Congrats! 🥳🎉</string>
     <string name="schedule_details">Details</string>
+    <string name="schedule_details_alert_title">Schedule details</string>
+    <string name="last_updated_on">Last updated on: %s</string>
+    <string name="added_on">Added on: %s</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>
