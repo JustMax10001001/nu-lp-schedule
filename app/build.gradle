@@ -13,8 +13,8 @@ android {
         applicationId "com.justsoft.nulpschedule"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 15
-        versionName "1.2.0-BETA"
+        versionCode 16
+        versionName "1.2.1-BETA"
 
         multiDexEnabled true
 
