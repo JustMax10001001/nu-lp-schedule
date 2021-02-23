@@ -148,7 +148,7 @@ class ScheduleSelectFragment : Fragment() {
                     RefreshState.REFRESH_FAILED -> {
                         mSwipeRefreshLayout.isRefreshing = false
                         Snackbar.make(
-                            mSwipeRefreshLayout,
+                            requireView(),
                             R.string.something_went_wrong,
                             Snackbar.LENGTH_SHORT
                         ).setAction(getString(R.string.retry)) {
@@ -169,7 +169,7 @@ class ScheduleSelectFragment : Fragment() {
                 viewModel.postScheduleForDeletion(removedSchedule.schedule)
 
                 Snackbar.make(
-                    mScheduleRecyclerView,
+                    requireView(),
                     getString(R.string.schedule_is_removed),
                     Snackbar.LENGTH_LONG
                 )
