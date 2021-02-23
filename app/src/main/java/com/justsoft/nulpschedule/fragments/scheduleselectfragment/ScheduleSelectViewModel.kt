@@ -1,24 +1,23 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.util.Log
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.justsoft.nulpschedule.db.model.*
 import com.justsoft.nulpschedule.model.RefreshState
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.delegateLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import javax.inject.Inject
 import kotlin.concurrent.timerTask
 
-@HiltViewModel
-class ScheduleSelectViewModel @Inject constructor(
+//@HiltViewModel
+class ScheduleSelectViewModel @ViewModelInject constructor(
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
 

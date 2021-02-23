@@ -38,7 +38,7 @@ class ScheduleSelectFragment : Fragment() {
     private var _binding: FragmentScheduleSelectBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ScheduleSelectViewModel by viewModels()
+    private val viewModel by viewModels<ScheduleSelectViewModel>()
 
     @Inject
     lateinit var classesTimetable: ClassesTimetable

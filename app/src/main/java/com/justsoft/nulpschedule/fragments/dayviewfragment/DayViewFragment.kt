@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -63,21 +62,21 @@ class DayViewFragment : Fragment() {
     }
 
     private fun setUpObservers() {
-        viewModel.classesListLiveData.observe(owner = this.viewLifecycleOwner) {
+        viewModel.classesListLiveData.observe(this.viewLifecycleOwner) {
             updateSubjectList(
                 it,
                 sharedViewModel.subgroup,
                 sharedViewModel.isNumerator
             )
         }
-        sharedViewModel.subgroupLiveData.observe(owner = this.viewLifecycleOwner) {
+        sharedViewModel.subgroupLiveData.observe(this.viewLifecycleOwner) {
             updateSubjectList(
                 viewModel.classesListLiveData.value,
                 it,
                 sharedViewModel.isNumerator
             )
         }
-        sharedViewModel.isNumeratorLiveData.observe(owner = this.viewLifecycleOwner) { isNumerator ->
+        sharedViewModel.isNumeratorLiveData.observe(this.viewLifecycleOwner) { isNumerator ->
             updateSubjectList(
                 viewModel.classesListLiveData.value,
                 sharedViewModel.subgroup,
