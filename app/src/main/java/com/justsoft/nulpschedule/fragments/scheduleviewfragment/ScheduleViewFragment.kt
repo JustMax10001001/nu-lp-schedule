@@ -2,7 +2,6 @@ package com.justsoft.nulpschedule.fragments.scheduleviewfragment
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -18,6 +17,8 @@ import com.justsoft.nulpschedule.databinding.FragmentScheduleViewBinding
 import com.justsoft.nulpschedule.utils.setTooltipTextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @AndroidEntryPoint
 class ScheduleViewFragment : Fragment() {
@@ -140,18 +141,18 @@ class ScheduleViewFragment : Fragment() {
     }
 
     private fun buildScheduleDetails(): String {
-        val dateFormat = DateFormat.getDateFormat(requireContext())
+        val dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
         return buildString {
             appendLine(
                 getString(
                     R.string.added_on,
-                    dateFormat.format(sharedViewModel.schedule.addTime)
+                    sharedViewModel.schedule.addTime.format(dateTimeFormatter)
                 )
             )
             appendLine(
                 getString(
                     R.string.last_updated_on,
-                    dateFormat.format(sharedViewModel.schedule.updateTime)
+                    sharedViewModel.schedule.updateTime.format(dateTimeFormatter)
                 )
             )
         }
