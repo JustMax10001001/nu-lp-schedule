@@ -145,6 +145,7 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
 
     fun cancelDeletion() {
         scheduleDeletionTask?.cancel()
+        scheduleIdsToDelete.clear();
     }
 
     fun refreshSchedules(): Flow<RefreshState> = flow {
