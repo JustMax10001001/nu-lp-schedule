@@ -73,4 +73,8 @@
     <string name="app_name_extended">Расписание НУ ЛП</string>
     <string name="app_name">Расписание</string>
     <string name="easteregg_text">Поздравляю! 🥳🎉</string>
+    <string name="schedule_details">Детали</string>
+    <string name="schedule_details_alert_title">Детали о расписании</string>
+    <string name="last_updated_on">Последнее обновление: %s</string>
+    <string name="added_on">Добавлен: %s</string>
 </resources>
