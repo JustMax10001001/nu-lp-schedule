@@ -90,7 +90,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
-    implementation 'com.justsoft.nulpschedule:api:1.0.5'
+    implementation 'com.justsoft.nulpschedule:api:1.0.6'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: '1.4.1'
 
     implementation "androidx.room:room-runtime:$room_version"
