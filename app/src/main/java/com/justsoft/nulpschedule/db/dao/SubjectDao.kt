@@ -3,7 +3,6 @@ package com.justsoft.nulpschedule.db.dao
 import androidx.room.*
 import com.justsoft.nulpschedule.db.model.EntitySubject
 import com.justsoft.nulpschedule.db.model.UpdateEntitySubject
-import com.justsoft.nulpschedule.model.Subject
 
 @Dao
 interface SubjectDao {

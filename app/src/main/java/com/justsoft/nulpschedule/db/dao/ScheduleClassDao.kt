@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.db.model.EntityScheduleClass
-import com.justsoft.nulpschedule.db.model.UpdateEntitySubject
-import com.justsoft.nulpschedule.model.ScheduleClass
 import java.time.DayOfWeek
-import java.util.*
 
 @Dao
 interface ScheduleClassDao {

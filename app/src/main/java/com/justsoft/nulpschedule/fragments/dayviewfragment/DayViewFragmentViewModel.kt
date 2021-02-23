@@ -2,14 +2,12 @@ package com.justsoft.nulpschedule.fragments.dayviewfragment
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
-import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
-import com.justsoft.nulpschedule.utils.isInitialized
-import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.time.LocalDateTime
 
 class DayViewFragmentViewModel @ViewModelInject constructor(
     private val scheduleRepository: ScheduleRepository,

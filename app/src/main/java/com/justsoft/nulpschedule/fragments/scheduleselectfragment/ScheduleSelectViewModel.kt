@@ -1,36 +1,38 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.justsoft.nulpschedule.db.model.*
 import com.justsoft.nulpschedule.model.RefreshState
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.delegateLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import javax.inject.Inject
 import kotlin.concurrent.timerTask
 
-class ScheduleSelectViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ScheduleSelectViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
 
     val scheduleListLiveData = scheduleRepository.getSchedules()
 
     val currentClassIndexLiveData = MutableLiveData(-1)
-    val currentClassIndex by delegateLiveData(currentClassIndexLiveData)
+    val currentClassIndex: Int by delegateLiveData(currentClassIndexLiveData)
 
     val nextClassIndexLiveData = MutableLiveData(-1)
-    val nextClassIndex by delegateLiveData(nextClassIndexLiveData)
+    val nextClassIndex: Int by delegateLiveData(nextClassIndexLiveData)
 
     val currentDayOfWeekLiveData: MutableLiveData<DayOfWeek> =
         MutableLiveData(LocalDate.now().dayOfWeek)
-    val currentDayOfWeek by delegateLiveData(currentDayOfWeekLiveData)
+    val currentDayOfWeek: DayOfWeek by delegateLiveData(currentDayOfWeekLiveData)
 
     private val deleteScheduleTimer = Timer()
     private var scheduleDeletionTask: TimerTask? = null
