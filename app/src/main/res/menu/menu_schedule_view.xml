@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/switch_numerator"
+        android:id="@+id/action_switch_numerator"
         android:title="@string/switch_to_denominator"
         android:checkable="true"
         app:actionLayout="@layout/action_view_numerator_switch"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/switch_subgroup"
+        android:id="@+id/action_switch_subgroup"
         android:title="1"
         app:tooltipText="@string/switch_subgroup"
         android:checkable="true"
@@ -17,7 +17,7 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:id="@+id/schedule_details"
+        android:id="@+id/action_schedule_details"
         android:title="@string/schedule_details"
         app:showAsAction="never" />
 </menu>

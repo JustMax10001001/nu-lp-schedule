@@ -83,7 +83,7 @@ class ScheduleViewFragment : Fragment() {
         menu.clear()
         inflater.inflate(R.menu.menu_schedule_view, menu)
 
-        menu.findItem(R.id.switch_numerator).actionView.apply {
+        menu.findItem(R.id.action_switch_numerator).actionView.apply {
             this as MaterialButton
             sharedViewModel.isNumeratorLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 this.isChecked = it ?: return@observe
@@ -98,7 +98,7 @@ class ScheduleViewFragment : Fragment() {
             }
         }
 
-        menu.findItem(R.id.switch_subgroup).apply {
+        menu.findItem(R.id.action_switch_subgroup).apply {
             sharedViewModel.subgroupLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 title = sharedViewModel.subgroup.toString()
             }
@@ -108,14 +108,14 @@ class ScheduleViewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.switch_subgroup -> {
+            R.id.action_switch_subgroup -> {
                 sharedViewModel.updateSubjectSubgroup(
                     sharedViewModel.subgroup.and(1) + 1
                 )          // https://imgur.com/a/Yssd6yl
                 item.title = sharedViewModel.subgroup.toString()
                 return true
             }
-            R.id.switch_numerator -> {
+            R.id.action_switch_numerator -> {
                 return true
             }
         }
