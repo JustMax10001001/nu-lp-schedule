@@ -11,13 +11,13 @@ import com.justsoft.nulpschedule.db.model.ScheduleTuple
 import com.justsoft.nulpschedule.db.model.UpdateEntitySchedulePosition
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
-import com.justsoft.nulpschedule.ui.recyclerview.UpdatableAdapter
+import com.justsoft.nulpschedule.ui.recyclerview.UpdatableEditableAdapter
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.lazyFind
 import java.time.LocalDateTime
 
 class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
-    UpdatableAdapter<ScheduleTuple, ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
+    UpdatableEditableAdapter<ScheduleTuple, ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
 
     var showCurrentClass: Boolean = true
         set(value) {
@@ -93,23 +93,6 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
                 onSelectSchedule(schedule)
             }
         }
-    }
-
-    fun removeItemAt(adapterPosition: Int): ScheduleTuple {
-        val removed = items[adapterPosition]
-        items.removeIf {
-            it.scheduleId == removed.scheduleId
-        }
-        notifyItemRemoved(adapterPosition)
-        return removed
-    }
-
-    fun move(from: Int, to: Int) {
-        items.apply {
-            val move = removeAt(from)
-            add(to, move)
-        }
-        notifyItemMoved(from, to)
     }
 
     fun getSchedulePositions(): List<UpdateEntitySchedulePosition> =
