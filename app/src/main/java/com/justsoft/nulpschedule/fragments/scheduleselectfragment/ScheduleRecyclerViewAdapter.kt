@@ -5,30 +5,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.db.model.ScheduleTuple
 import com.justsoft.nulpschedule.db.model.UpdateEntitySchedulePosition
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
+import com.justsoft.nulpschedule.ui.recyclerview.UpdatableAdapter
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.lazyFind
 import java.time.LocalDateTime
-import kotlin.properties.Delegates
 
 class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
-    RecyclerView.Adapter<ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
+    UpdatableAdapter<ScheduleTuple, ScheduleRecyclerViewAdapter.ScheduleViewHolder>() {
 
     var showCurrentClass: Boolean = true
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    var scheduleList: List<ScheduleTuple> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
-        notifyChanges(oldValue, newValue)
-    }
 
     private var onSelectSchedule: (Schedule) -> Unit = { }
 
@@ -39,7 +34,7 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     private val mLayoutInflater = LayoutInflater.from(context)
 
     override fun getItemViewType(position: Int): Int {
-        return if (showCurrentClass && scheduleList[position].currentClass != null) {
+        return if (showCurrentClass && items[position].currentClass != null) {
             VIEW_TYPE_FULL
         } else {
             VIEW_TYPE_HALF
@@ -63,9 +58,9 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
-        val schedule = scheduleList[position].schedule
-        val currentClass = scheduleList[position].currentClass
-        val nextClass = scheduleList[position].nextClass
+        val schedule = items[position].schedule
+        val currentClass = items[position].currentClass
+        val nextClass = items[position].nextClass
 
         holder.invokeOnInflated {
             this as ScheduleViewHolder
@@ -100,36 +95,25 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         }
     }
 
-    override fun getItemCount(): Int {
-        return scheduleList.size
-    }
-
-    private fun notifyChanges(
-        oldScheduleList: List<ScheduleTuple>,
-        newScheduleList: List<ScheduleTuple>
-    ) {
-        val listCallback = ScheduleDiffCallback(oldScheduleList, newScheduleList)
-        val diffResult = DiffUtil.calculateDiff(listCallback)
-
-        diffResult.dispatchUpdatesTo(this)
-    }
-
     fun removeItemAt(adapterPosition: Int): ScheduleTuple {
-        val removed = scheduleList[adapterPosition]
-        scheduleList = scheduleList.filter { it.scheduleId != removed.scheduleId }
+        val removed = items[adapterPosition]
+        items.removeIf {
+            it.scheduleId == removed.scheduleId
+        }
+        notifyItemRemoved(adapterPosition)
         return removed
     }
 
     fun move(from: Int, to: Int) {
-        scheduleList = mutableListOf<ScheduleTuple>().apply {
-            addAll(scheduleList)
+        items.apply {
             val move = removeAt(from)
             add(to, move)
         }
+        notifyItemMoved(from, to)
     }
 
     fun getSchedulePositions(): List<UpdateEntitySchedulePosition> =
-        scheduleList.mapIndexed { index, scheduleTuple ->
+        items.mapIndexed { index, scheduleTuple ->
             UpdateEntitySchedulePosition(
                 scheduleTuple.scheduleId,
                 index
@@ -160,42 +144,25 @@ class ScheduleRecyclerViewAdapter(context: Context, private val timeFormatter: T
         }
     }
 
-    internal class ScheduleDiffCallback(
-        private val old: List<ScheduleTuple>,
-        private val new: List<ScheduleTuple>
-    ) : DiffUtil.Callback() {
-
-        override fun getOldListSize(): Int {
-            return old.size
-        }
-
-        override fun getNewListSize(): Int {
-            return new.size
-        }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return old[oldItemPosition].scheduleId == new[newItemPosition].scheduleId
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = old[oldItemPosition]
-            val newItem = new[newItemPosition]
-            // check all displayed info
-            return oldItem.schedule.groupName == newItem.schedule.groupName &&
-                    oldItem.schedule.instituteName == newItem.schedule.instituteName &&
-                    oldItem.schedule.isNumeratorOnDate(LocalDateTime.now()) == newItem.schedule.isNumeratorOnDate(
-                LocalDateTime.now()
-            ) &&
-                    oldItem.schedule.subgroup == newItem.schedule.subgroup &&
-                    oldItem.currentClass?.subject?.displayName == newItem.currentClass?.subject?.displayName &&
-                    oldItem.currentClass?.scheduleClass?.index == newItem.currentClass?.scheduleClass?.index &&
-                    oldItem.nextClass?.subject?.displayName == newItem.nextClass?.subject?.displayName &&
-                    oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index
-        }
-    }
-
     companion object {
         private const val VIEW_TYPE_HALF = 1
         private const val VIEW_TYPE_FULL = 2
+    }
+
+    override fun areItemsTheSame(oldItem: ScheduleTuple, newItem: ScheduleTuple): Boolean {
+        return oldItem.scheduleId == newItem.scheduleId
+    }
+
+    override fun areContentsTheSame(oldItem: ScheduleTuple, newItem: ScheduleTuple): Boolean {
+        return oldItem.schedule.groupName == newItem.schedule.groupName &&
+                oldItem.schedule.instituteName == newItem.schedule.instituteName &&
+                oldItem.schedule.subgroup == newItem.schedule.subgroup &&
+                oldItem.currentClass?.subject?.displayName == newItem.currentClass?.subject?.displayName &&
+                oldItem.currentClass?.scheduleClass?.index == newItem.currentClass?.scheduleClass?.index &&
+                oldItem.nextClass?.subject?.displayName == newItem.nextClass?.subject?.displayName &&
+                oldItem.nextClass?.scheduleClass?.index == newItem.nextClass?.scheduleClass?.index &&
+                oldItem.schedule.isNumeratorOnDate(LocalDateTime.now()) == newItem.schedule.isNumeratorOnDate(
+            LocalDateTime.now()
+        )
     }
 }

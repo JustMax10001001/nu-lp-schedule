@@ -109,7 +109,7 @@ class ScheduleSelectFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.scheduleTupleListLiveData.observe(this.viewLifecycleOwner) {
-            mScheduleRecyclerViewAdapter.scheduleList = it
+            mScheduleRecyclerViewAdapter.updateDataSource(it)
         }
         viewModel.scheduleListLiveData.observe(this.viewLifecycleOwner) {
             binding.suchEmptySchedulesText.visibility =
@@ -207,7 +207,7 @@ class ScheduleSelectFragment : Fragment() {
             .setAction(getString(R.string.undo)) {
                 viewModel.cancelDeletion()
                 viewModel.scheduleTupleListLiveData.value?.let {
-                    mScheduleRecyclerViewAdapter.scheduleList = it
+                    mScheduleRecyclerViewAdapter.updateDataSource(it)
                 }
                 mCancelDeletionSnackbar = null
             }.also {
