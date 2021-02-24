@@ -91,10 +91,12 @@ class DayViewFragment : Fragment() {
         newIsNumerator: Boolean
     ) {
         newList ?: return
-        mClassAdapter.classList = newList.filter { subject ->
-            subject.scheduleClass.classMatches(newSubgroup, newIsNumerator)
-        }
+        mClassAdapter.updateDataSource(
+            newList.filter { subject ->
+                subject.scheduleClass.classMatches(newSubgroup, newIsNumerator)
+            }
+        )
         binding.suchEmptyClassesText.visibility =
-            if (mClassAdapter.classList.isEmpty()) View.VISIBLE else View.GONE
+            if (mClassAdapter.isEmpty()) View.VISIBLE else View.GONE
     }
 }

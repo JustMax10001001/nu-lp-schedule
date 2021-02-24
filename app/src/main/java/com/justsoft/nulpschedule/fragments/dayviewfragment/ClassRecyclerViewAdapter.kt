@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
@@ -18,18 +16,14 @@ import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
 import com.justsoft.nulpschedule.model.ScheduleClass
 import com.justsoft.nulpschedule.model.Subject
 import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
+import com.justsoft.nulpschedule.ui.recyclerview.UpdatableAdapter
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
 import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.clipboardManager
 import com.justsoft.nulpschedule.utils.lazyFind
-import kotlin.properties.Delegates
 
 class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: TimeFormatter) :
-    RecyclerView.Adapter<ClassRecyclerViewAdapter.ClassViewHolder>() {
-
-    var classList: List<EntityClassWithSubject> by Delegates.observable(emptyList()) { _, oldValue, newValue ->
-        notifyChanges(oldValue, newValue)
-    }
+    UpdatableAdapter<EntityClassWithSubject, ClassRecyclerViewAdapter.ClassViewHolder>() {
 
     private val mLayoutInflater = LayoutInflater.from(context)
 
@@ -40,7 +34,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     }
 
     override fun getItemId(position: Int): Long {
-        return classList[position].scheduleClass.id
+        return items[position].scheduleClass.id
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
@@ -53,19 +47,9 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         }
     }
 
-    private fun notifyChanges(
-        oldSubjectList: List<EntityClassWithSubject>,
-        newSubjectList: List<EntityClassWithSubject>
-    ) {
-        val subjectListCallback = ClassesDiffCallback(oldSubjectList, newSubjectList)
-        val diffResult = DiffUtil.calculateDiff(subjectListCallback)
-
-        diffResult.dispatchUpdatesTo(this)
-    }
-
     override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
-        val currentClass = classList[position].scheduleClass
-        val currentSubject = classList[position].subject
+        val currentClass = items[position].scheduleClass
+        val currentSubject = items[position].subject
 
         val onlineClassUrl = currentClass.url
 
@@ -82,7 +66,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
             lecturerNameTextView.text = currentClass.teacherName
             classDescriptionTextView.text = currentClass.classDescription
             bulletedAdditionalInfoTextView.text =
-                createAdditionalInfoSpan(classList[position], itemView.context)
+                createAdditionalInfoSpan(items[position], itemView.context)
 
             itemView.setOnClickListener {
                 onlineClassUrl?.let { openClassUrl(it, itemView.context) }
@@ -103,7 +87,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         button: ImageButton,
         position: Int
     ): PopupMenu {
-        val onlineClassUrl = classList[position].scheduleClass.url
+        val onlineClassUrl = items[position].scheduleClass.url
 
         return PopupMenu(context, button, Gravity.END).apply {
             inflate(R.menu.context_menu_class_card)
@@ -124,7 +108,7 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
                         return@setOnMenuItemClickListener true
                     }
                     R.id.action_change_custom_subject_name -> {
-                        buildAndShowSubjectNameEditDialog(context, classList[position].subject)
+                        buildAndShowSubjectNameEditDialog(context, items[position].subject)
                         return@setOnMenuItemClickListener true
                     }
                     R.id.action_share_class -> {
@@ -138,8 +122,8 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     }
 
     private fun shareClass(position: Int, context: Context) {
-        val scheduleClass = classList[position].scheduleClass
-        val subject = classList[position].subject
+        val scheduleClass = items[position].scheduleClass
+        val subject = items[position].subject
 
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/*"
@@ -236,8 +220,6 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         context.startActivity(chooser)
     }
 
-    override fun getItemCount(): Int = classList.size
-
     class ClassViewHolder(
         context: Context,
         @LayoutRes layoutId: Int,
@@ -258,34 +240,24 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
         val classEndTimeTextView: TextView by itemView.lazyFind(R.id.class_end_time_text_view)
     }
 
-    internal class ClassesDiffCallback(
-        private val oldClasses: List<EntityClassWithSubject>,
-        private val newClasses: List<EntityClassWithSubject>
-    ) : DiffUtil.Callback() {
+    override fun areItemsTheSame(
+        oldItem: EntityClassWithSubject,
+        newItem: EntityClassWithSubject
+    ): Boolean {
+        return oldItem.scheduleClass.index == newItem.scheduleClass.index
+    }
 
-        override fun getOldListSize(): Int {
-            return oldClasses.size
-        }
-
-        override fun getNewListSize(): Int {
-            return newClasses.size
-        }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldClasses[oldItemPosition].scheduleClass.index == newClasses[newItemPosition].scheduleClass.index
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldClass = oldClasses[oldItemPosition].scheduleClass
-            val oldSubject = oldClasses[oldItemPosition].subject
-            val newClass = newClasses[newItemPosition].scheduleClass
-            val newSubject = newClasses[newItemPosition].subject
-            return (oldClass.url == null) == (newClass.url == null) &&
-                    oldClass.classDescription == newClass.classDescription &&
-                    oldClass.index == newClass.index &&
-                    oldClass.flags == newClass.flags &&
-                    oldClass.teacherName == newClass.teacherName &&
-                    oldSubject.displayName == newSubject.displayName
-        }
+    override fun areContentsTheSame(
+        oldItem: EntityClassWithSubject,
+        newItem: EntityClassWithSubject
+    ): Boolean {
+        val oldClass = oldItem.scheduleClass
+        val newClass = newItem.scheduleClass
+        return (oldClass.url == null) == (newClass.url == null) &&
+                oldClass.classDescription == newClass.classDescription &&
+                oldClass.index == newClass.index &&
+                oldClass.flags == newClass.flags &&
+                oldClass.teacherName == newClass.teacherName &&
+                oldItem.subject.displayName == newItem.subject.displayName
     }
 }
