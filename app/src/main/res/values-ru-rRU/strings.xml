@@ -33,7 +33,6 @@
     <string name="this_schedule_was_already_added">Это расписание уже додано</string>
     <string name="sync_header">Синхронизация</string>
     <string name="sync_title">Периодически обновлять расписания</string>
-    <string name="key_open_telegram_channel">Открыть Телеграм канал</string>
     <string name="app_version">Версия приложения</string>
     <string name="app_telegram_channel">Телеграм канал приложения</string>
     <string name="intent_title_open_telegram_channel">Открыть Телеграм канал</string>
@@ -77,4 +76,6 @@
     <string name="schedule_details_alert_title">Детали о расписании</string>
     <string name="last_updated_on">Последнее обновление: %s</string>
     <string name="added_on">Добавлен: %s</string>
+    <string name="open_class_in">Открыть пару в</string>
+    <string name="subject_count">Количество предметов: %d</string>
 </resources>

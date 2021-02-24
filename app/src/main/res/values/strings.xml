@@ -55,7 +55,7 @@
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync schedules periodically</string>
-    <string name="key_open_telegram_channel">open_telegram_channel</string>
+    <string name="key_open_telegram_channel" translatable="false">open_telegram_channel</string>
     <string name="key_app_version" translatable="false">app_version</string>
     <string name="app_version">App version</string>
     <string name="app_telegram_channel">App telegram channel</string>
