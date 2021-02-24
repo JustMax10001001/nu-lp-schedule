@@ -55,11 +55,12 @@ class ScheduleViewFragment : Fragment() {
             R.anim.rotate_180
         )
 
+        // Set up an active observer so that we receive updates
         sharedViewModel.subjectCountLiveData.observe(this.viewLifecycleOwner) { }
 
         val dayOfWeekTodayOrdinal = LocalDate.now().dayOfWeek.ordinal
 
-        val dayFragmentAdapter = DayFragmentAdapter(this, viewModel.scheduleId.value!!)
+        val dayFragmentAdapter = DayFragmentAdapter(this, sharedViewModel.scheduleId)
         // Set fragment adapter to viewPager
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
