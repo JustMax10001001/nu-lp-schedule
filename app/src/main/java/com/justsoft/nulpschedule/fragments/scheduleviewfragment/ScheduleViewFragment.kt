@@ -75,13 +75,12 @@ class ScheduleViewFragment : Fragment() {
 
         // Initialize day tabs
         val shortDayNames = resources.getStringArray(R.array.days_of_week_short)
-        mTabLayoutMediator =
-            TabLayoutMediator(
-                binding.dayTabLayout,
-                binding.subjectByDayOfWeekViewPager
-            ) { tab, position ->
-                tab.text = shortDayNames[position]
-            }
+        mTabLayoutMediator = TabLayoutMediator(
+            binding.dayTabLayout,
+            binding.subjectByDayOfWeekViewPager
+        ) { tab, position ->
+            tab.text = shortDayNames[position]
+        }
         mTabLayoutMediator.attach()
     }
 
@@ -144,7 +143,8 @@ class ScheduleViewFragment : Fragment() {
     }
 
     private fun buildScheduleDetails(): String {
-        val dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
+        val dateTimeFormatter =
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
         return buildString {
             appendLine(
                 getString(
