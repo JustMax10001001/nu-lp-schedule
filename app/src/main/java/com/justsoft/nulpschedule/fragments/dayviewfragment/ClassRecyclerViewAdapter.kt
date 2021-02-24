@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import com.google.android.material.card.MaterialCardView
 import com.justsoft.nulpschedule.R
@@ -50,8 +49,6 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
     override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
         val currentClass = items[position].scheduleClass
         val currentSubject = items[position].subject
-
-        val onlineClassUrl = currentClass.url
 
         holder.invokeOnInflated {
             this as ClassViewHolder
@@ -186,9 +183,5 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
                 oldClass.flags == newClass.flags &&
                 oldClass.teacherName == newClass.teacherName &&
                 oldItem.subject.displayName == newItem.subject.displayName
-    }
-
-    fun interface ClassContextActionCallback {
-        fun onAction(@IdRes actionId: Int, item: EntityClassWithSubject): Boolean
     }
 }
