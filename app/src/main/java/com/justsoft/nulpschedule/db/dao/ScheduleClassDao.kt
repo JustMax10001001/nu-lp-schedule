@@ -42,4 +42,7 @@ interface ScheduleClassDao {
 
     @Insert(entity = EntityScheduleClass::class, onConflict = OnConflictStrategy.IGNORE)
     fun insertNew(classEntities: Collection<EntityScheduleClass>)
+
+    @Query("SELECT COUNT(DISTINCT subjectId) FROM ScheduleClass WHERE scheduleId = :scheduleId")
+    fun countActiveSubjectsForSchedule(scheduleId: Long): LiveData<Int>
 }

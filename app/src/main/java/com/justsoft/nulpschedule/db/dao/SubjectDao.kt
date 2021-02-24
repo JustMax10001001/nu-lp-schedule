@@ -22,9 +22,6 @@ interface SubjectDao {
     @Delete
     fun delete(subject: EntitySubject)
 
-    @Query("DELETE FROM Subject WHERE scheduleId = :scheduleId AND id NOT IN (:idList)")
-    fun deleteAllNotFromList(scheduleId: Long, idList: List<Long>)
-
     @Update(entity = EntitySubject::class)
     fun updateSubjects(subjects: List<UpdateEntitySubject>)
 

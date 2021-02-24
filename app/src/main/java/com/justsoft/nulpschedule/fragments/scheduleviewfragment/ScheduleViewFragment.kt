@@ -55,6 +55,8 @@ class ScheduleViewFragment : Fragment() {
             R.anim.rotate_180
         )
 
+        sharedViewModel.subjectCountLiveData.observe(this.viewLifecycleOwner) { }
+
         val dayOfWeekTodayOrdinal = LocalDate.now().dayOfWeek.ordinal
 
         val dayFragmentAdapter = DayFragmentAdapter(this, viewModel.scheduleId.value!!)
@@ -154,6 +156,9 @@ class ScheduleViewFragment : Fragment() {
                     R.string.last_updated_on,
                     sharedViewModel.schedule.updateTime.format(dateTimeFormatter)
                 )
+            )
+            appendLine(
+                getString(R.string.subject_count, sharedViewModel.subjectCount)
             )
         }
     }
