@@ -15,6 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
+import com.justsoft.nulpschedule.model.ScheduleClass
 import com.justsoft.nulpschedule.model.Subject
 import com.justsoft.nulpschedule.ui.recyclerview.AsyncLoadedViewHolder
 import com.justsoft.nulpschedule.utils.AlertDialogExtensions
@@ -138,28 +139,31 @@ class ClassRecyclerViewAdapter(context: Context, private val timeFormatter: Time
 
     private fun shareClass(position: Int, context: Context) {
         val scheduleClass = classList[position].scheduleClass
-        val onlineClassUrl = classList[position].scheduleClass.url
-        val text = if (onlineClassUrl != null)
-            context.getString(
-                R.string.class_share_text_with_url,
-                scheduleClass.index + 1,
-                classList[position].subject.displayName,
-                scheduleClass.teacherName,
-                scheduleClass.classDescription,
-                onlineClassUrl
-            )
-        else
-            context.getString(
-                R.string.class_share_text_no_url,
-                scheduleClass.index + 1,
-                scheduleClass.teacherName,
-                scheduleClass.classDescription,
-                classList[position].subject.displayName
-            )
+        val subject = classList[position].subject
+
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/*"
-        intent.putExtra(Intent.EXTRA_TEXT, text)
+        intent.putExtra(Intent.EXTRA_TEXT, buildClassShareText(scheduleClass, subject, context))
+
         context.startActivity(intent)
+    }
+
+    private fun buildClassShareText(
+        scheduleClass: ScheduleClass,
+        subject: Subject,
+        context: Context
+    ): String = buildString {
+        append(scheduleClass.index)
+        append(". ")
+        appendLine(subject.displayName)
+
+        appendLine(scheduleClass.teacherName)
+
+        appendLine(scheduleClass.classDescription)
+
+        scheduleClass.url?.let {
+            appendLine(context.getString(R.string.link_format, it))
+        }
     }
 
     private fun createAdditionalInfoSpan(

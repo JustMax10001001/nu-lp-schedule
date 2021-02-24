@@ -69,7 +69,7 @@
     </string-array>
     <string name="more">Додатково</string>
     <string name="menu_action_share_class">Поділитись парою</string>
-    <string name="class_share_text_with_url">%d. %s %s %s Посилання: %s</string>
+    <string name="link_format">Посилання: %s</string>
     <string name="app_name_extended">Розклад НУ ЛП</string>
     <string name="app_name">Розклад</string>
     <string name="easteregg_text">Вітаю! 🥳🎉</string>
