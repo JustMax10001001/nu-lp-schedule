@@ -154,16 +154,14 @@ class ScheduleSelectFragment : Fragment() {
         mSwipeRefreshLayout.setOnRefreshListener(this::onRefreshListener)
     }
 
-    private fun onRefreshListener() {
-        launch {
-            viewModel.refreshSchedules().collect {
-                when (it) {
-                    RefreshState.PREPARING -> Log.d("ScheduleSelectFragment", "Preparing refresh")
-                    RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
-                    RefreshState.REFRESH_FAILED -> {
-                        mSwipeRefreshLayout.isRefreshing = false
-                        makeRefreshErrorSnackBar()
-                    }
+    private fun onRefreshListener() = launch {
+        viewModel.refreshSchedules().collect {
+            when (it) {
+                RefreshState.PREPARING -> Log.d("ScheduleSelectFragment", "Preparing refresh")
+                RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
+                RefreshState.REFRESH_FAILED -> {
+                    mSwipeRefreshLayout.isRefreshing = false
+                    makeRefreshErrorSnackBar()
                 }
             }
         }
