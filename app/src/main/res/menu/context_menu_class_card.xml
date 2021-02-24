@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_open_class_in"
+        android:icon="@drawable/ic_baseline_open_in_new_24"
+        android:title="@string/open_class_in" />
+
     <item
         android:id="@+id/action_change_custom_subject_name"
         android:icon="@drawable/ic_baseline_edit_24"

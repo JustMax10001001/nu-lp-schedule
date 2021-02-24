@@ -90,6 +90,7 @@
     <string name="last_updated_on">Last updated on: %s</string>
     <string name="added_on">Added on: %s</string>
     <string name="link_format">Link: %s</string>
+    <string name="open_class_in">Open class in</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>
