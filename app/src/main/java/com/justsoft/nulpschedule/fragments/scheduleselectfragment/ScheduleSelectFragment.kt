@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -151,7 +152,7 @@ class ScheduleSelectFragment : Fragment() {
         }
 
         mSwipeRefreshLayout = view.findViewById(R.id.schedule_selector_swipe_refresh)
-        mSwipeRefreshLayout.setOnRefreshListener(this::onRefreshListener)
+        mSwipeRefreshLayout.setOnRefreshListener { onRefreshListener() }
     }
 
     private fun onRefreshListener() = launch {

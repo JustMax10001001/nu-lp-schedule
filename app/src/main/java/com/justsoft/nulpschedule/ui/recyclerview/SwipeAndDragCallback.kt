@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.justsoft.nulpschedule.R
+import com.justsoft.nulpschedule.ui.recyclerview.SwipeAndDragCallback.OnMoveCallback
 
 class SwipeAndDragCallback(
     context: Context
@@ -33,8 +34,10 @@ class SwipeAndDragCallback(
     private lateinit var onDeleteCallback: (RecyclerView.ViewHolder) -> Unit
     private lateinit var onMoveCallback: OnMoveCallback
 
-    fun move(onMoveCallback: OnMoveCallback) {
-        this.onMoveCallback = onMoveCallback
+    fun move(onMoveCallback: (RecyclerView.ViewHolder, RecyclerView.ViewHolder) -> Unit) {
+        this.onMoveCallback = OnMoveCallback { viewHolder, target ->
+            onMoveCallback(viewHolder, target)
+        }
     }
 
     fun delete(onDeleteCallback: (RecyclerView.ViewHolder) -> Unit) {
