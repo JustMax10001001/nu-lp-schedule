@@ -174,11 +174,11 @@ class AddScheduleFragment : Fragment() {
                 val result = deferredResult.getCompleted()
 
                 val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-                val switchDay = sharedPreferences.getInt(
+                val switchDay = sharedPreferences.getString(
                     getString(
                         R.string.key_schedule_switch_day
-                    ), 0
-                )
+                    ), "0"
+                )!!.toInt()
                 val arguments = bundleOf(
                     "schedule_id" to result.getOrThrow(),
                     "day_to_switch_to_next_week_on" to switchDay

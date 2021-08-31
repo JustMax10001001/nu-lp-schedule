@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.*
 
 class MainSettingsFragment : PreferenceFragmentCompat() {
@@ -36,6 +38,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 mVersionClickCount = 0
                 mHandler.removeCallbacks(clickCountReset)
                 Toast.makeText(requireContext(), R.string.easteregg_text, Toast.LENGTH_LONG).show()
+                Firebase.analytics.logEvent("easteregg_trigger", null)
             }
             if (mVersionClickCount == 1) {
                 mHandler.postDelayed(clickCountReset, (EASTER_EGG_TRIGGER_COUNT - 1) * 250.toLong())
