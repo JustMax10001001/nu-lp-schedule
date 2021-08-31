@@ -135,6 +135,9 @@ class ScheduleRepository @Inject constructor(
         return scheduleDao.loadAll()
     }
 
+    fun getSubjectCountForSchedule(scheduleId: Long): LiveData<Int> =
+        classDao.countActiveSubjectsForSchedule(scheduleId)
+
     suspend fun getClassesWithSubjectsSync(
         scheduleId: Long,
         dayOfWeek: DayOfWeek,

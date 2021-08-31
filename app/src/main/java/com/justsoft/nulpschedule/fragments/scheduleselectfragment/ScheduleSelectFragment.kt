@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -29,6 +31,7 @@ import com.justsoft.nulpschedule.utils.TimeFormatter
 import com.justsoft.nulpschedule.utils.launch
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -38,7 +41,7 @@ class ScheduleSelectFragment : Fragment() {
     private var _binding: FragmentScheduleSelectBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ScheduleSelectViewModel by viewModels()
+    private val viewModel by viewModels<ScheduleSelectViewModel>()
 
     @Inject
     lateinit var classesTimetable: ClassesTimetable
@@ -46,12 +49,16 @@ class ScheduleSelectFragment : Fragment() {
     @Inject
     lateinit var timeFormatter: TimeFormatter
 
+    private var mRefreshErrorSnackbar: Snackbar? = null
+    private var mCancelDeletionSnackbar: Snackbar? = null
+
     private lateinit var mSharedPreferences: SharedPreferences
 
     private lateinit var mScheduleRecyclerView: RecyclerView
-    private lateinit var mScheduleRecyclerViewAdapter: ScheduleRecyclerViewAdapter
-    private lateinit var mSwipeAndDragHelper: ItemTouchHelper
 
+    private lateinit var mScheduleRecyclerViewAdapter: ScheduleRecyclerViewAdapter
+
+    private lateinit var mSwipeAndDragHelper: ItemTouchHelper
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +93,15 @@ class ScheduleSelectFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        lifecycleScope.launch {
+            viewModel.flushDeletions()
+        }
+        mRefreshErrorSnackbar?.dismiss()
+        mCancelDeletionSnackbar?.dismiss()
+    }
+
     override fun onResume() {
         super.onResume()
         updateTimeRunnable()
@@ -94,7 +110,7 @@ class ScheduleSelectFragment : Fragment() {
 
     private fun setUpObservers() {
         viewModel.scheduleTupleListLiveData.observe(this.viewLifecycleOwner) {
-            mScheduleRecyclerViewAdapter.scheduleList = it
+            mScheduleRecyclerViewAdapter.updateDataSource(it)
         }
         viewModel.scheduleListLiveData.observe(this.viewLifecycleOwner) {
             binding.suchEmptySchedulesText.visibility =
@@ -136,28 +152,33 @@ class ScheduleSelectFragment : Fragment() {
         }
 
         mSwipeRefreshLayout = view.findViewById(R.id.schedule_selector_swipe_refresh)
-        mSwipeRefreshLayout.setOnRefreshListener(this::onRefreshListener)
+        mSwipeRefreshLayout.setOnRefreshListener { onRefreshListener() }
     }
 
-    private fun onRefreshListener() {
-        launch {
-            viewModel.refreshSchedules().collect {
-                when (it) {
-                    RefreshState.PREPARING -> Log.d("ScheduleSelectFragment", "Preparing refresh")
-                    RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
-                    RefreshState.REFRESH_FAILED -> {
-                        mSwipeRefreshLayout.isRefreshing = false
-                        Snackbar.make(
-                            mSwipeRefreshLayout,
-                            R.string.something_went_wrong,
-                            Snackbar.LENGTH_SHORT
-                        ).setAction(getString(R.string.retry)) {
-                            onRefreshListener()
-                        }.show()
-                    }
+    private fun onRefreshListener() = launch {
+        viewModel.refreshSchedules().collect {
+            when (it) {
+                RefreshState.PREPARING -> Log.d("ScheduleSelectFragment", "Preparing refresh")
+                RefreshState.REFRESH_SUCCESS -> mSwipeRefreshLayout.isRefreshing = false
+                RefreshState.REFRESH_FAILED -> {
+                    mSwipeRefreshLayout.isRefreshing = false
+                    makeRefreshErrorSnackBar()
                 }
             }
         }
+    }
+
+    private fun makeRefreshErrorSnackBar() {
+        Snackbar.make(
+            requireView(),
+            R.string.something_went_wrong,
+            Snackbar.LENGTH_SHORT
+        ).setAction(getString(R.string.retry)) {
+            onRefreshListener()
+            mRefreshErrorSnackbar = null
+        }.also {
+            mRefreshErrorSnackbar = it
+        }.show()
     }
 
     private fun createSwipeToDeleteHelper(): ItemTouchHelper =
@@ -168,18 +189,7 @@ class ScheduleSelectFragment : Fragment() {
 
                 viewModel.postScheduleForDeletion(removedSchedule.schedule)
 
-                Snackbar.make(
-                    mScheduleRecyclerView,
-                    getString(R.string.schedule_is_removed),
-                    Snackbar.LENGTH_LONG
-                )
-                    .setAnchorView(R.id.add_schedule_fab)
-                    .setAction(getString(R.string.undo)) {
-                        viewModel.cancelDeletion()
-                        viewModel.scheduleTupleListLiveData.value?.let {
-                            mScheduleRecyclerViewAdapter.scheduleList = it
-                        }
-                    }.show()
+                makeCancelDeletionSnackBar()
                 Firebase.analytics.logEvent("remove_schedule") { }
             }
 
@@ -187,6 +197,24 @@ class ScheduleSelectFragment : Fragment() {
                 viewModel.updateSchedulePositions(mScheduleRecyclerViewAdapter.getSchedulePositions())
             }
         })
+
+    private fun makeCancelDeletionSnackBar() {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.schedule_is_removed),
+            Snackbar.LENGTH_LONG
+        )
+            .setAnchorView(R.id.add_schedule_fab)
+            .setAction(getString(R.string.undo)) {
+                viewModel.cancelDeletion()
+                viewModel.scheduleTupleListLiveData.value?.let {
+                    mScheduleRecyclerViewAdapter.updateDataSource(it)
+                }
+                mCancelDeletionSnackbar = null
+            }.also {
+                mCancelDeletionSnackbar = it
+            }.show()
+    }
 
     private val mUpdateTimeHandler = Handler(Looper.getMainLooper())
 

@@ -3,7 +3,6 @@ package com.justsoft.nulpschedule.utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 class LiveDataDelegate<T>(

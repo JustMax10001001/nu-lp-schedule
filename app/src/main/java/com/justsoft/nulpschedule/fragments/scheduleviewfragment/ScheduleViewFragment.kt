@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
@@ -16,6 +17,8 @@ import com.justsoft.nulpschedule.databinding.FragmentScheduleViewBinding
 import com.justsoft.nulpschedule.utils.setTooltipTextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @AndroidEntryPoint
 class ScheduleViewFragment : Fragment() {
@@ -52,9 +55,12 @@ class ScheduleViewFragment : Fragment() {
             R.anim.rotate_180
         )
 
+        // Set up an active observer so that we receive updates
+        sharedViewModel.subjectCountLiveData.observe(this.viewLifecycleOwner) { }
+
         val dayOfWeekTodayOrdinal = LocalDate.now().dayOfWeek.ordinal
 
-        val dayFragmentAdapter = DayFragmentAdapter(this, viewModel.scheduleId.value!!)
+        val dayFragmentAdapter = DayFragmentAdapter(this, sharedViewModel.scheduleId)
         // Set fragment adapter to viewPager
         val dayViewPager = view.findViewById<ViewPager2>(R.id.subject_by_day_of_week_view_pager)
         dayViewPager.adapter = dayFragmentAdapter
@@ -69,13 +75,12 @@ class ScheduleViewFragment : Fragment() {
 
         // Initialize day tabs
         val shortDayNames = resources.getStringArray(R.array.days_of_week_short)
-        mTabLayoutMediator =
-            TabLayoutMediator(
-                binding.dayTabLayout,
-                binding.subjectByDayOfWeekViewPager
-            ) { tab, position ->
-                tab.text = shortDayNames[position]
-            }
+        mTabLayoutMediator = TabLayoutMediator(
+            binding.dayTabLayout,
+            binding.subjectByDayOfWeekViewPager
+        ) { tab, position ->
+            tab.text = shortDayNames[position]
+        }
         mTabLayoutMediator.attach()
     }
 
@@ -83,7 +88,7 @@ class ScheduleViewFragment : Fragment() {
         menu.clear()
         inflater.inflate(R.menu.menu_schedule_view, menu)
 
-        menu.findItem(R.id.switch_numerator).actionView.apply {
+        menu.findItem(R.id.action_switch_numerator).actionView.apply {
             this as MaterialButton
             sharedViewModel.isNumeratorLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 this.isChecked = it ?: return@observe
@@ -98,7 +103,7 @@ class ScheduleViewFragment : Fragment() {
             }
         }
 
-        menu.findItem(R.id.switch_subgroup).apply {
+        menu.findItem(R.id.action_switch_subgroup).apply {
             sharedViewModel.subgroupLiveData.observe(this@ScheduleViewFragment.viewLifecycleOwner) {
                 title = sharedViewModel.subgroup.toString()
             }
@@ -108,19 +113,55 @@ class ScheduleViewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.switch_subgroup -> {
+            R.id.action_switch_subgroup -> {
                 sharedViewModel.updateSubjectSubgroup(
                     sharedViewModel.subgroup.and(1) + 1
                 )          // https://imgur.com/a/Yssd6yl
                 item.title = sharedViewModel.subgroup.toString()
                 return true
             }
-            R.id.switch_numerator -> {
+            R.id.action_switch_numerator -> {
+                return true
+            }
+            R.id.action_schedule_details -> {
+                showDetailsAlert()
                 return true
             }
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDetailsAlert() {
+        AlertDialog.Builder(requireContext(), R.style.Theme_SchedulerTheme_AlertDialog)
+            .setTitle(getString(R.string.schedule_details_alert_title))
+            .setMessage(buildScheduleDetails())
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
+    }
+
+    private fun buildScheduleDetails(): String {
+        val dateTimeFormatter =
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
+        return buildString {
+            appendLine(
+                getString(
+                    R.string.added_on,
+                    sharedViewModel.schedule.addTime.format(dateTimeFormatter)
+                )
+            )
+            appendLine(
+                getString(
+                    R.string.last_updated_on,
+                    sharedViewModel.schedule.updateTime.format(dateTimeFormatter)
+                )
+            )
+            appendLine(
+                getString(R.string.subject_count, sharedViewModel.subjectCount)
+            )
+        }
     }
 }
 

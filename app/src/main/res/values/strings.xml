@@ -55,7 +55,7 @@
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync schedules periodically</string>
-    <string name="key_open_telegram_channel">open_telegram_channel</string>
+    <string name="key_open_telegram_channel" translatable="false">open_telegram_channel</string>
     <string name="key_app_version" translatable="false">app_version</string>
     <string name="app_version">App version</string>
     <string name="app_telegram_channel">App telegram channel</string>
@@ -83,10 +83,15 @@
     <string name="schedule_switch_day_summary">Showing next week\'s schedule starting on %s</string>
     <string name="more">More</string>
     <string name="menu_action_share_class">Share class</string>
-    <string name="class_share_text_no_url" translatable="false">%d. %s\n%s\n%s</string>
-    <string name="class_share_text_with_url">%d. %s %s %s Link: %s</string>
 
     <string name="easteregg_text">Congrats! 🥳🎉</string>
+    <string name="schedule_details">Details</string>
+    <string name="schedule_details_alert_title">Schedule details</string>
+    <string name="last_updated_on">Last updated on: %s</string>
+    <string name="added_on">Added on: %s</string>
+    <string name="link_format">Link: %s</string>
+    <string name="open_class_in">Open class in</string>
+    <string name="subject_count">Subject count: %d</string>
 
     <string-array name="switch_to_next_week_days_entries">
         <item>Saturday</item>

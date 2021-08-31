@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.concurrent.timerTask
 
+//@HiltViewModel
 class ScheduleSelectViewModel @ViewModelInject constructor(
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
@@ -23,14 +24,14 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
     val scheduleListLiveData = scheduleRepository.getSchedules()
 
     val currentClassIndexLiveData = MutableLiveData(-1)
-    val currentClassIndex by delegateLiveData(currentClassIndexLiveData)
+    val currentClassIndex: Int by delegateLiveData(currentClassIndexLiveData)
 
     val nextClassIndexLiveData = MutableLiveData(-1)
-    val nextClassIndex by delegateLiveData(nextClassIndexLiveData)
+    val nextClassIndex: Int by delegateLiveData(nextClassIndexLiveData)
 
     val currentDayOfWeekLiveData: MutableLiveData<DayOfWeek> =
         MutableLiveData(LocalDate.now().dayOfWeek)
-    val currentDayOfWeek by delegateLiveData(currentDayOfWeekLiveData)
+    val currentDayOfWeek: DayOfWeek by delegateLiveData(currentDayOfWeekLiveData)
 
     private val deleteScheduleTimer = Timer()
     private var scheduleDeletionTask: TimerTask? = null
@@ -144,6 +145,7 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
 
     fun cancelDeletion() {
         scheduleDeletionTask?.cancel()
+        scheduleIdsToDelete.clear();
     }
 
     fun refreshSchedules(): Flow<RefreshState> = flow {
@@ -168,5 +170,10 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
         // this will cause the currentClassIndexLiveData to force refresh on scheduleTupleListLivedata
         // as it is added as source
         currentClassIndexLiveData.value = currentClassIndex
+    }
+
+    suspend fun flushDeletions() = withContext(Dispatchers.IO) {
+        scheduleDeletionTask?.run()
+        scheduleIdsToDelete.clear()
     }
 }

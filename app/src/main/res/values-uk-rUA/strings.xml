@@ -33,7 +33,6 @@
     <string name="this_schedule_was_already_added">Цей розклад уже додано</string>
     <string name="sync_header">Синхронізація</string>
     <string name="sync_title">Періодично оновлювати розклади</string>
-    <string name="key_open_telegram_channel">Відкрити Телеграм канал</string>
     <string name="app_version">Версія програми</string>
     <string name="app_telegram_channel">Телеграм канал програми</string>
     <string name="intent_title_open_telegram_channel">Відкрити Телеграм канал</string>
@@ -69,8 +68,14 @@
     </string-array>
     <string name="more">Додатково</string>
     <string name="menu_action_share_class">Поділитись парою</string>
-    <string name="class_share_text_with_url">%d. %s %s %s Посилання: %s</string>
+    <string name="link_format">Посилання: %s</string>
     <string name="app_name_extended">Розклад НУ ЛП</string>
     <string name="app_name">Розклад</string>
     <string name="easteregg_text">Вітаю! 🥳🎉</string>
+    <string name="schedule_details">Подробиці</string>
+    <string name="schedule_details_alert_title">Подробиці про розклад</string>
+    <string name="last_updated_on">Востаннє оновлено: %s</string>
+    <string name="added_on">Доданий: %s</string>
+    <string name="open_class_in">Відкрити пару в</string>
+    <string name="subject_count">Кількість предметів: %d</string>
 </resources>

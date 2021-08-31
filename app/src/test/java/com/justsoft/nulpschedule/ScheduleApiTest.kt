@@ -1,5 +1,6 @@
 package com.justsoft.nulpschedule
 
+import com.justsoft.nulpschedule.api.ScheduleApi
 import com.justsoft.nulpschedule.utils.net.SSLSocketFactoryWithAdditionalKeyStores
 import org.junit.Before
 import org.junit.Test

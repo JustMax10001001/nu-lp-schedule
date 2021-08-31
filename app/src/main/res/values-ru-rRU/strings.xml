@@ -33,7 +33,6 @@
     <string name="this_schedule_was_already_added">Это расписание уже додано</string>
     <string name="sync_header">Синхронизация</string>
     <string name="sync_title">Периодически обновлять расписания</string>
-    <string name="key_open_telegram_channel">Открыть Телеграм канал</string>
     <string name="app_version">Версия приложения</string>
     <string name="app_telegram_channel">Телеграм канал приложения</string>
     <string name="intent_title_open_telegram_channel">Открыть Телеграм канал</string>
@@ -69,8 +68,14 @@
     </string-array>
     <string name="more">Дополнительно</string>
     <string name="menu_action_share_class">Поделиться парой</string>
-    <string name="class_share_text_with_url">%d. %s %s %s Ссылка: %s</string>
+    <string name="link_format">Ссылка: %s</string>
     <string name="app_name_extended">Расписание НУ ЛП</string>
     <string name="app_name">Расписание</string>
     <string name="easteregg_text">Поздравляю! 🥳🎉</string>
+    <string name="schedule_details">Детали</string>
+    <string name="schedule_details_alert_title">Детали о расписании</string>
+    <string name="last_updated_on">Последнее обновление: %s</string>
+    <string name="added_on">Добавлен: %s</string>
+    <string name="open_class_in">Открыть пару в</string>
+    <string name="subject_count">Количество предметов: %d</string>
 </resources>

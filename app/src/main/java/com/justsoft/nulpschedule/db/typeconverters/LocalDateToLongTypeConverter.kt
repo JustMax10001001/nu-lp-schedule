@@ -2,7 +2,6 @@ package com.justsoft.nulpschedule.db.typeconverters
 
 import androidx.room.TypeConverter
 import java.time.*
-import java.util.*
 
 object LocalDateToLongTypeConverter {
 

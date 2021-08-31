@@ -2,13 +2,17 @@ package com.justsoft.nulpschedule.ui.recyclerview
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.justsoft.nulpschedule.R
-import com.justsoft.nulpschedule.fragments.scheduleselectfragment.ScheduleRecyclerViewAdapter
+import com.justsoft.nulpschedule.ui.recyclerview.SwipeAndDragCallback.OnMoveCallback
 
 class SwipeAndDragCallback(
     context: Context
@@ -30,8 +34,10 @@ class SwipeAndDragCallback(
     private lateinit var onDeleteCallback: (RecyclerView.ViewHolder) -> Unit
     private lateinit var onMoveCallback: OnMoveCallback
 
-    fun move(onMoveCallback: OnMoveCallback) {
-        this.onMoveCallback = onMoveCallback
+    fun move(onMoveCallback: (RecyclerView.ViewHolder, RecyclerView.ViewHolder) -> Unit) {
+        this.onMoveCallback = OnMoveCallback { viewHolder, target ->
+            onMoveCallback(viewHolder, target)
+        }
     }
 
     fun delete(onDeleteCallback: (RecyclerView.ViewHolder) -> Unit) {
@@ -45,10 +51,17 @@ class SwipeAndDragCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        (recyclerView.adapter as ScheduleRecyclerViewAdapter).move(
-            viewHolder.adapterPosition,
-            target.adapterPosition
-        )
+        if (recyclerView.adapter !is UpdatableEditableAdapter<*, *>) {
+            Log.w(
+                "SwipeAndDragCallback",
+                "Supplied RecyclerView's adapter does not extend UpdatableEditableAdapter!"
+            )
+        } else {
+            (recyclerView.adapter as UpdatableEditableAdapter<*, *>).moveItem(
+                viewHolder.adapterPosition,
+                target.adapterPosition
+            )
+        }
         onMoveCallback.onMove(viewHolder, target)
         return true
     }
