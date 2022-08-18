@@ -104,11 +104,17 @@ class MainActivity : AppCompatActivity() {
     private fun createSyncAccount(): Account {
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
-            if (!accountManager.addAccountExplicitly(newAccount, null, null)) {
-                Log.w("MainActivity", "Could not add account, maybe it already exists")
-            } else {
-                ContentResolver.setSyncAutomatically(newAccount, mAuthority, true)
+            try {
+                if (!accountManager.addAccountExplicitly(newAccount, null, null)) {
+                    Log.w("MainActivity", "Could not add account, maybe it already exists")
+                } else {
+                    ContentResolver.setSyncAutomatically(newAccount, mAuthority, true)
+                }
+            } catch (e: SecurityException) {
+                Log.w("MainActivity", "Could not add account", e)
+
             }
+
         }
     }
 

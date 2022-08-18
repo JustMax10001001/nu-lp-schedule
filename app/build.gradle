@@ -6,13 +6,13 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
+    buildToolsVersion '33.0.0'
 
     defaultConfig {
         applicationId "com.justsoft.nulpschedule"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 16
         versionName "1.2.1-BETA"
 
@@ -90,7 +90,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
-    implementation 'com.justsoft.nulpschedule:api:1.0.6'
+    implementation 'com.justsoft.nulpschedule:api:1.0.6-test'
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-android', version: '1.4.1'
 
     implementation "androidx.room:room-runtime:$room_version"

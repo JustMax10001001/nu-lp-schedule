@@ -1,23 +1,29 @@
 package com.justsoft.nulpschedule.fragments.scheduleselectfragment
 
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.justsoft.nulpschedule.db.model.*
+import com.justsoft.nulpschedule.db.model.EntityClassWithSubject
+import com.justsoft.nulpschedule.db.model.ScheduleTuple
+import com.justsoft.nulpschedule.db.model.UpdateEntitySchedulePosition
 import com.justsoft.nulpschedule.model.RefreshState
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.delegateLiveData
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import javax.inject.Inject
 import kotlin.concurrent.timerTask
 
-//@HiltViewModel
-class ScheduleSelectViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ScheduleSelectViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
 
@@ -145,7 +151,7 @@ class ScheduleSelectViewModel @ViewModelInject constructor(
 
     fun cancelDeletion() {
         scheduleDeletionTask?.cancel()
-        scheduleIdsToDelete.clear();
+        scheduleIdsToDelete.clear()
     }
 
     fun refreshSchedules(): Flow<RefreshState> = flow {
