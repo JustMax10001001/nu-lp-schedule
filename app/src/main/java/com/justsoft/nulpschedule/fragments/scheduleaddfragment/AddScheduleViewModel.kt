@@ -1,6 +1,5 @@
 package com.justsoft.nulpschedule.fragments.scheduleaddfragment
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,10 +8,13 @@ import com.justsoft.nulpschedule.model.InstituteAndGroup
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.MutableStatefulLiveData
 import com.justsoft.nulpschedule.utils.StatefulData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddScheduleViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
     val instituteAndGroupListLiveData: MutableStatefulLiveData<List<InstituteAndGroup>> =
@@ -30,7 +32,7 @@ class AddScheduleViewModel @ViewModelInject constructor(
 
     fun downloadSelectedScheduleAsync() = viewModelScope.async {
         with(selectedInstituteAndGroupLiveData.value!!) {
-            scheduleRepository.downloadSchedule(institute, group, selectedSubgroupLiveData.value!!)
+            scheduleRepository.downloadSchedule(group, selectedSubgroupLiveData.value!!)
         }
     }
 

@@ -2,23 +2,23 @@
 <resources>
     <integer-array name="schedule_lesson_start_times">
         <item>510</item>
-        <item>620</item>
-        <item>730</item>
-        <item>855</item>
-        <item>960</item>
-        <item>1060</item>
-        <item>1160</item>
-        <item>1260</item>
+        <item>605</item>
+        <item>700</item>
+        <item>795</item>
+        <item>890</item>
+        <item>985</item>
+        <item>1080</item>
+        <item>1170</item>
     </integer-array>
 
     <integer-array name="schedule_lesson_end_times">
-        <item>605</item>
-        <item>715</item>
-        <item>825</item>
-        <item>950</item>
-        <item>1055</item>
-        <item>1155</item>
-        <item>1255</item>
-        <item>1355</item>
+        <item>590</item>
+        <item>685</item>
+        <item>780</item>
+        <item>875</item>
+        <item>970</item>
+        <item>1065</item>
+        <item>1160</item>
+        <item>1250</item>
     </integer-array>
 </resources>

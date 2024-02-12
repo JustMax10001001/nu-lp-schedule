@@ -1,22 +1,27 @@
 package com.justsoft.nulpschedule.fragments.scheduleviewfragment
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.justsoft.nulpschedule.model.Schedule
 import com.justsoft.nulpschedule.repo.ScheduleRepository
 import com.justsoft.nulpschedule.utils.delegateLiveData
-import com.justsoft.nulpschedule.utils.isInitialized
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class SharedDayViewFragmentViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SharedDayViewFragmentViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val scheduleId: Long
-        get() = savedStateHandle.get("schedule_id")!!
+        get() = savedStateHandle["schedule_id"]!!
 
     val scheduleLiveData: LiveData<Schedule> by lazy {
         scheduleRepository.getSchedule(scheduleId)

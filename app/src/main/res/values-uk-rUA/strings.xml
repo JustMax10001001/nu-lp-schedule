@@ -20,7 +20,7 @@
     <string name="class_starts_at">Початок: %s</string>
     <string name="something_went_wrong">Щось пішло не так</string>
     <string name="add_new_schedule">Додати розклад</string>
-    <string name="institute_group">Інститут та група</string>
+    <string name="institute_group">Ваша група (напр. ПЗ-43)</string>
     <string name="subgroup_1">Підгрупа 1</string>
     <string name="subgroup_2">Підгрупа 2</string>
     <string name="retry">Повторити</string>

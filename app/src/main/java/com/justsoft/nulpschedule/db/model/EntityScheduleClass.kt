@@ -1,7 +1,12 @@
 package com.justsoft.nulpschedule.db.model
 
-import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.justsoft.nulpschedule.model.ScheduleClass
 import com.justsoft.nulpschedule.model.Subject
 import java.time.DayOfWeek

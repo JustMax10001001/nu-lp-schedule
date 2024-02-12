@@ -19,6 +19,7 @@ object ScheduleApiModule {
     @Singleton
     fun getScheduleApi(@ApplicationContext context: Context): ScheduleApi {
         return ScheduleApi(
+            "https://student2023.lpnu.ua",
             SSLSocketFactoryWithAdditionalKeyStores(loadKeyStore(context))
         )
     }

@@ -5,7 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,9 +22,11 @@ import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import com.justsoft.nulpschedule.R
 import com.justsoft.nulpschedule.databinding.FragmentAddScheduleBinding
-import com.justsoft.nulpschedule.utils.StatefulData.*
+import com.justsoft.nulpschedule.model.InstituteAndGroup
+import com.justsoft.nulpschedule.utils.StatefulData.Error
+import com.justsoft.nulpschedule.utils.StatefulData.Loading
+import com.justsoft.nulpschedule.utils.StatefulData.Success
 import com.justsoft.nulpschedule.utils.animationEnd
-import com.justsoft.nulpschedule.utils.inputMethodManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -170,10 +177,13 @@ class AddScheduleFragment : Fragment() {
         deferredResult.invokeOnCompletion {
             hideLoading()
             item.isEnabled = true
-            if (it == null) {
+
+            val error = it ?: deferredResult.getCompleted().exceptionOrNull()
+
+            if (error == null) {
                 val result = deferredResult.getCompleted()
 
-                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
                 val switchDay = sharedPreferences.getString(
                     getString(
                         R.string.key_schedule_switch_day
@@ -202,7 +212,7 @@ class AddScheduleFragment : Fragment() {
                         arguments
                     )
             } else {
-                if (it is SQLiteConstraintException) {
+                if (error is SQLiteConstraintException) {
                     Snackbar.make(
                         binding.search,
                         getString(R.string.this_schedule_was_already_added),
@@ -222,7 +232,7 @@ class AddScheduleFragment : Fragment() {
                     Log.e(
                         "AddScheduleFragment",
                         "Error downloading schedule",
-                        it
+                        error
                     )
                     errorSnackbar.show()
                 }
@@ -233,12 +243,12 @@ class AddScheduleFragment : Fragment() {
     private fun initializeAutoCompleteSearch(view: View) {
         mInstituteAndGroupArrayAdapter = InstituteAndGroupArrayAdapter(requireContext())
 
-        binding.search.setAdapter(mInstituteAndGroupArrayAdapter)
+        //binding.search.setAdapter(mInstituteAndGroupArrayAdapter)
         binding.search.isEnabled = false
         binding.search.post {
             mInstituteAndGroupArrayAdapter.filter.filter(null)
         }
-        binding.search.setOnItemClickListener { _, _, position, _ ->
+        /*binding.search.setOnItemClickListener { _, _, position, _ ->
             val item = mInstituteAndGroupArrayAdapter.getItem(position)
             val trimmed = item.toString().substringBeforeLast("...")
 
@@ -260,7 +270,7 @@ class AddScheduleFragment : Fragment() {
                 }
                 viewModel.selectedInstituteAndGroupLiveData.postValue(item)
             }
-        }
+        }*/
         binding.search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -270,9 +280,14 @@ class AddScheduleFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 s ?: return
-                if (s.toString() != viewModel.selectedInstituteAndGroupLiveData.value.toString()) {
-                    viewModel.selectedInstituteAndGroupLiveData.postValue(null)             // invalidate selected object
+                val text = s.toString().trim().uppercase()
+
+                if (text.matches(Regex("\\p{L}{2,3}-\\d{2,3}"))) {
+                    viewModel.selectedInstituteAndGroupLiveData.postValue(InstituteAndGroup("", text))
                 }
+//                if (s.toString() != viewModel.selectedInstituteAndGroupLiveData.value.toString()) {
+//                    viewModel.selectedInstituteAndGroupLiveData.postValue(null)             // invalidate selected object
+//                }
             }
         })
     }

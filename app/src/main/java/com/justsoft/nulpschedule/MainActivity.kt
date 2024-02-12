@@ -68,13 +68,13 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
-    private fun preferenceChangeListener(sharedPreferences: SharedPreferences, key: String) {
+    private fun preferenceChangeListener(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == getString(R.string.key_refresh_schedules)) {
             Log.d("MainActivity", "Preference change listener for sync")
             ContentResolver.setSyncAutomatically(
                 mAccount,
                 mAuthority,
-                sharedPreferences.getBoolean(key, true)
+                sharedPreferences!!.getBoolean(key, true)
             )
         }
     }
@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_FirstFragment_to_mainSettingsFragment)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

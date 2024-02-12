@@ -35,7 +35,6 @@ class ScheduleRepository @Inject constructor(
             Uninitialized()
         )
 
-    @Suppress("DeferredResultUnused")
     suspend fun getInstitutesAndGroups(): StatefulLiveData<List<InstituteAndGroup>> = liveData {
         emitSource(instituteAndGroupListLiveData)
 
@@ -72,21 +71,19 @@ class ScheduleRepository @Inject constructor(
     private suspend fun getDownloadedInstitutesAndGroups(scheduleType: ScheduleType = ScheduleType.STUDENT): List<InstituteAndGroup> =
         scheduleDao.getPersistedInstitutesAndGroups(scheduleType)
 
-    private fun getInstitutes(): Result<List<String>> =
-        scheduleApi.getInstitutes()
+    private fun getInstitutes(): Result<List<String>> = Result.success(emptyList())
 
-    private fun getGroups(instituteName: String): Result<List<String>> =
-        scheduleApi.getGroups(instituteName)
+    private fun getGroups(instituteName: String): Result<List<String>> = Result.success(emptyList())
 
     fun refreshAllSchedules() {
         val schedules = scheduleDao.loadAllSync()
-        for ((_, instituteName, groupName) in schedules) {
-            refreshScheduleSync(instituteName, groupName)
+        for ((_, _, groupName) in schedules) {
+            refreshScheduleSync(groupName)
         }
     }
 
-    private fun refreshScheduleSync(instituteName: String, groupName: String) {
-        val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
+    private fun refreshScheduleSync(groupName: String) {
+        val boxedResult = scheduleApi.getSchedule(groupName)
         val (schedule, subjects, classes) = boxedResult.getOrThrow()
         scheduleDao.updatePartial(schedule.toUpdateEntity())
 
@@ -104,12 +101,11 @@ class ScheduleRepository @Inject constructor(
      * @return - the id of the downloaded schedule
      */
     suspend fun downloadSchedule(
-        instituteName: String,
         groupName: String,
         subgroup: Int
     ): Result<Long> =
         withContext(Dispatchers.IO) {
-            val boxedResult = scheduleApi.getSchedule(instituteName, groupName)
+            val boxedResult = scheduleApi.getSchedule(groupName)
             if (boxedResult.isSuccess) {
                 val unboxedResult = boxedResult.getOrNull()!!
                 scheduleDao.saveSchedule(unboxedResult.schedule.toEntity())
